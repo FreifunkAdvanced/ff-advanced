@@ -1,0 +1,7 @@
+# the system init finished. By default this file does nothing.
+
+# Workaround bridge seems do work not well (ath1 did not join the bridge)
+brctl addif br-mesh ath1
+ifconfig br-mesh down
+ifconfig br-mesh up  
+exit 0   
