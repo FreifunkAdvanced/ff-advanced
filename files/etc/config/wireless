@@ -5,14 +5,12 @@ config wifi-device  wifi0
         # REMOVE THIS LINE TO ENABLE WIFI:
 config wifi-iface
         option device   wifi0
-        option network  ath0
         option mode     adhoc
         option ssid     batman.jena.freifunk.net
         option bssid    03:CA:FF:EE:BA:BE
 
 config wifi-iface
         option device   wifi0
-        option network  ath1
         option mode     ap
         option ssid     batman-test.jena.freifunk.net
         option bssid    04:CA:FF:EE:BA:BE
