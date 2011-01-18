@@ -8,7 +8,6 @@
 #
 # Basiert auf OpenWRT backfire und enthält OpenVPN
 #  * OpenWRT 
-#  * LuCI 
-#  * Gebaut am / Version: 
-#  * Kudos an Klaus Kruse (kkruse [dot] 1987atgooglemail [dot] com)
+#  * IPv6
+#  * Batman-ADV
 #################################################################
