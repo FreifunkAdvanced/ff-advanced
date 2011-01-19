@@ -1,0 +1,23 @@
+Roadmap
+
+v0.1
+-> Erste Alpha, welche die Basis Funktionalität unterstützt
+-> B.A.T.N.A.N.-ADV Mesh
+-> AP-Mode Interface für User
+-> Mesh-Interface für Batman
+-> Gateway Mode:
+		- DHCP Server
+		- Batman Gateway Mode
+-> Client Mode
+-> Manuelles Konfigruationsscript
+
+v0.2
+-> Zum Testen in der Saalstr
+-> Splash Screen
+
+v0.3
+-> Openvpn
+
+v0.4
+-> Vnet-Support
+-> Openvpn Autoconfig Openvpn
