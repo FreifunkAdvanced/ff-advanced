@@ -1,0 +1,26 @@
+#!/bin/sh
+echo "Soll dieser Router als Gateway arbeiten? (j/n) "
+read router
+echo
+if [[ $router = "j" ]]
+        then
+		#Act a a Router
+		#set ipv4 Adress
+		echo "Bitte geben sie die IP-Adresse des Routers an (siehe http://www.freifunk-jena.de/NodeDB)"
+		read ipv4_adress
+		uci set network.mesh.ipaddr=$ipv4_adress
+		uci set network.mesh.proto=static
+		uci set network.mesh.netmask=255.255.0.0
+	else
+	# Act as a node only
+		uci del network.mesh.ipaddr
+		uci del network.mesh.proto
+		uci del network.mesh.netmask
+		echo "Der Router wird als normaler Node konfiguriert"
+		echo
+		
+fi
+uci commit
+#TODO: Generate Subnet
+#TODO: DHCP Configuration
+#HINT: Port freifunk-wizzard-leipzig in from lua (http://luci.subsignal.org/trac/browser/luci/branches/luci-0.10/applications/luci-ffwizard-leipzig/luasrc/model/cbi/ffwizard.lua)
