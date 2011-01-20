@@ -10,12 +10,21 @@ if [[ $router = "j" ]]
 		read ipv4_adress
 		uci set network.mesh.ipaddr=$ipv4_adress
 		uci set network.mesh.proto=static
-		uci set network.mesh.netmask=255.255.0.0
+		uci set network.mesh.netmask=255.0.0.0
+		uci set dhcp.mesh=dhcp
+		uci set dhcp.mesh.start=2
+		uci set dhcp.mesh.limit=254
+		uci set dhcp.mesh.leasetime=12h
+		uci set dhcp.mesh.interface=mesh
+		uci commit dhcp
 	else
 	# Act as a node only
+		uci del dhcp.mesh
+		uci commit dhcp
 		uci del network.mesh.ipaddr
 		uci del network.mesh.proto
 		uci del network.mesh.netmask
+		uci commit network
 		echo "Der Router wird als normaler Node konfiguriert"
 		echo
 		
