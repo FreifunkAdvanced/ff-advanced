@@ -10,7 +10,7 @@ if [[ $router = "j" ]]
 		read ipv4_adress
 		uci set network.mesh.ipaddr=$ipv4_adress
 		uci set network.mesh.proto=static
-		uci set network.mesh.netmask=255.0.0.0
+		uci set network.mesh.netmask=255.255.0.0
 		uci set dhcp.mesh=dhcp
 		uci set dhcp.mesh.start=2
 		uci set dhcp.mesh.limit=254
