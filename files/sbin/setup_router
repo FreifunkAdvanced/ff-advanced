@@ -17,6 +17,8 @@ if [[ $router = "j" ]]
 		uci set dhcp.mesh.leasetime=12h
 		uci set dhcp.mesh.interface=mesh
 		uci commit dhcp
+		# Batman Server Mode
+		batctl gw server
 	else
 	# Act as a node only
 		uci del dhcp.mesh
@@ -27,7 +29,8 @@ if [[ $router = "j" ]]
 		uci commit network
 		echo "Der Router wird als normaler Node konfiguriert"
 		echo
-		
+		# Batman Server Mode
+		batctl gw client
 fi
 uci commit
 #TODO: Generate Subnet
