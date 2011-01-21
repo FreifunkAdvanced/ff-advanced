@@ -6,4 +6,5 @@ config 'mesh' 'bat0'
         option 'bonding'
         option 'fragmentation'
         option 'vis_mode'
+        option 'gw_mode' 'client'
 

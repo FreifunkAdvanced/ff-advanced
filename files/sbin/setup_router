@@ -25,7 +25,8 @@ if [[ $router = "j" ]]
 		uci set dhcp.mesh.end_ip=10.17.$oct3.254
 		uci commit dhcp
 		# Batman Server Mode
-		batctl gw server
+		uci set batman-adv.bat0.gw_mode=server
+		uci commit batman-adv
 	else
 	# Act as a node only
 		uci del dhcp.mesh
@@ -36,8 +37,9 @@ if [[ $router = "j" ]]
 		uci commit network
 		echo "Der Router wird als normaler Node konfiguriert"
 		echo
-		# Batman Server Mode
-		batctl gw client
+		# Batman Clientr Mode
+		uci set batman-adv.bat0.gw_mode=client
+		uci commit batman-adv
 fi
 uci commit
 #TODO: Generate Subnet
