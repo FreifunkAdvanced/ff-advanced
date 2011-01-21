@@ -8,6 +8,11 @@ if [[ $router = "j" ]]
 		#set ipv4 Adress
 		echo "Bitte geben sie die IP-Adresse des Routers an (siehe http://www.freifunk-jena.de/NodeDB)"
 		read ipv4_adress
+		#IP Zerlegen
+		oct1=`echo $ipv4_adress | awk -F . '{print $1}'`
+		oct2=`echo $ipv4_adress | awk -F . '{print $2}'` 
+		oct3=`echo $ipv4_adress | awk -F . '{print $3}'`
+		oct4=`echo $ipv4_adress | awk -F . '{print $4}'`
 		uci set network.mesh.ipaddr=$ipv4_adress
 		uci set network.mesh.proto=static
 		uci set network.mesh.netmask=255.255.0.0
@@ -16,6 +21,8 @@ if [[ $router = "j" ]]
 		uci set dhcp.mesh.limit=254
 		uci set dhcp.mesh.leasetime=12h
 		uci set dhcp.mesh.interface=mesh
+		uci set dhcp.mesh.start_ip=10.17.$oct3.2
+		uci set dhcp.mesh.end_ip=10.17.$oct3.254
 		uci commit dhcp
 		# Batman Server Mode
 		batctl gw server
