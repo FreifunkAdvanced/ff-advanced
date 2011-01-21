@@ -2,7 +2,6 @@ config wifi-device  wifi0
         option type     atheros
         option channel  5
 
-        # REMOVE THIS LINE TO ENABLE WIFI:
 config wifi-iface
         option device   wifi0
         option mode     adhoc
