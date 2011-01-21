@@ -5,7 +5,7 @@ config 'interface' 'loopback'
         option 'netmask' '255.0.0.0'
 config 'interface' 'mesh'
         option 'type' 'bridge'
-        option 'ifname' 'ath1 bat0'
+        option 'ifname' 'bat0 ath0'
 
 config 'interface' 'lan'
         option 'type' 'bridge'
