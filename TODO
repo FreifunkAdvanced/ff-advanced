@@ -1,1 +1,3 @@
 Collection of unpriorized ToDos, for a Roadmap see ROADMAP file
+
+ * Freeze the Batman-Adv stuff on next new Version, get rid of trunk (currently we use trunk because the last version of bat-adv doesn't support the gw_mode)
