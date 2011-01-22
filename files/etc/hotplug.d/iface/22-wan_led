@@ -1,9 +1,9 @@
 #!/bin/sh
 case "${ACTION:-ifup}" in
         ifup)
-                gpioctl set 1
+                gpioctl set 3
         ;;
         ifdown)
-                gpioctl dirout 1
+                gpioctl dirout 3
         ;;
 esac
