@@ -13,5 +13,4 @@ config wifi-iface
         option device   wifi0
         option mode     ap
         option ssid     test.freifunk-jena.de
-        option bssid    04:CA:FF:EE:BA:BE
 
