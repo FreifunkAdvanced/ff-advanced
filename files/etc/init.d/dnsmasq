@@ -366,7 +366,6 @@ start() {
 	config_foreach dhcp_subscrid_add subscrid
 	config_foreach dhcp_domain_add domain
 	config_foreach dhcp_add dhcp
-	echo $args
 	/usr/sbin/dnsmasq $args && {
 		rm -f /tmp/resolv.conf
 		[ -n "$DOMAIN" ] && echo "search $DOMAIN" >> /tmp/resolv.conf
