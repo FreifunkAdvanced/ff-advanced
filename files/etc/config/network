@@ -12,7 +12,7 @@ config 'interface' 'mesh'
 config 'interface' 'lan'
 	option 'type' 'bridge'
 	option 'proto' 'static'
-	option 'ipaddr' '192.168.1.1'
+	option 'ipaddr' '10.17.200.1'
 	option 'netmask' '255.255.255.0'
 	option 'ifname' 'eth0.1'
 
