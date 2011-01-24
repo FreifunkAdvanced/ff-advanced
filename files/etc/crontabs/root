@@ -1,1 +1,2 @@
 * * * * * /sbin/test_gateway > /dev/null
+* * * * * /sbin/splash_sync > /dev/null
