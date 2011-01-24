@@ -1,6 +1,6 @@
 config system
 	option hostname OpenWrt
-	option timezone UTC
+	option timezone CET
 
 config button
 	option button	reset
