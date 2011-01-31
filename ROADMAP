@@ -2,22 +2,46 @@ Roadmap
 
 v0.1
 -> Erste Alpha, welche die Basis Funktionalität unterstützt
--> B.A.T.N.A.N.-ADV Mesh
--> AP-Mode Interface für User
--> Mesh-Interface für Batman
+-> B.A.T.N.A.N.-ADV Mesh (finished)
+-> AP-Mode Interface für User (finished)
+-> Mesh-Interface für Batman (finished)
+  -> Mesh.nterface with hidden SSID (finished)
 -> Gateway Mode:
-		- DHCP Server
-		- Batman Gateway Mode
--> Client Mode
--> Manuelles Konfigruationsscript
+		- DHCP Server (finished)
+		- Batman Gateway Mode (finished)
+		- Batman Gateway Bandwidth
+-> Client Mode  (finished)
+-> Manuelles Konfigruationsscript  (partially finished)
+-> LED-Config (bascis are finished)
+-> Zum Testen in der Saalstr
 
 v0.2
--> Zum Testen in der Saalstr
--> Splash Screen
+-> Splash Screen (finished)
+-> n2n
 
 v0.3
 -> Openvpn
-
+-> Splash:
+   -> Whitelisting/Blacklisting
+   -> Layout
 v0.4
 -> Vnet-Support
+  -> possibility to configure each port as:
+       - batman mesh interface (cablebridge for batman layer 2 traffic only)
+       - default-lan interface (non batman)
+       - service port (static public ip via dhcp)
+       - batman mesh-bridge
+
+v0.5
 -> Openvpn Autoconfig Openvpn
+-> local node-db (plaintext)
+
+v0.6
+-> Config-Webinterface
+-> Status/Diagnostics-WebIf
+
+
+Post v1.0
+-> global node-db for www.freifunk-jena.de
+-> openvpn auto cert solution (telephone based)
+-> emergency update system
