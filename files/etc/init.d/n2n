@@ -1,0 +1,40 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2008 OpenWrt.org
+START=90
+
+config_cb() {
+	local cfg="$CONFIG_SECTION"
+	config_get configname "$cfg" TYPE
+
+	case "$configname" in
+		edge)
+			config_get ipaddr "$cfg" ipaddr
+			config_get supernode "$cfg" supernode
+			config_get port "$cfg" port
+			config_get community "$cfg" community
+			config_get key "$cfg" key
+			config_get_bool route "$cfg" route 0
+			config_get devname "$cfg" devname
+			[ "$route" = "1" ] && args='-r'
+			if [ "$ipaddr" != "" ]; then
+				edge -f $args -a 169.254.0.1 -d $devname -c $community -k $key -l ${supernode}:${port}
+				ifconfig $devname 0.0.0.0
+				batctl if add $devname
+			fi
+		;;
+		supernode)
+			config_get port "$cfg" port
+			if [ "$port" != "" ]; then
+				supernode -l $port &
+			fi
+		;;
+	esac
+}
+
+start() {
+	config_load n2n
+}
+stop() {
+	killall edge
+	killall supernode
+}
