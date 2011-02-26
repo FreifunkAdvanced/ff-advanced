@@ -3,6 +3,7 @@
 x=0
 config_load splash_users
 test=1
+myip=`uci get network.mesh.ipaddr`
 splash_check() {
    timeout=6000
    current_time=`date +%s`
@@ -35,7 +36,7 @@ iptables -t nat -N ffj_splash
 iptables -t nat -I zone_mesh_prerouting 1 -p tcp -j ffj_splash
 config_foreach splash_check user
 #iptables -t nat -D ffj_splash -p tcp -j DNAT --to 10.17.200.1:80
-iptables -t nat -A ffj_splash -p tcp -j DNAT --to 10.17.200.1:80
+iptables -t nat -A ffj_splash -p tcp -j DNAT --to $myip:80
 #iptables -t nat -D ffj_splash -j DROP
 #iptables -t nat -A ffj_splash -j DROP
 
