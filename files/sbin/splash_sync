@@ -10,11 +10,9 @@ splash_check() {
    config_get ip "$1" ip
    config_get time "$1" time
    local config="$1" 
-   echo Vergleich Jetzt `date +%s` gespeichert $time
    let time_check=$time+$timeout
    if [ $time_check -gt  $current_time ]; then
    	# User ist noch gesplashed
-   	echo User ist noch gesplashed
    	iptables  -t nat -D ffj_splash -s $ip -j ACCEPT
    	iptables  -t nat -I ffj_splash 1 -s $ip -j ACCEPT
    else
@@ -35,10 +33,7 @@ iptables -t nat -X ffj_splash
 iptables -t nat -N ffj_splash
 iptables -t nat -I zone_mesh_prerouting 1 -p tcp -j ffj_splash
 config_foreach splash_check user
-#iptables -t nat -D ffj_splash -p tcp -j DNAT --to 10.17.200.1:80
 iptables -t nat -A ffj_splash -p tcp -j DNAT --to $myip:80
-#iptables -t nat -D ffj_splash -j DROP
-#iptables -t nat -A ffj_splash -j DROP
 
                                                
 
