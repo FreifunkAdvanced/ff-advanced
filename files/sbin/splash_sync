@@ -33,6 +33,13 @@ iptables -t nat -X ffj_splash
 iptables -t nat -N ffj_splash
 iptables -t nat -I zone_mesh_prerouting 1 -p tcp -j ffj_splash
 config_foreach splash_check user
+#Jabber Whitelisting
+iptables -t nat -A ffj_splash --destination-port 5222 -j ACCEPT
+iptables -t nat -A ffj_splash --destination-port 5223 -j ACCEPT
+#Freifunk-Jena Whitelisting
+iptables -t nat -A ffj_splash -d freifunk-jena -j ACCEPT
+iptables -t nat -A ffj_splash -d www.freifunk-jena -j ACCEPT
+
 iptables -t nat -A ffj_splash -p tcp -j DNAT --to $myip:80
 
                                                
