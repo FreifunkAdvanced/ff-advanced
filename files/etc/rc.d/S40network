@@ -29,7 +29,7 @@ boot() {
 		type "coldplug_interface_$proto" >/dev/null && [ "$auto" = 1 ] && \
 			coldplug_interface_$proto "$ifc"
 	done
-	ifconfig ath1 | grep 'HWaddr'| awk '{gsub(":","", $5); print $5}' > /proc/sys/kernel/hostname
+	ifconfig ath0 | grep 'HWaddr'| awk '{gsub(":","", $5); print $5}' > /proc/sys/kernel/hostname
 	
 }
 
