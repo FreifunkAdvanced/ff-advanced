@@ -1,6 +1,6 @@
 config wifi-device  wifi0
         option type     atheros
-        option channel  5
+        option channel  
 
 config wifi-iface
         option device   wifi0
@@ -12,5 +12,5 @@ config wifi-iface
 config wifi-iface
         option device   wifi0
         option mode     ap
-        option ssid     test.freifunk-jena.de
+        option ssid     www.freifunk-jena.de
 
