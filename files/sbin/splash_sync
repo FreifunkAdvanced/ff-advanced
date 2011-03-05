@@ -38,6 +38,8 @@ iptables -t nat -A ffj_splash --destination-port 53 -j ACCEPT
 #Jabber Whitelisting
 iptables -t nat -A ffj_splash --destination-port 5222 -j ACCEPT
 iptables -t nat -A ffj_splash --destination-port 5223 -j ACCEPT
+#Free Wavez in Freifunk
+iptables -t nat -A ffj_splash -s 10.0.0.0/8 -d 10.0.0.0/8 -j ACCEPT
 #Freifunk-Jena Whitelisting
 iptables -t nat -A ffj_splash -d freifunk-jena.de -j ACCEPT
 iptables -t nat -A ffj_splash -d www.freifunk-jena.de -j ACCEPT
