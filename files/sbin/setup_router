@@ -42,6 +42,7 @@ if [[ $router = "j" ]]
 		uci commit batman-adv
 fi
 uci commit
+/etc/init.d/batman-adv restart
 #TODO: Generate Subnet
 #TODO: DHCP Configuration
 #HINT: Port freifunk-wizzard-leipzig in from lua (http://luci.subsignal.org/trac/browser/luci/branches/luci-0.10/applications/luci-ffwizard-leipzig/luasrc/model/cbi/ffwizard.lua)
