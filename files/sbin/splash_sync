@@ -34,10 +34,10 @@ iptables -t nat -N ffj_splash
 iptables -t nat -I zone_mesh_prerouting 1 -p tcp -j ffj_splash
 config_foreach splash_check user
 #DNS Whitelisting
-iptables -t nat -A ffj_splash --destination-port 53 -j ACCEPT
+iptables -t nat -p udp -A ffj_splash --dport 53 -j ACCEPT
 #Jabber Whitelisting
-iptables -t nat -A ffj_splash --destination-port 5222 -j ACCEPT
-iptables -t nat -A ffj_splash --destination-port 5223 -j ACCEPT
+iptables -t nat -p tcp -A ffj_splash --dport 5222 -j ACCEPT
+iptables -t nat -p tcp -A ffj_splash --dport 5223 -j ACCEPT
 #Free Wavez in Freifunk
 iptables -t nat -A ffj_splash -s 10.0.0.0/8 -d 10.0.0.0/8 -j ACCEPT
 #Freifunk-Jena Whitelisting
