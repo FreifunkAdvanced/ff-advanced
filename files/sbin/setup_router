@@ -6,14 +6,24 @@ if [[ $router = "j" ]]
         then
 		#Act a a Router
 		#set ipv4 Adress
-		echo "Bitte geben sie die IP-Adresse des Routers an (siehe http://www.freifunk-jena.de/NodeDB)"
-		read ipv4_adress
+    echo "Bitte warten, es wird automatisch eine freie IP ermittelt (Kann bis zu 10 Minuten dauern)"
+    /etc/init.d/n2n enable
+    /etc/init.d/n2n start
+    sleep 10
+    for i in `seq 1 254 `; do
+      LOSS=`ping -c1 10.17.$i.1 | grep loss | awk '{print $7}' | sed 's/%//g'; sleep 1`
+      sleep 1;
+      if [[ 99 -lt $LOSS ]]; then
+        NODE_IP=10.17.$i.1
+        break
+      fi
+    done
 		#IP Zerlegen
-		oct1=`echo $ipv4_adress | awk -F . '{print $1}'`
-		oct2=`echo $ipv4_adress | awk -F . '{print $2}'` 
-		oct3=`echo $ipv4_adress | awk -F . '{print $3}'`
-		oct4=`echo $ipv4_adress | awk -F . '{print $4}'`
-		uci set network.mesh.ipaddr=$ipv4_adress
+		oct1=`echo $NODE_IP | awk -F . '{print $1}'`
+		oct2=`echo $NODE_IP | awk -F . '{print $2}'` 
+		oct3=`echo $NODE_IP | awk -F . '{print $3}'`
+		oct4=`echo $NODE_IP | awk -F . '{print $4}'`
+		uci set network.mesh.ipaddr=$NODE_IP
 		uci set network.mesh.proto=static
 		uci set network.mesh.netmask=255.255.0.0
 		uci set dhcp.mesh=dhcp
