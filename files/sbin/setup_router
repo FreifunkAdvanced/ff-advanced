@@ -15,14 +15,11 @@ if [[ $router = "j" ]]
       sleep 1;
       if [[ 99 -lt $LOSS ]]; then
         NODE_IP=10.17.$i.1
+        oct3=$i
         break
       fi
     done
-		#IP Zerlegen
-		oct1=`echo $NODE_IP | awk -F . '{print $1}'`
-		oct2=`echo $NODE_IP | awk -F . '{print $2}'` 
-		oct3=`echo $NODE_IP | awk -F . '{print $3}'`
-		oct4=`echo $NODE_IP | awk -F . '{print $4}'`
+
 		uci set network.mesh.ipaddr=$NODE_IP
 		uci set network.mesh.proto=static
 		uci set network.mesh.netmask=255.255.0.0
