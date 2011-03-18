@@ -5,9 +5,10 @@ config 'interface' 'loopback'
 	option 'ipaddr' '127.0.0.1'
 	option 'netmask' '255.0.0.0'
 
-config 'interface' 'mesh'
-	option 'type' 'bridge'
-	option 'ifname' 'bat0 ath0'
+config 'interface'  'mesh'
+  option 'type'       'bridge'
+  foption 'ifname'     'bat0 ath0'
+  option 'mtu'        '1527'
 
 config 'interface' 'lan'
 	option 'type' 'bridge'
