@@ -7,7 +7,7 @@ config 'interface' 'loopback'
 
 config 'interface'  'mesh'
   option 'type'       'bridge'
-  foption 'ifname'     'bat0 ath0'
+  option 'ifname'     'bat0 ath0'
   option 'mtu'        '1527'
 
 config 'interface' 'lan'
