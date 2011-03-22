@@ -1,5 +1,6 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2008 OpenWrt.org
+[ -n "$IPKG_INSTROOT" ] && exit 0
 START=90
 
 config_cb() {
