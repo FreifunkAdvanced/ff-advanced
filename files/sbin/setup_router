@@ -9,7 +9,7 @@ if [[ $router = "j" ]]
     echo "Bitte warten, es wird automatisch eine freie IP ermittelt (Kann bis zu 10 Minuten dauern)"
     /etc/init.d/n2n enable
     /etc/init.d/n2n start
-    sleep 10
+    sleep 20
     for i in `seq 1 254 `; do
       LOSS=`ping -c1 10.17.$i.1 | grep loss | awk '{print $7}' | sed 's/%//g'; sleep 1`
       sleep 1;
