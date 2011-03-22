@@ -34,6 +34,10 @@ if [[ $router = "j" ]]
 		# Batman Server Mode
 		uci set batman-adv.bat0.gw_mode=server
 		uci commit batman-adv
+    echo $'\n\n\n\n'
+    echo "Einrichtung des Routers abgeschossen!
+    Dieser Router hat folgende IP: $NODE_IP"
+    echo $'\n\n\n\n'
 	else
 	# Act as a node only
 		uci del dhcp.mesh
