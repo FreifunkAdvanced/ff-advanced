@@ -5,8 +5,8 @@ config uhttpd main
 	list listen_http	0.0.0.0:80
 	# Server document root
 	option home		/www
-	option error_page 	/splash.html
-	option index_page	splash.html
+	option error_page 	/cgi-bin/redirect
+	option index_page	cgi-bin/redirect
 	# Reject requests from RFC1918 IP addresses
 	# directed to the servers public IP(s).
 	# This is a DNS rebinding countermeasure.
