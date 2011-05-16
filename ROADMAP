@@ -45,3 +45,4 @@ Post v1.0
 -> global node-db for www.freifunk-jena.de
 -> openvpn auto cert solution (telephone based)
 -> emergency update system
+-> remote update via netcat
