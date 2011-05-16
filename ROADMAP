@@ -23,7 +23,7 @@ v0.3
 -> Openvpn
 -> Splash:
    -> Whitelisting/Blacklisting
-   -> Layout
+   -> Layout (finished)
 v0.4
 -> Vnet-Support
   -> possibility to configure each port as:
