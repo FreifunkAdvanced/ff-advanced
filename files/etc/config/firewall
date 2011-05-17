@@ -20,6 +20,11 @@ config zone
 config forwarding                  
         option src      mesh       
         option dest     wan                
+
+config forwarding
+        option src      lan
+        option dest     wan
+
 # We need to accept udp packets on port 68,
 # see https://dev.openwrt.org/ticket/4108
 config rule                        
