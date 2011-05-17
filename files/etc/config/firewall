@@ -16,7 +16,11 @@ config zone
         option input    ACCEPT              
         option output   ACCEPT             
         option forward  REJECT             
-                   
+config zone
+        option name     lan
+        option input    ACCEPT        
+        option output   ACCEPT                
+        option forward  REJECT                  
 config forwarding                  
         option src      mesh       
         option dest     wan                
