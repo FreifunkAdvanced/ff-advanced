@@ -64,23 +64,24 @@
                 erneut aufgefordet, diese Bedingungen zu akzeptieren.
             </p>
 
-            <div id="button_left">
-                <div class="buttons">
-                    <form action="/cgi-bin/splash_click" method="post">
-                        <input type="hidden" name="target_url" value="targeturl"/>
-                        <input class="button" type="submit" value="Akzeptieren"/>
-                    </form>
+
+            <div id="button_area">
+                <div id="button_left">
+                    <div class="buttons">
+                        <form action="/cgi-bin/splash_click" method="post">
+                            <input type="hidden" name="target_url" value="targeturl"/>
+                            <input class="button" type="submit" value="Akzeptieren"/>
+                        </form>
+                    </div>
+                </div>
+                <div id="button_right">
+                    <div class="buttons">
+                        <form action="http://www.freifunk-jena.de/Decline" method="get">
+                            <input class="button" type="submit" value="Ablehnen"/>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <div id="button_right">
-                <div class="buttons">
-                    <form action="http://www.freifunk-jena.de/Decline" method="get">
-                        <input class="button" type="submit" value="Ablehnen"/>
-                    </form>
-                </div>
-            </div>
-
         </div>
     </div>
 </body>

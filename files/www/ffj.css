@@ -15,6 +15,12 @@ color: #464646;
 text-decoration: none;
 }
 
+div#button_area{
+padding-left:150px;
+padding-right:150px;
+text-align:center;
+}
+
 div#button_left{
 float:left;
 width: 50%;
