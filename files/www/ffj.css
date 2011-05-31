@@ -13,14 +13,24 @@ text-align: left;
 div#maincontent a, a:link, a:visited {
 color: #464646;
 text-decoration: none;
-} 
-
-div#buttons{
-width: 100%;
-text-align: center;
 }
-a.button {
-border: 1px solid black;
+
+div#button_left{
+float:left;
+width: 50%;
+text-align:center;
+}
+
+div#button_right{
+float:right;
+width: 50%;
+text-align:center;
+}
+
+input.button{
+border-color:white black black white;
+border-style:solid;
+border-width:1px;
 background-color: #E5E5E5;
 padding: 5px;
 color: black;
@@ -29,7 +39,7 @@ border-radius: 5px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
 }
-a.button:hover {
+input.button:hover {
 border: 1px solid black;
 background-color: grey;
 }
@@ -37,7 +47,7 @@ div#logo {
 height: 125px;
 font-size: 24px;
 }
-img.logo { 
+img.logo {
 float: left;
 padding: 5px;
 }
