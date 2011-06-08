@@ -17,7 +17,7 @@ splash_check() {
    	iptables  -t nat -I ffj_splash 1 -s $ip -j ACCEPT
    else
    	# User is not longer splashed / the user must click again
-   	iptables -t nat -D ffj_splash -s $ip -j ACCPET
+   	iptables -t nat -D ffj_splash -s $ip -j ACCEPT
    	uci delete splash_users.@user[$x].ip
    	uci delete splash_users.@user[$x].time
    	uci delete splash_users.@user[$x]     
