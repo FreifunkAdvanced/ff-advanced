@@ -5,5 +5,7 @@ case "${ACTION:-ifup}" in
         ;;
         ifdown)
                 gpioctl dirout 3
+                uci set batman-adv.bat0.gw_mode=client
+                uci commit batman-adv
         ;;
 esac
