@@ -52,7 +52,7 @@ Dieser Router hat folgende IP: $NODE_IP"
 		uci commit network
 		echo "Der Router wird als normaler Node konfiguriert"
 		echo
-		# Batman Clientr Mode
+		# Batman Client Mode
 		uci set batman-adv.bat0.gw_mode=client
 		uci commit batman-adv
 fi
