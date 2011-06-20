@@ -11,7 +11,7 @@ if [[ $router = "j" ]]
     /etc/init.d/n2n start
     sleep 20
     for i in `seq 1 254 `; do
-      LOSS=`ping -c1 10.17.$i.1 | grep loss | awk '{print $7}' | sed 's/%//g'; sleep 1`
+      LOSS=`ping -c3 10.17.$i.1 | grep loss | awk '{print $7}' | sed 's/%//g'; sleep 1`
       sleep 1;
       if [[ 99 -lt $LOSS ]]; then
         NODE_IP=10.17.$i.1
