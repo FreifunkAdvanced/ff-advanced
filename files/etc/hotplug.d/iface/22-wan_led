@@ -2,6 +2,9 @@
 case "${ACTION:-ifup}" in
         ifup)
                 gpioctl set 3
+                uci set batman-adv.bat0.gw_mode=server
+                uci commit batman-adv
+                /etc/init.d/batman-adv restart
         ;;
         ifdown)
                 gpioctl dirout 3
