@@ -7,5 +7,6 @@ case "${ACTION:-ifup}" in
                 gpioctl dirout 3
                 uci set batman-adv.bat0.gw_mode=client
                 uci commit batman-adv
+                /etc/init.d/batman-adv restart
         ;;
 esac
