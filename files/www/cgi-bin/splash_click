@@ -28,7 +28,7 @@ iptables  -t nat -I ffj_splash 1 -s $REMOTE_HOST -j ACCEPT
 uci add splash_users user
 uci set splash_users.@user[-1].ip=$REMOTE_HOST
 uci set splash_users.@user[-1].time=`date +%s`
-uci -q commit > /dev/null
+
 exit 0
 
 
