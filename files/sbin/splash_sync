@@ -21,7 +21,7 @@ splash_check() {
    	uci delete splash_users.@user[$x].ip
    	uci delete splash_users.@user[$x].time
    	uci delete splash_users.@user[$x]     
-   	uci commit
+   	
    fi
    let x=$x+1
 }
