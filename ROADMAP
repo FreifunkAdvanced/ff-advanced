@@ -18,12 +18,19 @@ v0.1
 v0.2
 -> Splash Screen (finished)
 -> n2n (finished)
+-> n2n watchdog (erledigt)
+-> autoip bugfix
+-> batman-adv settings
 
 v0.3
 -> Openvpn
 -> Splash:
    -> Whitelisting/Blacklisting
    -> Layout (finished)
+   -> Webinterface (Status)
+   -> Cable Bridge / Lan-Port / Switch
+   -> Non-Uplink-DHCP
+   -> Non-Uplink-Splash "No Internet available"
 v0.4
 -> Vnet-Support
   -> possibility to configure each port as:
@@ -46,3 +53,10 @@ Post v1.0
 -> openvpn auto cert solution (telephone based)
 -> emergency update system
 -> remote update via netcat
+-> IPv6
+-> Admininterface
+-> Karte
+-> Auto-IP
+-> dnsmasq reload
+-> Livestats
+-> dezentraler DNS
