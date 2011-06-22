@@ -7,18 +7,18 @@ myip=`uci get network.mesh.ipaddr`
 splash_check() {
    timeout=6000
    current_time=`date +%s`
-   config_get ip "$1" ip
+   config_get mac "$1" mac
    config_get time "$1" time
    local config="$1" 
    let time_check=$time+$timeout
    if [ $time_check -gt  $current_time ]; then
    	# User ist noch gesplashed
-   	iptables  -t nat -D ffj_splash -s $ip -j ACCEPT
-   	iptables  -t nat -I ffj_splash 1 -s $ip -j ACCEPT
+   	iptables  -t nat -D ffj_splash -m mac --mac-source $mac -j ACCEPT
+   	iptables  -t nat -I ffj_splash 1 -m mac --mac-source $mac -j ACCEPT
    else
    	# User is not longer splashed / the user must click again
-   	iptables -t nat -D ffj_splash -s $ip -j ACCEPT
-   	uci delete splash_users.@user[$x].ip
+   	iptables -t nat -D ffj_splash -m mac --mac-source $mac -j ACCEPT
+   	uci delete splash_users.@user[$x].mac
    	uci delete splash_users.@user[$x].time
    	uci delete splash_users.@user[$x]     
    	
