@@ -6,28 +6,30 @@ TEST=`cat `
 TEST=`echo $TEST | sed 's/'target_url='/''/g'`
 TEST=`/bin/urldecode "$TEST"`
 TEST=`echo $TEST | sed 's/%2F/\//g'`
+USER_MAC=`cat /proc/net/arp | grep $REMOTE_HOST | awk 'BEGIN { FS = " " } ; { print $4 }'`
+
 . $IPKG_INSTROOT/etc/functions.sh
 ISSPLASHED=0
 config_load splash_users
-is_ip() {
-   config_get ip "$1" ip
-   if [ "$ip" == "$REMOTE_HOST" ]; then
+is_mac() {
+   config_get mac "$1" mac
+   if [ "$mac" == "$USER_MAC" ]; then
    	ISSPLASHED=1
    fi
 }
 #check if user is alredy splashed
-config_foreach is_ip user
+config_foreach is_mac user
 sed 's/targeturl/'"$(echo $TEST| sed 's#/#\\/#g')"'/g' /www/iframe.html
 
 if [ $ISSPLASHED -eq 1 ]; then
 	exit
 fi
 #User is now free to go
-iptables  -t nat -I ffj_splash 1 -s $REMOTE_HOST -j ACCEPT
+iptables -t nat -I ffj_splash 1 -m --mac-source $USER_MAC -j ACCEPT
 
-uci add splash_users user
-uci set splash_users.@user[-1].ip=$REMOTE_HOST
-uci set splash_users.@user[-1].time=`date +%s`
+uci -q add splash_users user
+uci -q set splash_users.@user[-1].mac=$USER_MAC
+uci -q set splash_users.@user[-1].time=`date +%s`
 
 exit 0
 
