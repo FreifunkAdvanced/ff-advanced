@@ -37,6 +37,6 @@ start() {
 	config_load n2n
 }
 stop() {
-	killall edge
+	killall -9 edge
 	killall supernode
 }
