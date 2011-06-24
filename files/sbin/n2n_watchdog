@@ -11,6 +11,7 @@ if [[ `uci get batman-adv.bat0.gw_mode` = "server" ]]; then
     uci set n2n.@edge[1].key=$n2n_pwd
     uci commit n2n
     /etc/init.d/n2n restart
+    logger "n2n password updated and restarted (new password)"
   fi
   
   sleep 5
@@ -18,6 +19,7 @@ if [[ `uci get batman-adv.bat0.gw_mode` = "server" ]]; then
   
   if [[ $n2n_neighbors -lt 1 ]]; then
     /etc/init.d/n2n restart
+    logger "n2n restarted (no neighbors via n2n)"
   fi
 else
   exit 0
