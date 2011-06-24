@@ -38,7 +38,7 @@ if [[ $router = "j" ]]
     echo "* * * * * /sbin/test_gateway > /dev/null" >> /etc/crontabs/root
     echo "* * * * * /sbin/splash_sync > /dev/null" >> /etc/crontabs/root
     echo "*/15 * * * * /sbin/n2n_watchdog > /dev/null" >> /etc/crontabs/root
-    
+    /etc/init.d/cron restart
     echo $'\n\n\n\n'
     echo "Einrichtung des Routers abgeschossen!
 Dieser Router hat folgende IP: $NODE_IP"
