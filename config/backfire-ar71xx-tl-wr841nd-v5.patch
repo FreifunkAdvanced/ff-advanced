@@ -1,0 +1,16 @@
+4c4
+< # Fri Oct 14 21:30:27 2011
+---
+> # Fri Oct 14 21:29:25 2011
+77c77
+< CONFIG_TARGET_ar71xx_Default=y
+---
+> # CONFIG_TARGET_ar71xx_Default is not set
+99c99
+< # CONFIG_TARGET_ar71xx_TLWR841NDV5 is not set
+---
+> CONFIG_TARGET_ar71xx_TLWR841NDV5=y
+195,197d194
+< CONFIG_DEFAULT_kmod-usb-core=y
+< CONFIG_DEFAULT_kmod-usb-ohci=y
+< CONFIG_DEFAULT_kmod-usb2=y
