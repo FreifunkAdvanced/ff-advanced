@@ -25,7 +25,7 @@ image/%: openwrt/$$(REPO)/.repo_access config/$$(REPO).config \
 	cp config/$(REPO).config openwrt/$(REPO)/.config
 	patch openwrt/$(REPO)/.config <config/$(REPO)-$(PLATFORM).patch 
 	patch openwrt/$(REPO)/.config <config/$(REPO)-$(PLATFORM)-$(MODEL).patch
-	-rm -r openwrt/$(REPO)/files
+	-rm -r openwrt/$(REPO)/files openwrt/$(REPO)/bin/$(PLATFORM)
 	cp -a files/common openwrt/$(REPO)/files
 	rsync -a files/$(PLATFORM)/ openwrt/$(REPO)/files/
 	rsync -a files/$(PLATFORM)-$(MODEL)/ openwrt/$(REPO)/files/
