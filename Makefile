@@ -9,7 +9,7 @@ openwrt/backfire/.repo_access:
 	cd $(@D) && $(MAKE) package/symlinks
 	touch $@
 
-update/%: openwrt/%
+update/%: openwrt/%/.repo_access
 	cd $< && svn update
 	cd $< && ./scripts/feeds update
 	cd $< && $(MAKE) package/symlinks
