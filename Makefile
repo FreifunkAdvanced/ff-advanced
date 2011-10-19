@@ -2,8 +2,10 @@
 
 .PHONY: openwrt/backfire
 openwrt/backfire/.repo_access:
+	mkdir dl
 	mkdir -p openwrt
 	cd openwrt && svn co svn://svn.openwrt.org/openwrt/branches/backfire
+	cd $(@D) && ln -s ../../dl .
 	cd $(@D) && ./scripts/feeds update
 	cd $(@D) && make package/symlinks
 	touch $@
