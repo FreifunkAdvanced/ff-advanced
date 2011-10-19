@@ -6,13 +6,13 @@ openwrt/backfire/.repo_access:
 	cd openwrt && svn co svn://svn.openwrt.org/openwrt/branches/backfire
 	ln -s ../../dl $(@D)/
 	cd $(@D) && ./scripts/feeds update
-	cd $(@D) && make package/symlinks
+	cd $(@D) && $(MAKE) package/symlinks
 	touch $@
 
 update/%: openwrt/%
 	cd $< && svn update
 	cd $< && ./scripts/feeds update
-	cd $< && make package/symlinks
+	cd $< && $(MAKE) package/symlinks
 	touch $</.repo_access
 
 # format image/($repo)/openwrt-$(platform)-$(model).bin
