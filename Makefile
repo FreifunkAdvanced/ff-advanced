@@ -1,6 +1,5 @@
 .NOTPARALLEL:
 
-.PHONY: openwrt/backfire
 openwrt/backfire/.repo_access:
 	mkdir -p openwrt dl
 	cd openwrt && svn co svn://svn.openwrt.org/openwrt/branches/backfire
