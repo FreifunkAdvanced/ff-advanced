@@ -24,7 +24,7 @@ config/%.config: $$(shell find config -iname '$$(REPO).config') \
 				 $$(shell find config -iname '$$(REPO)-$$(PLATFORM)-$$(MODEL).patch')
 	cp config/$(REPO).config $@~
 	if [ -n "$(MODEL)" ]; then 	\
-		patch $@~ <config/$(REPO)-$(PLATFORM).patch; \
+		patch $@~ <config/$(REPO)-$(PLATFORM).patch && \
 		patch $@~ <config/$(REPO)-$(PLATFORM)-$(MODEL).patch; \
 	else \
 		patch $@~ <config/$(REPO)-$(PLATFORM).patch; \
