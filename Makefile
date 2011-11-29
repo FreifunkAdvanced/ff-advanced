@@ -1,3 +1,22 @@
+NUMPROC := 1
+OS := $(shell uname)
+export NUMPROC
+
+ifeq ($(OS),Linux)
+        NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
+
+else ifeq ($(OS),Darwin)
+        NUMPROC := $(shell sysctl hw.ncpu | awk '{print $$2}')
+endif
+
+# Always use # of processory plus 1
+NUMPROC:=$$((${NUMPROC}+1))
+NUMPROC:=$(shell echo ${NUMPROC})
+
+ifeq ($(NUMPROC),0)
+        NUMPROC = 1
+endif
+
 .NOTPARALLEL:
 
 openwrt/backfire/.repo_access:
@@ -44,6 +63,6 @@ image/%: config/$$(REPO)-$$(PLATFORM)-$$(MODEL).config \
 	cp -a files/common openwrt/$(REPO)/files
 	[ -d files/$(PLATFORM) ] && rsync -a files/$(PLATFORM)/ openwrt/$(REPO)/files/
 	[ -d files/$(PLATFORM)-$(MODEL) ] && rsync -a files/$(PLATFORM)-$(MODEL)/ openwrt/$(REPO)/files/
-	cd openwrt/$(REPO) && $(MAKE)
+	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLATFORM)/ $@/
