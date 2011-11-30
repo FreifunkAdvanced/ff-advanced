@@ -4,7 +4,6 @@ export NUMPROC
 
 ifeq ($(OS),Linux)
         NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
-
 else ifeq ($(OS),Darwin)
         NUMPROC := $(shell sysctl hw.ncpu | awk '{print $$2}')
 endif
@@ -23,7 +22,9 @@ openwrt/backfire/.repo_access:
 	mkdir -p openwrt dl
 	cd openwrt && svn co svn://svn.openwrt.org/openwrt/branches/backfire
 	ln -s ../../dl $(@D)/
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update
+	cd $(@D) && ./scripts/feeds install -a -p ffj
 	cd $(@D) && $(MAKE) package/symlinks
 	touch $@
 
