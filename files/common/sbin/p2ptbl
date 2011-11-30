@@ -1,0 +1,84 @@
+#!/bin/sh
+
+function init {
+    [ -n "$1" ] || printArgs
+    [ -f "$1" ] || cat >$1 </dev/null
+}
+
+function get {
+    [ -n "$2" ] || printArgs
+    grep -P "^$2\t" "$1" | cut -f3-
+}
+
+function update {
+    [ -n "$2" -a -n "$3" ] || printArgs
+    oldversion=$(grep -P "^$2\t" "$1" | cut -f2)
+    tmpfile="$1.update"
+    echo -e "$2\t$(($oldversion + 1 + $RANDOM))\t$3" > "$tmpfile"
+    merge "$1" "$tmpfile"
+    rm "$tmpfile"
+}
+
+function merge {
+    sort "$1" "$2" \
+	| {
+	oldkey=""
+	oldversion=0
+	oldval=""
+	while read key version val; do
+	    if [ "$key" == "$oldkey" ]; then
+		if [ "$version" -gt "$oldversion" ]; then
+		    oldversion="$version"
+		    oldval="$val"
+		fi
+	    else
+		[ -n "$oldkey" ] && echo -e "$oldkey\t$oldversion\t$oldval"
+		oldkey="$key"
+		oldversion="$version"
+		oldval="$val"
+	    fi
+	done
+	[ -n "$oldkey" ] && echo -e "$oldkey\t$oldversion\t$oldval"
+    } > "$1~"
+    mv "$1~" "$1"
+}
+
+function printArgs {
+    echo -e "Usage:
+$0 init   table
+$0 get    table key
+$0 update table key value
+$0 merge  table foreign-table"
+    exit -1
+}
+
+function checkTable {
+    [ -n "$1" ] || printArgs;
+    [ -f "$1" ] || { 
+	echo "$1 is no P2P table"; 
+	printArgs;
+    }
+}
+
+case "$1" in
+    init) 
+	checkTable "$2"
+	init "$2"
+	;;
+    get)
+	checkTable "$2"
+	get "$2" "$3"
+	;;
+    update)
+	checkTable "$2"
+	update "$2" "$3" "$4"
+	;;
+    merge)
+	checkTable "$2"
+	checkTable "$3"
+	merge "$2" "$3"
+	;;
+    *) 
+	printArgs
+	;;
+esac
