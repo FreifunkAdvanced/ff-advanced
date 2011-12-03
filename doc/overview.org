@@ -1,0 +1,51 @@
+* Components
+** HBBP
+   - UDP `broadcast` and `listener`
+   - transmit a zero-terminated key and an optional arbitrary-binary
+     payload: key is comparable to an HTTP URI, the payload to HTTP
+     POST data
+   - IPv6-only
+   - restricted to a single network using link-local broadcast and
+     listening on only interface
+*** Usage
+*** Wire format
+    One of:
+    - <key>
+    - <key> \0 <payload>
+
+    encapsulated in IPv6 UDP. <key> must not contain \0.
+** P2P tables
+   P2P tables are a lightweight distributed key-value store with
+   built-in collision arbitration. Eventual consistency is maintained
+   using a HBBP-based gossip protocol.
+*** Usage
+    - p2ptbl init <table> :: create a new table named <table>
+    - p2ptbl update <table> <key> <value> [iface] :: set the value of
+         <key> to <value> in <table> no matter if <key> existed before
+         or not; If given, broadcast the update over [iface]
+    - p2ptbl get <table> <key> :: get the value of <key> in <table> or
+         zero output if <key> does not exist in <table>
+    - p2ptbl gossip <table> <size> <iface> :: broadcast <table> over
+         <iface>; Send at most <size> bytes compressed table data: if
+         the table is larger, a random subset is sent
+
+    All tables are stored in /tmp/p2ptbl/table. The above tools
+    require the full path to the table.
+
+    To be synchronized via gossip protocol, a table must be enabled
+    for receiving updates by symlinking /hbbp/p2ptbl/<table> to
+    /sbin/p2ptbl-recv.
+*** P2P table format
+    - tab separated
+    - fields
+      - key :: per-table unique token
+      - version :: integer
+      - value(s) :: anything, tab-separated
+    - on merge of two tables, for each key the variant with the
+      largest version number wins
+    - on update, the version number is incremented by some
+      sufficiently large random amount (to avoid collisions)
+      ... e.g. 2^32
+*** Gossip protocol
+    HBBP with key "p2ptbl/<table-name>" and gzip-compressed shuffled
+    random subsets of a table as payload.
