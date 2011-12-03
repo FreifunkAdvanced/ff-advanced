@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+tbldir=/tmp/p2ptbl
+tbl=$tbldir/$(basename $0)
+
+[ -f $tbl ] || p2ptbl init $tbl
+
+gunzip > $tbl.recv
+p2ptbl merge $tbl $tbl.recv
+rm $tbl.recv
