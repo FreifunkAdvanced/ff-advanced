@@ -1,0 +1,11 @@
+#!/bin/sh /etc/rc.common
+START=99
+
+start() {
+	cd /hbbp
+	listener br-mesh
+}
+
+stop() {
+       killall listener
+}
