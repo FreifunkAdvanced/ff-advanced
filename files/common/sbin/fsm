@@ -1,0 +1,104 @@
+#!/bin/sh
+
+set -e
+
+# paths to state file and definition dir
+PState=/var/fsm/$2
+PDef=/etc/fsm/$2
+
+watch () {
+    SO=$(cat $PState)
+    SN=$(callOne $PDef/watch $SO "xxx" \
+	"./$SO
+         ./default
+         /bin/false") || fail "watch script failed or missing"
+    [ -n "$SN" ] || fail "watch script $S0 returned empty state name"
+    change $SN
+}
+
+change () {
+    SO=$(cat $PState)
+    SN=$1
+    if [ "$SO" != "$SN" ]; then
+	if [ -x $PDef/trans/$SO-$SN.trans ]; then
+	    # one script to handle whole transition
+	    callOne $PDef/trans $SO $SN \
+		"./$SO-$SN.trans" \
+		|| fail "state transition script failed"
+	else
+	    # seperate scripts for leaving and entering states
+	    callOne $PDef/trans $SO $SN \
+		"./$SO.leave
+                 ./default.leave
+                 /bin/true" \
+		|| fail "state leave script failed"
+	    callOne $PDef/trans $SO $SN \
+		"./$SN.enter
+                 ./default.enter
+                 /bin/true" \
+		|| fail "state enter script failed"
+
+	fi
+	echo $SN > $PState
+    fi
+}
+
+callOne () { # args: cwd arg1 arg2 cmdlist
+    echo "$4" | sed 's/ *//' | (
+	set -e
+	cd $1
+	while read cmd; do
+	    if [ -x "$cmd" ]; then
+		$cmd $2 $3
+		exit $?
+	    fi
+	done )
+}
+
+fail() {
+    echo "$1" 1>&2
+    exit 1
+}
+
+printArgs () {
+    fail "Usage:
+$0 get    fsm
+$0 watch  fsm
+$0 change fsm state"
+}
+
+[ $# -lt 2 ] && printArgs
+
+# check for minimal FSM definition
+if [   -f $PDef/initial_state \
+    -a -d $PDef/watch \
+    -a -d $PDef/trans ]; then
+    if [ ! -f $PState ]; then
+	mkdir -p $(dirname $PState)
+	S=$(cat $PDef/initial_state)
+	[ -n "$S" ] || fail "initial state must not be empty"
+	echo $S >$PState
+    fi
+else
+    fail "FSM $1 does not exist"
+fi
+
+# lock state file (neccessary also for watch, as it calls scripts that
+# assume a certain state as active during their whole execution time)
+exec 666<$PState
+flock -x 666
+
+case "$1" in
+    get)
+	cat $PState
+	;;
+    watch)
+	watch
+	;;
+    change)
+	[ -n "$3" ] || printArgs
+	change $3
+	;;
+    *)
+	printArgs
+esac
