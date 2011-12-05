@@ -1,5 +1,161 @@
+* Goals
+  - auto configuration
+    - internet on wan port automatically detected and shared
+    - cloud without internet access announces the sad fact
+  - no persistent writes during normal use (e.g. avoid uci commit for
+    things like internet up/down)
+  - splash status of users is distributed
+  - tbc...
+
+* Networks
+  - 10.17.?.0/? - semi-public IPv4
+    - each GW and each client gets an address in this range
+    - routes to IPv4 internet
+    - GW addresses a managed by P2P table
+  - site-wide global IPv6
+    - every node & client
+    - public in IPv6 internet
+    - automatic address for mesh nodes, DHCPv6 for clients
+  - mesh-wide link-local IPv6
+    - used for UDP broadcasts and default for all other node2node
+      communication
+  - Robinson net (see below)
+
+* State machines (FSMs)
+  State machines are implemented using the /sbin/fsm script (see
+  below).
+** Network
+   Controls the different network states that result of the local
+   availability of internet connection and the state of the cloud.
+
+#+begin_dot FSM_Update.png -Tpng
+digraph dsd {
+  Boot -> {Queen; Drone; Robinson};
+  Queen -> {Ghost; Robinson};
+  Ghost -> {Queen; Drone; Robinson};
+  Drone -> {Queen; Robinson};
+  Robinson -> {Queen; Drone};
+}
+#+end_dot
+*** Boot
+    The node has recently started and is still looking for its mommy.
+    - gw_mode=0
+*** Queen
+    The node as a working direct internet connection.
+    - gw_mode=1, bandwidth >> 0
+    - DHCP range: derived from router-id
+*** Ghost
+    The node was a queen recently (within the last 3600s), but now its
+    direct internet access does not work anymore. There still is a
+    working connection in the cloud.
+    - gw_mode=0
+    - all traffic redirected to another GW (determine how?)
+    - no new DHCP leases (handled via BATMAN by GW nodes)
+*** Drone
+    The node has no direct internet connection but is in a cloud with
+    working internet connection.
+    - gw_mode=0
+    - no DHCP (handled via BATMAN by GW nodes)
+*** Robinson
+    The node is in a cloud without working internet connection.
+    - gw_mode=1, bandwidth = 0+epsilon
+    - DHCP range: ???
+    - fake DNS, resolving all A queries to a the Robinson net; host
+      part of the addr is derived from hash of name to resolve
+    - all internet traffic is redirected to a local httpd, yelling the
+      network status and explaining FFJ
+
+** Update
+   Implements all-or-nothing update of nodes (e.g. if the network
+   protocol changes incompatibly). Synchronized via p2ptable
+   firmware-versions with the fields
+   - machine_id
+   - current firmware (sha256)
+   - target firmware (sha256); empty if no update shall be performed
+   - time target: set by admin to time when update shall happen
+   - acknowledge time: set by device to time target once ready for an
+     upgrade
+
+   The security model relies on the requirement to store the update in
+   a secure location on the node. This is intended to happen via ssh.
+
+#+begin_dot FSM_Update.png -Tpng
+digraph {
+  Idle -> Ready;
+  Ready ->{ Scheduled; Idle };
+  Scheduled ->{Applying; Idle };
+}
+#+end_dot
+*** Idle
+    Current firmware is installed and no update is required/possible.
+*** Ready
+    Target firmware is stored in /tmp/firmware-update and verified.
+*** Scheduled
+    Node has received target time and copied the value to
+    acknowledge time. And this time point has not passed, yet.
+*** Applying
+    For all nodes of the firmware-versions table one of the following
+    conditions hold:
+    1. target firmware, update time target and acknowledge update time
+       are empty
+    2. current time > time target == acknowledge time; And target
+       firmware points to a new version that is locally stored an
+       verified
+
+    Once this state is reached the update is performed.
+  
 * Components
-** HBBP
+** Firmware ID
+   /etc/firmware stores sha256 of the current firmware. If a node is
+   intensively modified after flashing the value is replaced (e.g. by
+   "custom").
+** Router IDs
+   - unique ID :: all routers use /proc/sys/kernel/random/boot_id as
+                  unique ID
+   - gateway ID :: 0..254, given only to Queens and Ghosts, managed
+                   via p2ptbl "gwid"
+** Connectivity tests
+   - /sbin/test_connectivity <internet|vpn>
+   - ping some test hosts over a specified interface; if at least one
+     responds, we are online
+   - returns connectivity status
+   - TODO: ping multiple hosts in parallel
+** Finite state machine
+   FSMs are implemented using
+   - /sbin/fsm :: a script to monitor and change the state:
+     - fsm watch <name> :: check whether a state change shall occur
+     - fsm change <name> <new-state> :: force a state transition
+   - /etc/fsm/<name>/initial_state :: the state set on startup
+   - /etc/fsm/<name>/watch/<state> :: watch scripts that print the
+        next state; If that file does not exist
+        /etc/fsm/<name>/watch/default is tried. The script may assume that:
+	- the state they denote is the current state reached via
+          non-failing transition functions
+	- the CWD is /etc/fsm/<name>/watch
+	- cmd line param $1 is set to the current state
+   - /etc/fsm/<name>/trans/<transition> :: scripts implementing the
+        transition between states, probed in the following order:
+	1. If a transition name <oldstate>-<newstate>.trans exists it
+           is executed
+	2. Otherwise first <oldstate>.leave and then <newstate>.enter
+           are executed if they exist.
+	3. If one of them does not exist default.enter and
+           default.leave is tried. 
+	4. If none exists, the state transition happens, but has no
+           effect.
+
+	The script may assume that:
+	- the CWD is /etc/fsm/<name>/trans
+	- cmd line param $1 is set to the old state and $2 is set to
+          the new state
+	- it is called exactly once for a state change
+   - /var/fsm/<name> :: a tmpfs-based storage of the current state
+
+   TODO:
+   - proper handling of errors occurring in one of the many scripts
+     (e.g. changing to an error-state or rebooting the device).
+   - handle invalid states
+** HBBP: Home-Based Broadcast Protocol
    - UDP `broadcast` and `listener`
    - transmit a zero-terminated key and an optional arbitrary-binary
      payload: key is comparable to an HTTP URI, the payload to HTTP
@@ -49,3 +205,26 @@
 *** Gossip protocol
     HBBP with key "p2ptbl/<table-name>" and gzip-compressed shuffled
     random subsets of a table as payload.
+** Preferred gateway
+   - each node has a preferred gateway, which is used to access the
+     internets if no local connection is available
+   - how to determine? ... extract from batman?
+** Robinson net
+   - captured .mil-network (/16)
+   - when no internet is available, fake DNS responses resolve to a
+     stable address in this range (via hash of name)
+   - once internet becomes available and the names known, a
+     redirection is set up via iptables
+   - after a certain time, the redirection is forgotten
+
+* Thoughts, Fragments, Questions
+  - VPN node takes part in batman mesh?
+    - no (memory intensive) NAT on mesh nodes
+    - roaming without sticking to the old gateway
+  - continuous bandwidth tests for internet uplinks to update
+    advertised batman gw capabilities?
+    - occasional flooding to/from VPN node (with idle QoS class)
+  - IPv6: use multiple routers for roaming w/o breaking existing
+    connections?
+  - how to support uplinks that do not use the WAN port (e.g. 3G
+    modems)?
