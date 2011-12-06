@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -e
 
 # paths to state file and definition dir
 PState=/var/fsm/$2
@@ -80,7 +78,7 @@ if [   -f $PDef/initial_state \
 	echo $S >$PState
     fi
 else
-    fail "FSM $1 does not exist"
+    fail "FSM $2 does not exist"
 fi
 
 # lock state file (neccessary also for watch, as it calls scripts that
