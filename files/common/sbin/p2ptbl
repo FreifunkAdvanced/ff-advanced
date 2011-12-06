@@ -13,6 +13,10 @@ get () {
     grep "^$2"$'\t' "$1" | cut -f3-
 }
 
+show () {
+    cut -f1,3- "$1"
+}
+
 update () {
     [ -n "$2" -a -n "$3" ] || printArgs
     oldversion=$(grep "^$2"$'\t' "$1" | cut -f2)
@@ -80,6 +84,7 @@ printArgs () {
     echo -e "Usage:
 $0 init   table
 $0 get    table key
+$0 show   table
 $0 update table key value [interface]
 $0 merge  table foreign-table
 $0 gossip table target-size interface"
@@ -107,6 +112,10 @@ case "$1" in
     get)
 	lockTable -s "$2"
 	get "$2" "$3"
+	;;
+    show)
+	lockTable -s "$2"
+	show "$2"
 	;;
     update)
 	lockTable -s "$2"
