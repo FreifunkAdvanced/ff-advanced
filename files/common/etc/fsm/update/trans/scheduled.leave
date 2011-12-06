@@ -1,0 +1,9 @@
+#!/bin/sh -e
+. ../common.sh
+
+AckTime=""
+
+# disable gossip during update - the new state is broadcasted during
+# *.enter immediately
+TblIf=
+GS_update

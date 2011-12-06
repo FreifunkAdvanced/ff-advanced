@@ -24,7 +24,7 @@
 * State machines (FSMs)
   State machines are implemented using the /sbin/fsm script (see
   below).
-** Network
+** inetable
    Controls the different network states that result of the local
    availability of internet connection and the state of the cloud.
 
@@ -65,13 +65,13 @@ digraph dsd {
     - all internet traffic is redirected to a local httpd, yelling the
       network status and explaining FFJ
 
-** Update
+** update
    Implements all-or-nothing update of nodes (e.g. if the network
    protocol changes incompatibly). Synchronized via p2ptable
    firmware-versions with the fields
    - machine_id
-   - current firmware (sha256)
-   - target firmware (sha256); empty if no update shall be performed
+   - current firmware (some human readable version string)
+   - SHA256 of target firmware; empty if no update shall be performed
    - time target: set by admin to time when update shall happen
    - acknowledge time: set by device to time target once ready for an
      upgrade
@@ -81,9 +81,9 @@ digraph dsd {
 
 #+begin_dot FSM_Update.png -Tpng
 digraph {
-  Idle -> Ready;
-  Ready ->{ Scheduled; Idle };
-  Scheduled ->{Applying; Idle };
+  Idle      -> Ready;
+  Ready     ->{Idle; Scheduled}
+  Scheduled ->{Idle; Scheduled; Applying}
 }
 #+end_dot
 *** Idle
@@ -98,8 +98,8 @@ digraph {
     conditions hold:
     1. target firmware, update time target and acknowledge update time
        are empty
-    2. current time > time target == acknowledge time; And target
-       firmware points to a new version that is locally stored an
+    2. time target == acknowledge time; And target
+       firmware points to a new version that is locally stored and
        verified
 
     Once this state is reached the update is performed.
@@ -120,7 +120,7 @@ digraph {
      responds, we are online
    - returns connectivity status
    - TODO: ping multiple hosts in parallel
-** Finite state machine
+** Finite state machines
    FSMs are implemented using
    - /sbin/fsm :: a script to monitor and change the state:
      - fsm watch <name> :: check whether a state change shall occur
