@@ -64,6 +64,7 @@ image/%: config/$$(REPO)-$$(PLATFORM)-$$(MODEL).config \
 	cp -a files/common openwrt/$(REPO)/files
 	[ -d files/$(PLATFORM) ] && rsync -a files/$(PLATFORM)/ openwrt/$(REPO)/files/
 	[ -d files/$(PLATFORM)-$(MODEL) ] && rsync -a files/$(PLATFORM)-$(MODEL)/ openwrt/$(REPO)/files/
+	./name_firmware openwrt/$(REPO)
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLATFORM)/ $@/

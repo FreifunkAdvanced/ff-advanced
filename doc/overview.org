@@ -103,12 +103,18 @@ digraph {
        verified
 
     Once this state is reached the update is performed.
-  
+    
 * Components
 ** Firmware ID
-   /etc/firmware stores sha256 of the current firmware. If a node is
-   intensively modified after flashing the value is replaced (e.g. by
-   "custom").
+   /etc/firmware stores a string identifying the current firmware. It
+   consists of
+   1. the date of the git commit of the FFJ config
+   2.   a hash of the git commit of the FFJ config
+   3. the OpenWRT major version
+   4. the OpenWRT revision
+
+   Example:
+   2011-12-06_a4fa439-modified_backfire-29460
 ** Router IDs
    - unique ID :: all routers use /proc/sys/kernel/random/boot_id as
                   unique ID

@@ -1,0 +1,27 @@
+#!/bin/bash -e
+
+[ -d "$1" ] || {
+    echo "Usage: $0 target-repo"; 
+    exit 1;
+}
+
+REPO=$1
+OB=$1/files/etc/banner
+OF=$1/files/etc/firmware
+
+HDATE="$(date +'%d.%m.%Y %H:%M')"
+VGIT=$(
+    git log --format=format:%cd_%h --date=short | head -n1 | tr -d "\n";
+    [ -n "$$(git status --porcelain)" ] && echo -n "-modified";
+)
+VWRT=$(basename $REPO)-$(cd $REPO; svn info | grep Revision | cut -f2 -d' ')
+MACHINE="$USER @ $HOST"
+
+# firmware id
+echo "${VGIT}_$VWRT" > $OF
+
+# banner
+sed < files/common/etc/banner > $OB \
+'s/$VWRT.\{'$(($(echo -n "$VWRT"|wc -c) - 5))'\}/'"$VWRT"'/
+s/$VGIT.\{'$(($(echo -n "$VGIT"|wc -c) - 5))'\}/'"$VGIT"'/
+s/$HDATE.\{'$(($(echo -n "$HDATE"|wc -c) - 6))'\}/'"$HDATE"'/'
