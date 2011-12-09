@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 gwiptbl=/tmp/p2ptbl/gwip
+NodeId="$(cat /etc/nodeid)"
 
 # determine gw IP from p2ptable
 getoct () {
@@ -8,7 +9,8 @@ getoct () {
     | cut -f1,2 \
     | egrep "[0-9]*"$'\t'"$1" \
     | $2 \
-    | head -n1
+    | head -n1 \
+    | cut -f1
 }
 # get the lowest free addr
 oct3=$(getoct free "sort -n")
