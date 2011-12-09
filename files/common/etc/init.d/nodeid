@@ -1,0 +1,11 @@
+#!/bin/sh /etc/rc.common
+START=20
+
+start ()  {
+      if ! [ -f /etc/nodeid ]; then
+      	 cat </proc/sys/kernel/random/boot_id > /etc/nodeid
+      fi
+}
+
+stop () {
+}
