@@ -81,7 +81,7 @@ gossip() {
 }
 
 printArgs () {
-    echo -e "Usage:
+    echo -e >&2 "Usage:
 $0 init   table
 $0 get    table key
 $0 show   table
@@ -94,7 +94,7 @@ $0 gossip table target-size interface"
 checkTable () {
     [ -n "$1" ] || printArgs;
     [ -f "$1" ] || { 
-	echo "$1 is no P2P table"; 
+	echo >&2 "$1 is no P2P table"; 
 	printArgs;
     }
 }
