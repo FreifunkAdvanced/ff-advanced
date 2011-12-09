@@ -19,7 +19,7 @@
   - mesh-wide link-local IPv6
     - used for UDP broadcasts and default for all other node2node
       communication
-  - Robinson net (see below)
+  - Robinson networks (see below)
 
 * State machines (FSMs)
   State machines are implemented using the /sbin/fsm script (see
@@ -44,7 +44,7 @@ digraph dsd {
     The node as a working direct internet connection.
     - gw_mode=1, bandwidth >> 0
     - DHCP range: derived from router-id
-*** Ghost
+*** TODO Ghost
     The node was a queen recently (within the last 3600s), but now its
     direct internet access does not work anymore. There still is a
     working connection in the cloud.
@@ -118,6 +118,9 @@ digraph {
 ** Router IDs
    - unique ID :: all routers use /proc/sys/kernel/random/boot_id as
                   unique ID
+   - node ID :: /etc/nodeid is used as unique identifier across
+                reboots and firmware upgrades; it is initialized with
+                the unique ID of the first boot
    - gateway ID :: 0..254, given only to Queens and Ghosts, managed
                    via p2ptbl "gwid"
 ** Connectivity tests
