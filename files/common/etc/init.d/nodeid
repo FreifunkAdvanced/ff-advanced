@@ -6,6 +6,3 @@ start ()  {
       	 cat </proc/sys/kernel/random/boot_id > /etc/nodeid
       fi
 }
-
-stop () {
-}
