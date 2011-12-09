@@ -1,3 +1,2 @@
-* * * * * /sbin/p2ptbl gossip /tmp/p2ptbl/test 100 br-mesh
 * * * * * /sbin/p2ptbl gossip /tmp/p2ptbl/update 500 br-mesh
 * * * * * /sbin/fsm watch update
