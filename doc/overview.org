@@ -56,10 +56,11 @@ digraph dsd {
     working internet connection.
     - gw_mode=0
     - no DHCP (handled via BATMAN by GW nodes)
-*** Robinson
+*** TODO Robinson
     The node is in a cloud without working internet connection.
     - gw_mode=1, bandwidth = 0+epsilon
-    - DHCP range: ???
+    - random IP in 21.x.x.1
+    - DHCP range: 21.x.x.2 - 21.x.x.254
     - fake DNS, resolving all A queries to a the Robinson net; host
       part of the addr is derived from hash of name to resolve
     - all internet traffic is redirected to a local httpd, yelling the
