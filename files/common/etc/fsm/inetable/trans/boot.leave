@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+# init gwid table by merging it with a hand-crafted table in which all
+# available IPs are stored as free with version zero. This guarantees
+# that any update on any node will have a higher version.
+for i in $(seq 0 254); do
+    echo -e "$i\t0\tfree"
+done > /tmp/gwip-init
+p2ptbl init  /tmp/p2ptbl/gwip
+p2ptbl merge /tmp/p2ptbl/gwip /tmp/gwip-init
+rm /tmp/gwip-init

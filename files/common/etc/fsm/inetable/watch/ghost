@@ -1,0 +1,31 @@
+#!/bin/sh -e
+. ../common.sh
+. ../common_queen.sh
+
+# if our GW IP has been taken we must no use it again
+if ! we_own_our_ip; then
+    if ! cloud_is_online; then
+	echo robinson
+    else
+	echo drone
+    fi
+    exit
+fi
+
+if test_connectivity internet; then
+    echo queen
+    exit
+fi
+
+if [ "$1" == "ghost" ]; then
+    GhostTime=$(($(date +%s) - $(cat /tmp/ghost_since)))
+else
+    GhostTime=0
+fi
+if ! cloud_is_online; then
+    echo robinson
+elif [ $GhostTime -ge $DHCPLeaseTime ]; then
+    echo drone
+else
+    echo ghost
+fi

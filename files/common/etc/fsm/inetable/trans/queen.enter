@@ -1,0 +1,45 @@
+#!/bin/sh -e
+
+gwiptbl=/tmp/p2ptbl/gwip
+
+# determine gw IP from p2ptable
+getoct () {
+    p2ptbl show $gwiptbl \
+    | cut -f1,2 \
+    | egrep "[0-9]*"$'\t'"$1" \
+    | $2 \
+    | head -n1
+}
+# get the lowest free addr
+oct3=$(getoct free "sort -n")
+# no free addrs? -> steal an addr from a random ghost
+if [ -z "$oct3" ]; then
+    oct3=$(getoct ghost "shuf")
+    # no ghost addrs? -> steal an addr from a random queen
+    if [ -z "$oct3" ]; then
+	oct3=$(getoct queen "shuf")
+    fi
+    # TODO: log warning about IPv4 addr space exhaustion
+fi
+[ -n "$oct3" ]
+p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
+
+# activate gw mode
+batctl gw server
+
+# set up gw IP
+ifconfig br-mesh 10.17.$oct3.1
+
+# TODO: load splash status
+
+# setup DHCP
+echo "
+set dhcp.mesh=dhcp
+set dhcp.mesh.start=2
+set dhcp.mesh.limit=254
+set dhcp.mesh.leasetime=$DHCPLeaseTime
+set dhcp.mesh.interface=mesh
+set dhcp.mesh.start_ip=10.17.$oct3.2
+set dhcp.mesh.end_ip=10.17.$oct3.254
+" | uci batch
+/etc/init.d/dnsmasq restart

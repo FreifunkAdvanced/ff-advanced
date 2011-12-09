@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+rm /tmp/ghost_since
+
+# free our gw ip
+ifconfig br-mesh 0.0.0.0
+
+# update status of our gateway ip
+if we_own_our_ip; then
+    p2ptbl update $gwiptbl $oct3 free br-mesh
+fi
+
+# disable DHCP
+uci delete dhcp.mesh
+/etc/init.d/dnsmasq restart
+
+# TODO: remove internet redirection & splash iptable

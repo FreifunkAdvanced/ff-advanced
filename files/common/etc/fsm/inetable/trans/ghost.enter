@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+date +%s > /tmp/ghost_since

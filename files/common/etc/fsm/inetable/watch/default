@@ -1,0 +1,10 @@
+#!/bin/sh -e
+. ../common.sh
+
+if test_connectivity internet; then
+    echo queen
+elif cloud_is_online; then
+    echo drone
+else
+    echo robinson
+fi

@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+# stop announcing fake gateway
+batctl gw client
+
+# stop DHCP server
+uci delete dhcp.mesh
+/etc/init.d/dnsmasq restart
+
+# TODO: stop fake dns
+
+# TODO: stop redirecting all inet traffic to local httpd
