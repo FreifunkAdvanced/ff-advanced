@@ -22,6 +22,10 @@ case "$1" in
     vpn)
 	pingtest tun0 $TestHosts
 	;;
+    *)
+	echo "Usage:
+$0 <internet|vpn>" >&2
+	;;
 esac
 
 exit 1
