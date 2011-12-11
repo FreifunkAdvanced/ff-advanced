@@ -1,12 +1,11 @@
-# Server configuration
-config uhttpd main
+# By default all instances declared here are disabled; They are
+# enabled by the FSM inetable. To this end a listen_http directive
+# will be added and the config type will be changed from 'disabled' to
+# 'uhttpd'; The rest of the config section is left as-is.
 
-	# HTTP listen addresses, multiple allowed
-	list listen_http	0.0.0.0:80
-	# Server document root
-	option home		/www
-	option error_page 	/cgi-bin/redirect
-	option index_page	cgi-bin/redirect
+# service instance
+config disabled service
+	option home		/www/service
 	# Reject requests from RFC1918 IP addresses
 	# directed to the servers public IP(s).
 	# This is a DNS rebinding countermeasure.
@@ -20,7 +19,7 @@ config uhttpd main
 	# write data within the given amount of seconds,
 	# the server will terminate the request with
 	# 504 Gateway Timeout response.
-	option script_timeout	60
+	option script_timeout	10
 
 	# Network timeout, if the current connection is
 	# blocked for the specified amount of seconds,
@@ -33,7 +32,17 @@ config uhttpd main
 	# The value is given in seconds to specify the
 	# interval between subsequent probes.
 	# Setting this to 0 will disable TCP keep-alive.
-	option tcp_keepalive	1
+	option tcp_keepalive	10
 
+# redirection instance
+config disabled redirection
+	option home		/www/redirection
+	option error_page 	/cgi-bin/redirect
+	option index_page	cgi-bin/redirect
 
-
+	# default options
+	option rfc1918_filter 1
+	option cgi_prefix	/cgi-bin
+	option script_timeout	10
+	option network_timeout	30
+	option tcp_keepalive	10
