@@ -1,4 +1,5 @@
 #!/bin/sh -e
+. ../common.sh
 
 # init gwid table by merging it with a hand-crafted table in which all
 # available IPs are stored as free with version zero. This guarantees
@@ -9,3 +10,9 @@ done > /tmp/gwip-init
 p2ptbl init  /tmp/p2ptbl/gwip
 p2ptbl merge /tmp/p2ptbl/gwip /tmp/gwip-init
 rm /tmp/gwip-init
+
+# start service httpd, listening on the link-local addrs of mesh and
+# lan
+enable_httpd service
+change_service_httpd_listen
+/etc/init.d/uhttpd restart
