@@ -58,7 +58,7 @@ digraph dsd {
     - no DHCP (handled via BATMAN by GW nodes)
 *** TODO Robinson
     The node is in a cloud without working internet connection.
-    - gw_mode=1, bandwidth = 0+epsilon
+    - gw_mode=0
     - random IP in 21.x.x.1
     - DHCP range: 21.x.x.2 - 21.x.x.254
     - fake DNS, resolving all A queries to a the Robinson net; host
@@ -227,6 +227,16 @@ digraph {
      redirection is set up via iptables
    - after a certain time, the redirection is forgotten
 
+** Multiple web servers
+   Two uhttpd services with www root /www/<servicename> for the
+   following purposes:
+   - service :: self-service / debugging / status.xml
+     - listening on port 80 of link-local IPv6 pf br-mesh and br-lan;
+       public IPv6 of br-mesh; and gateway IPv4 (if existing)
+   - redirection :: use for splash/robinson redirection
+     - redirects all traffic to the URL given by
+       /tmp/redirection_target
+     - listening on port 81 gw/robinson IPv4
 * Thoughts, Fragments, Questions
   - VPN node takes part in batman mesh?
     - no (memory intensive) NAT on mesh nodes
