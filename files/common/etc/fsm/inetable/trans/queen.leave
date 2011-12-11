@@ -1,8 +1,12 @@
 #!/bin/sh -e
+. ../common.sh
 . ../common_queen.sh
 
 # do not announce gateway anymore
 batctl gw client
+
+# free gw IP
+mesh_del_ipv4
 
 # release IP in p2ptable (if we still own it)
 if we_own_our_ip; then

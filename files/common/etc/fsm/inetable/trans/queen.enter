@@ -1,4 +1,5 @@
 #!/bin/sh -e
+. ../common.sh
 
 gwiptbl=/tmp/p2ptbl/gwip
 NodeId="$(cat /etc/nodeid)"
@@ -30,7 +31,7 @@ p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
 batctl gw server
 
 # set up gw IP
-ifconfig br-mesh 10.17.$oct3.1
+mesh_add_ipv4 10.17.$oct3.1 255.255.0.0
 
 # TODO: load splash status
 

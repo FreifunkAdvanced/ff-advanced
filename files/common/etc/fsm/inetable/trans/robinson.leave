@@ -1,7 +1,7 @@
 #!/bin/sh -e
+. ../common.sh
 
-# stop announcing fake gateway
-batctl gw client
+mesh_del_ipv4
 
 # stop DHCP server
 uci delete dhcp.mesh

@@ -1,4 +1,5 @@
 #!/bin/sh -e
+. ../common.sh
 
 # setup random ip
 gen_randnet () {
@@ -9,7 +10,8 @@ gen_randnet
 while ! arping -I br-mesh -D -c 5 -q $randnet.1; do
     gen_randnet
 done
-ifconfig br-mesh $randnet.1
+
+mesh_add_ipv4 $randnet.1 255.0.0.0
 
 # setup dhcp
 echo "
@@ -18,13 +20,11 @@ set dhcp.mesh.start=2
 set dhcp.mesh.limit=254
 set dhcp.mesh.leasetime=60
 set dhcp.mesh.interface=mesh
-set dhcp.mesh.start_ip=$randnet.2
-set dhcp.mesh.end_ip=$randnet.254
 " | uci batch
 /etc/init.d/dnsmasq restart
 
-# announce fake gateway; TODO: announce only tiny bandwith
-batctl gw server
+# disable batman-adv-mangling with DHCP packets
+batctl gw off
 
 # TODO: start fake dns
 
