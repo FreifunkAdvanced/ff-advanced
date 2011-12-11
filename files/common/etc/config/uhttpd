@@ -37,12 +37,12 @@ config disabled service
 # redirection instance
 config disabled redirection
 	option home		/www/redirection
-	option error_page 	/cgi-bin/redirect
-	option index_page	cgi-bin/redirect
+	option error_page 	/redirect
+	option index_page	redirect
+	option cgi_prefix	/
 
 	# default options
 	option rfc1918_filter 1
-	option cgi_prefix	/cgi-bin
 	option script_timeout	10
 	option network_timeout	30
 	option tcp_keepalive	10

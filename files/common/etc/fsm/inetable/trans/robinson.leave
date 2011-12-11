@@ -9,4 +9,11 @@ uci delete dhcp.mesh
 
 # TODO: stop fake dns
 
+# stop redirection httpd, remove robinson IP from service httpd
+disable_httpd redirection
+rm /tmp/redirection_target
+change_service_httpd_listen
+/etc/init.d/uhttpd restart
+
+
 # TODO: stop redirecting all inet traffic to local httpd

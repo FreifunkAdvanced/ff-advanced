@@ -25,13 +25,14 @@ if [ -z "$oct3" ]; then
     # TODO: log warning about IPv4 addr space exhaustion
 fi
 [ -n "$oct3" ]
+gwip=10.17.$oct3.1
 p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
 
 # activate gw mode
 batctl gw server
 
 # set up gw IP
-mesh_add_ipv4 10.17.$oct3.1 255.255.0.0
+mesh_add_ipv4 $gwip 255.255.0.0
 
 # TODO: load splash status
 
@@ -42,7 +43,12 @@ set dhcp.mesh.start=2
 set dhcp.mesh.limit=254
 set dhcp.mesh.leasetime=$DHCPLeaseTime
 set dhcp.mesh.interface=mesh
-set dhcp.mesh.start_ip=10.17.$oct3.2
-set dhcp.mesh.end_ip=10.17.$oct3.254
 " | uci batch
 /etc/init.d/dnsmasq restart
+
+# start redirection httpd (for splash), add GW IP to the addrs service
+# httpd listens on
+echo "http://$gwip/cgi-bin/splash? /sbin/urlencode" > /tmp/redirection_target
+enable_httpd redirection $randnet.1:81
+change_service_httpd_listen   $gwip:80
+/etc/init.d/uhttpd restart

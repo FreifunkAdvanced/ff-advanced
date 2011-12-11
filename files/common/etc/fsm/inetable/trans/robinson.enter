@@ -28,4 +28,10 @@ batctl gw off
 
 # TODO: start fake dns
 
+# start redirection httpd, add robinson IP to service httpd
+echo "http://$randnet.1/robinson.html" > /tmp/redirection_target
+enable_httpd redirection    $randnet.1:81
+change_service_httpd_listen $randnet.1:80
+/etc/init.d/uhttpd restart
+
 # TODO: redirect all inet traffic to local httpd

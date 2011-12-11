@@ -18,3 +18,10 @@ uci delete dhcp.mesh
 /etc/init.d/dnsmasq restart
 
 # TODO remove splash iptable
+
+# stop redirection httpd, remove GW IP from the addrs service httpd
+# listens on
+disable_httpd redirection
+rm /tmp/redirection_target
+change_service_httpd_listen
+/etc/init.d/uhttpd restart
