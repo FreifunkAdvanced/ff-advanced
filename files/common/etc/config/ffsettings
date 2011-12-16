@@ -1,0 +1,17 @@
+config active
+	option community neuss
+
+config community
+	option name	neuss
+	option channel	11
+	option subnet	"10.28.0.0"
+	option splash_name "Freifunk Rheinland"
+	option splash_logo "freifunk-logo.png"
+	option splash_link "http://www.freifunk-rheinland.net"
+config community
+	option name	duesseldorf
+	option channel	3
+	option subnet	"10.40.0.0"
+	option splash_name "Freifunk Rheinland"
+	option splash_logo "freifunk-logo.png"
+	option splash_link "http://www.freifunk-rheinland.net"
