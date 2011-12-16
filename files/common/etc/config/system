@@ -1,5 +1,5 @@
 config system
-	option hostname FFJ
+	option hostname FFNE
 	option timezone CET
 
 config button

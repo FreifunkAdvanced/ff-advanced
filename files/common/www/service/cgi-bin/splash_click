@@ -25,11 +25,11 @@ if [ $ISSPLASHED -eq 1 ]; then
 	exit
 fi
 #User is now free to go
-iptables -t nat -I ffj_splash 1 -m --mac-source $USER_MAC -j ACCEPT
+iptables -t nat -I ffj_splash 1 -m mac --mac-source $USER_MAC -j ACCEPT > /dev/null
 
-uci -q add splash_users user
-uci -q set splash_users.@user[-1].mac=$USER_MAC
-uci -q set splash_users.@user[-1].time=`date +%s`
+uci -q add splash_users user > /dev/null
+uci -q set splash_users.@user[-1].mac=$USER_MAC > /dev/null
+uci -q set splash_users.@user[-1].time=`date +%s` > /dev/null
 
 exit 0
 

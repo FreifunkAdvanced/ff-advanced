@@ -40,9 +40,9 @@ iptables -t nat -p tcp -A ffj_splash --dport 5222 -j ACCEPT
 iptables -t nat -p tcp -A ffj_splash --dport 5223 -j ACCEPT
 #Free Wavez in Freifunk
 iptables -t nat -A ffj_splash -s 10.0.0.0/8 -d 10.0.0.0/8 -j ACCEPT
-#Freifunk-Jena Whitelisting
-iptables -t nat -A ffj_splash -d freifunk-jena.de -j ACCEPT
-iptables -t nat -A ffj_splash -d www.freifunk-jena.de -j ACCEPT
+#Freifunk-Rheinland Whitelisting
+iptables -t nat -A ffj_splash -d freifunk-rheinland.net -j ACCEPT
+iptables -t nat -A ffj_splash -d www.freifunk-rheinland.net -j ACCEPT
 #Jappix Whitelisting
 iptables -t nat -A ffj_splash -d  static.jappix.com -j ACCEPT
 iptables -t nat -A ffj_splash -p tcp -j DNAT --to $myip:80
