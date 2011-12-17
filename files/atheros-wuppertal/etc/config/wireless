@@ -1,6 +1,8 @@
 config wifi-device  wifi0
         option type     atheros
-        option channel 11
+        option channel	11
+        option country  276
+        option txpower  20
 
 config wifi-iface
         option device   wifi0
