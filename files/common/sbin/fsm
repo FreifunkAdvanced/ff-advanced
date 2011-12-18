@@ -53,6 +53,14 @@ callOne () { # args: cwd arg1 arg2 cmdlist
 	done )
 }
 
+lockState () {
+    # lock state file (neccessary also for watch, as it calls scripts
+    # that assume a certain state as active during their whole
+    # execution time)
+    exec 666<$1
+    flock -x 666
+}
+
 fail() {
     echo "$1" 1>&2
     exit 1
@@ -81,20 +89,17 @@ else
     fail "FSM $2 does not exist"
 fi
 
-# lock state file (neccessary also for watch, as it calls scripts that
-# assume a certain state as active during their whole execution time)
-exec 666<$PState
-flock -x 666
-
 case "$1" in
     get)
 	cat $PState
 	;;
     watch)
+	lock $PState
 	watch
 	;;
     change)
 	[ -n "$3" ] || printArgs
+	lock $PState
 	change $3
 	;;
     *)
