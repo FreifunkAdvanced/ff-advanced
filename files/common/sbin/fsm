@@ -47,7 +47,7 @@ callOne () { # args: cwd arg1 arg2 cmdlist
 	cd $1
 	while read cmd; do
 	    if [ -x "$cmd" ]; then
-		$cmd $2 $3
+		$cmd $2 $3 666<&-
 		exit $?
 	    fi
 	done )
@@ -94,12 +94,12 @@ case "$1" in
 	cat $PState
 	;;
     watch)
-	lock $PState
+	lockState $PState
 	watch
 	;;
     change)
 	[ -n "$3" ] || printArgs
-	lock $PState
+	lockState $PState
 	change $3
 	;;
     *)
