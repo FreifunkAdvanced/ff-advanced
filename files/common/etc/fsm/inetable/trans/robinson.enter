@@ -2,36 +2,51 @@
 . ../common.sh
 
 # setup random ip
-gen_randnet () {
-    randnet=21.$(($RANDOM % 256)).$(($RANDOM % 256))
+net=$(     uci get cloud.cur.net_robinson)
+net_fake=$(uci get cloud.cur.net_fake)
+prefix=$(ipcalc.sh $net | grep ^PREFIX | cut -f2 -d=)
+
+gen_randip () {
+    local r=$RANDOM
+    randip=$(
+	ipcalc.sh $net $((($r % 2**(24 - $prefix) - 1) * 2**8 + 1)) 1 \
+	    | grep ^START | cut -f2 -d=
+    )
 }
 
-gen_randnet
-while ! arping -I br-mesh -D -c 5 -q $randnet.1; do
-    gen_randnet
+gen_randip
+while ! arping -I br-mesh -D -c 5 -q $randip; do
+    gen_randip
 done
 
-mesh_add_ipv4 $randnet.1 255.0.0.0
+mesh_add_ipv4 $randip 255.0.0.0
 
-# setup dhcp
+# setup dhcp, start fake DNS
 echo "
 set dhcp.mesh=dhcp
-set dhcp.mesh.start=2
+set dhcp.mesh.start=3
 set dhcp.mesh.limit=254
 set dhcp.mesh.leasetime=60
 set dhcp.mesh.interface=mesh
+set dhcp.fakedns=domain
+set dhcp.fakedns.ip=$(ipcalc.sh $net_fake 1 0 | grep ^START | cut -f2 -d=)
+set dhcp.fakedns.name='#'
 " | uci batch
 /etc/init.d/dnsmasq restart
 
 # disable batman-adv-mangling with DHCP packets
 batctl gw off
 
-# TODO: start fake dns
-
 # start redirection httpd, add robinson IP to service httpd
-echo "http://$randnet.1/robinson.html" > /tmp/redirection_target
-enable_httpd redirection    $randnet.1:81
-change_service_httpd_listen $randnet.1:80
+echo "http://$randip/robinson.html" > /tmp/redirection_target
+enable_httpd redirection    $randip:81
+change_service_httpd_listen $randip:80
 /etc/init.d/uhttpd restart
 
-# TODO: redirect all inet traffic to local httpd
+# redirect all tcp traffic to local httpd, all dns traffic to local NS
+iptables -t nat -F prerouting_robinson_fake
+iptables -t nat -F prerouting_robinson_inet
+iptables -t nat -A prerouting_robinson_inet -p tcp \
+    -j DNAT --to-destination $randip:81
+iptables -t nat -A prerouting_robinson_inet -p udp --dport 53 \
+    -j DNAT --to-destination $randip:53

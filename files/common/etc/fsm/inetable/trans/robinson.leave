@@ -3,11 +3,10 @@
 
 mesh_del_ipv4
 
-# stop DHCP server
+# stop DHCP server & fake DNS
 uci delete dhcp.mesh
+uci delete dhcp.fakedns
 /etc/init.d/dnsmasq restart
-
-# TODO: stop fake dns
 
 # stop redirection httpd, remove robinson IP from service httpd
 disable_httpd redirection
@@ -15,5 +14,9 @@ rm /tmp/redirection_target
 change_service_httpd_listen
 /etc/init.d/uhttpd restart
 
+# stop redirecting all inet traffic to local httpd/nameserver
+iptables -t nat -F prerouting_robinson_inet
 
-# TODO: stop redirecting all inet traffic to local httpd
+# TODO: now that we have internet, send all packets destined to the
+# fake net to the intended inet host; for now reject them
+iptables -t nat -F prerouting_robinson_fake
