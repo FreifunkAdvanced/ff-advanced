@@ -3,6 +3,10 @@
 TestHosts="4.2.2.4 8.8.8.8"
 PingTrials=2
 
+iftest () {
+    ifconfig $1 2>/dev/null | grep -q RUNNING
+}
+
 pingtest () {
     # TODO: replace with something parallel
     for i in $(seq 1 $PingTrials); do
@@ -17,10 +21,10 @@ pingtest () {
 
 case "$1" in
     internet)
-	pingtest eth1 $TestHosts
+	iftest eth1 && pingtest eth1 $TestHosts
 	;;
     vpn)
-	pingtest tun0 $TestHosts
+	iftest tun0 && pingtest tun0 $TestHosts
 	;;
     *)
 	echo "Usage:
