@@ -1,21 +1,40 @@
 #!/bin/sh -e
 
+net_robinson=$(uci get cloud.cur.net_robinson)
+net_fake=$(    uci get cloud.cur.net_fake)
+net_mesh=$(    uci get cloud.cur.net_mesh)
+
+# flush PREROUTING chains; we catch all packets with the cases
+# detailed below
+iptables -t nat -F PREROUTING
+
+## robinson net
 # create chains for the robinson fake net (depending on the inetable
 # state, this is used to route all TCP traffic to a local web server
 # or relay all traffic to the intended target):
 # - prerouting_robinson_fake: traffic destinated to the fake net
 # - prerouting_robinson_inet: traffic destinated to anything outside
 #   the robinson net
-net_robinson=$(uci get cloud.cur.net_robinson)
-net_fake=$(    uci get cloud.cur.net_fake)
 iptables -t nat -N prerouting_robinson_inet
 iptables -t nat -N prerouting_robinson_fake
-iptables -t nat -I PREROUTING -i br-mesh ! -d $net_robinson \
-    -j prerouting_robinson_inet
-iptables -t nat -I PREROUTING -i br-mesh   -d $net_fake \
+iptables -t nat -A PREROUTING -i br-mesh   -d $net_fake \
     -j prerouting_robinson_fake
+iptables -t nat -A PREROUTING -i br-mesh ! -d $net_robinson \
+    -j prerouting_robinson_inet
 
 # reject all packets to the robinson fake net that have not been
 # catched by a nat rule in the preceeding chains
 iptables -t filter -I forward -d $net_fake \
     -j REJECT --reject-with icmp-net-unreachable
+
+## splash
+# create chains executed for splashed/unsplashed users when trying to
+# reach the internet
+for mode in splashed unsplashed; do
+    iptables -t nat -N prerouting_inet_$mode
+    iptables -t nat -A PREROUTING -s $net_mesh ! -d $net_mesh \
+	-j prerouting_inet_$mode
+done
+
+# route everything
+iptables -I FORWARD -j ACCEPT
