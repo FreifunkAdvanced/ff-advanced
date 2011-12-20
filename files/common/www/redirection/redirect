@@ -2,7 +2,7 @@
 
 read url reftrans < /tmp/redirection_target
 if [ -x "$reftrans" ]; then
-    url="$url$($reftrans "$HTTP_HOST$REQUEST_URI")"
+    url="$url$(echo "$HTTP_HOST$REQUEST_URI" | $reftrans)"
 fi
 echo -e \
 "Cache-Control: no-cache, max-age=0, no-store, must-revalidate\r
