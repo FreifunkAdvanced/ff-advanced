@@ -26,7 +26,8 @@ if [ -z "$oct3" ]; then
     # TODO: log warning about IPv4 addr space exhaustion
 fi
 [ -n "$oct3" ]
-gwip=10.17.$oct3.1
+gwip=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 1)) 1 \
+     | grep ^START | cut -f2 -d=)
 p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
 
 # activate gw mode
