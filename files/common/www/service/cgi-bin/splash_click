@@ -1,14 +1,19 @@
-#!/bin/sh
+#!/bin/sh -e
+. $IPKG_INSTROOT/etc/functions.sh
+. /etc/splash.sh
+
 echo -en "Status: 200 OK\r\n"
 echo -en "Content-Type: text/html\r\n"
 echo -en "\r\n"
-TEST=`cat `
-TEST=`echo $TEST | sed 's/'target_url='/''/g'`
-TEST=`/bin/urldecode "$TEST"`
-TEST=`echo $TEST | sed 's/%2F/\//g'`
-USER_MAC=`cat /proc/net/arp | grep $REMOTE_HOST | awk 'BEGIN { FS = " " } ; { print $4 }'`
 
-. $IPKG_INSTROOT/etc/functions.sh
+# decode request params
+# url is decoded twice, as it is encoded by the browser and once by us
+URL="http://$(sed 's/target_url=//g' | urldecode)"
+USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \
+	 | awk 'BEGIN { FS = " " } ; { print $4 }')
+
+# check if user is already splashed; splash otherwise
+lockSplash
 ISSPLASHED=0
 config_load splash_users
 is_mac() {
@@ -17,22 +22,17 @@ is_mac() {
    	ISSPLASHED=1
    fi
 }
-#check if user is alredy splashed
 config_foreach is_mac user
-sed 's/targeturl/'"$(echo $TEST| sed 's#/#\\/#g')"'/g' /www/iframe.html
+if [ $ISSPLASHED -eq 0 ]; then
+    # user is now free to go
+    chain=$chain_prefix$chain_id
+    iptables -t nat -I $chain 1 -m mac --mac-source $USER_MAC -j ACCEPT
 
-if [ $ISSPLASHED -eq 1 ]; then
-	exit
+    uci -q add splash_users user >/dev/null
+    uci -q set splash_users.@user[-1].mac=$USER_MAC
+    uci -q set splash_users.@user[-1].time=`date +%s`
 fi
-#User is now free to go
-iptables -t nat -I ffj_splash 1 -m --mac-source $USER_MAC -j ACCEPT
+unlockSplash
 
-uci -q add splash_users user
-uci -q set splash_users.@user[-1].mac=$USER_MAC
-uci -q set splash_users.@user[-1].time=`date +%s`
-
-exit 0
-
-
-                                               
-
+# send response
+sed "s/targeturl/$(echo "$URL" | sed 's#/#\\/#g')/g" iframe.html

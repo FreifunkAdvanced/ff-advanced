@@ -4,6 +4,7 @@
 gwiptbl=/tmp/p2ptbl/gwip
 NodeId="$(cat /etc/nodeid)"
 
+## setup gateway IPv4
 # determine gw IP from p2ptable
 getoct () {
     p2ptbl show $gwiptbl \
@@ -34,9 +35,7 @@ batctl gw server
 # set up gw IP
 mesh_add_ipv4 $gwip 255.255.0.0
 
-# TODO: load splash status
-
-# setup DHCP
+## setup DHCP
 echo "
 set dhcp.mesh=dhcp
 set dhcp.mesh.start=2
@@ -46,9 +45,19 @@ set dhcp.mesh.interface=mesh
 " | uci batch
 /etc/init.d/dnsmasq restart
 
+## set splash
 # start redirection httpd (for splash), add GW IP to the addrs service
 # httpd listens on
 echo "http://$gwip/cgi-bin/splash? /sbin/urlencode" > /tmp/redirection_target
-enable_httpd redirection $randnet.1:81
-change_service_httpd_listen   $gwip:80
+enable_httpd redirection    $gwip:81
+change_service_httpd_listen $gwip:80
 /etc/init.d/uhttpd restart
+
+# fill splash table
+splash_sync "$1"
+
+# redirect tcp to local httpd, dns to local ns
+iptables -t nat -F prerouting_inet_unsplashed
+iptables -t nat -A prerouting_inet_unsplashed -p tcp            -j DNAT --to $gwip:81
+iptables -t nat -A prerouting_inet_unsplashed -p udp --dport 53 -j DNAT --to $gwip:53
+# TODO: discard any other UDP traffic
