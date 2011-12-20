@@ -7,7 +7,6 @@ echo -en "Content-Type: text/html\r\n"
 echo -en "\r\n"
 
 # decode request params
-# url is decoded twice, as it is encoded by the browser and once by us
 URL="http://$(sed 's/target_url=//g' | urldecode)"
 USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \
 	 | awk 'BEGIN { FS = " " } ; { print $4 }')
@@ -34,5 +33,5 @@ if [ $ISSPLASHED -eq 0 ]; then
 fi
 unlockSplash
 
-# send response
+# send response (encode / to not confuse sed)
 sed "s/targeturl/$(echo "$URL" | sed 's#/#\\/#g')/g" iframe.html

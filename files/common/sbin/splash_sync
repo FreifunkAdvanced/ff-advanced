@@ -13,7 +13,7 @@ splash_check() {
        iptables -t nat -I $chain -m mac --mac-source $mac -j ACCEPT
    else
 	# user is no longer splashed / must click again
-       uci delete splash_users.@user[$x]     
+       uci delete splash_users.@user[$x]
    fi
    let x=$x+1
 }
