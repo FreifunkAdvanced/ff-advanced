@@ -31,6 +31,7 @@ if [ $ISSPLASHED -eq 0 ]; then
     uci -q set splash_users.@user[-1].mac=$USER_MAC
     uci -q set splash_users.@user[-1].time=`date +%s`
 fi
+unlockSplash
 
 # send response (encode / to not confuse sed)
 sed "s/targeturl/$(echo "$URL" | sed 's#/#\\/#g')/g" iframe.html
