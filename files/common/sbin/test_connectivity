@@ -2,6 +2,7 @@
 
 TestHosts="4.2.2.4 8.8.8.8"
 PingTrials=2
+waniface=`uci get network.wan.ifname`
 
 iftest () {
     ifconfig $1 2>/dev/null | grep -q RUNNING
@@ -21,7 +22,7 @@ pingtest () {
 
 case "$1" in
     internet)
-	iftest eth1 && pingtest eth1 $TestHosts
+	iftest $waniface && pingtest $waniface $TestHosts
 	;;
     vpn)
 	iftest tun0 && pingtest tun0 $TestHosts
