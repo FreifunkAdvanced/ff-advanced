@@ -18,6 +18,9 @@ uci delete dhcp.mesh
 /etc/init.d/dnsmasq restart
 
 # TODO remove splash iptable
+for mode in splashed unsplashed; do
+    iptables -t nat -F prerouting_inet_$mode
+done
 
 # stop redirection httpd, remove GW IP from the addrs service httpd
 # listens on
