@@ -2,6 +2,9 @@
 . ../common.sh
 . ../common_queen.sh
 
+# Stop n2n VPN
+/etc/init.d/n2n stop
+
 # do not announce gateway anymore
 batctl gw client
 
