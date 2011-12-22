@@ -1,0 +1,5 @@
+#!/bin/sh
+[ "$INTERFACE" = "wan" ] && {
+	logger -t hotplug.d "Wan interface changed state, calling fsm watch inetable"
+        /sbin/fsm watch inetable
+}
