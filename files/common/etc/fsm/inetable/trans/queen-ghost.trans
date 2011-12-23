@@ -1,6 +1,9 @@
 #!/bin/sh -e
 . ../common_queen.sh
 
+# Stop n2n VPN
+/etc/init.d/n2n stop
+
 # store since when we are a ghost
 date +%s >/tmp/ghost_since
 
@@ -11,8 +14,5 @@ batctl gw client
 if we_own_our_ip; then
     p2ptbl update $gwiptbl $oct3 "ghost\t$NodeId" br-mesh
 fi
-
-# Stop n2n VPN
-/etc/init.d/n2n
 
 # TODO: setup redirection of all traffic to another gateway
