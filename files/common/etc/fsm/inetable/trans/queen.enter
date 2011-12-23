@@ -4,9 +4,9 @@
 gwiptbl=/tmp/p2ptbl/gwip
 NodeId="$(cat /etc/nodeid)"
 
-# Start n2n VPN and wait 10 seconds
+# Start n2n VPN and wait 60 seconds (for the next hbbp data)
 /etc/init.d/n2n start
-sleep 10
+sleep 60
 
 ## setup gateway IPv4
 # determine gw IP from p2ptable
