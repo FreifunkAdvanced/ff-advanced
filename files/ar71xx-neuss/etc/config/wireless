@@ -25,3 +25,4 @@ config wifi-iface
         option mode     ap
         option ssid     www.freifunk-rheinland.net
 	option encryption none
+	option wmm      0
