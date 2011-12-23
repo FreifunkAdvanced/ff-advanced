@@ -3,6 +3,10 @@
 
 rm /tmp/ghost_since
 
+# Start n2n again
+/etc/init.d/n2n start
+sleep 60
+
 # announce our gw again
 batctl gw server
 
