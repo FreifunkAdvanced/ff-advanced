@@ -3,7 +3,7 @@ cloud_is_online () {
     batctl gwl | tail -n-1 | egrep -q '([0-9a-f]{2}:){5}[0-9a-f]{2}'
 }
 
-## add/remove IPv4 address from mesh iface
+## add/remove IPv4/IPv6 address from mesh iface
 # manual update to avoid full ifdown+ifup, but update uci state for
 # other users (e.g. dnsmasq)
 mesh_add_ipv4 () {
@@ -21,6 +21,20 @@ mesh_del_ipv4 () {
 delete network.mesh.ipaddr
 delete network.mesh.proto
 delete network.mesh.netmask
+" | uci batch
+}
+
+mesh_add_ipv6 () {
+    ifconfig br-mesh add $1
+    echo "
+set network.mesh.ip6addr=$1
+" | uci batch
+}
+
+mesh_del_ipv6() {
+    ifconfig br-mesh del $1
+    echo "
+delete network.mesh.ip6addr
 " | uci batch
 }
 
