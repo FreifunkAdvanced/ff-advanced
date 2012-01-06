@@ -1,6 +1,6 @@
 #!/bin/ash
 
-if [[ `uci get batman-adv.bat0.gw_mode` = "server" ]]; then
+if [[ ` batctl gw_mode | awk '{print $1}'` = "server" ]]; then
    
   #Currently hardwired...
   #n2n_pwd=`wget http://freifunk.fnordeingang.de/n2n -O - -q`
