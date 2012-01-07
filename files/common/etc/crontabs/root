@@ -3,3 +3,4 @@
 * * * * * /sbin/fsm watch inetable
 * * * * * /sbin/fsm watch update
 * * * * * /sbin/splash_sync
+*/5 * * * * /sbin/n2n_watchdog
