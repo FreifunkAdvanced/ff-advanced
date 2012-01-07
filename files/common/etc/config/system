@@ -1,6 +1,12 @@
 config system
-	option hostname FFNE
-	option timezone CET
+	option hostname ffnode
+	option 'zonename' 'Europe/Berlin'
+	option 'timezone' 'CET-1CEST,M3.5.0,M10.5.0/3'
+
+config 'timeserver'
+	list 'server' 'ntp1.ptb.de'
+	list 'server' 'ntp2.ptb.de'
+
 
 config button
 	option button	reset
