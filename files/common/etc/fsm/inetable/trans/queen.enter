@@ -6,7 +6,7 @@ NodeId="$(cat /etc/nodeid)"
 
 # Start n2n VPN and wait 60 seconds (for the next hbbp data)
 /etc/init.d/n2n start
-sleep 60
+sleep 150
 
 ## setup gateway IPv4
 # determine gw IP from p2ptable
@@ -33,7 +33,16 @@ fi
 [ -n "$oct3" ]
 gwip=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 1)) 1 \
      | grep ^START | cut -f2 -d=)
+
+DHCPStartIP=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 2)) 1 \
+     | grep ^START | cut -f2 -d=)
+
+DHCPEndIP=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 254)) 1 \
+     | grep ^START | cut -f2 -d=)
+
 p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
+
+
 
 # activate gw mode
 batctl gw server
@@ -48,6 +57,8 @@ set dhcp.mesh.start=2
 set dhcp.mesh.limit=254
 set dhcp.mesh.leasetime=$DHCPLeaseTime
 set dhcp.mesh.interface=mesh
+set dhcp.mesh.start_ip=$DHCPStartIP
+set dhcp.mesh.end_ip=$DHCPEndIP
 " | uci batch
 /etc/init.d/dnsmasq restart
 
