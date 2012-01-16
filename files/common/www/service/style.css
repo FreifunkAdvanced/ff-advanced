@@ -1,0 +1,128 @@
+/*
+ * 1. Correct text resizing oddly in IE6/7 when body font-size is set using em units
+ * 2. Force vertical scrollbar in non-IE
+ * 3. Prevent iOS text size adjust on device orientation change, without disabling user zoom: h5bp.com/g
+*/
+
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body { margin: 0; font-size: 1em; line-height: 1.4; }
+
+body, button, input, select, textarea { font-family: sans-serif; color: #222; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+dd { margin: 0 0 0 40px; }
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+button, input, select, textarea { font-size: 100%; margin: 0; vertical-align: baseline; *vertical-align: middle; }
+
+button, input { line-height: normal; }
+
+/*
+ * 1. Display hand cursor for clickable form elements
+ * 2. Allow styling of clickable form elements in iOS
+ * 3. Correct inner spacing displayed oddly in IE7 (doesn't effect IE6)
+*/
+
+button, input[type="button"], input[type="reset"], input[type="submit"] { cursor: pointer; -webkit-appearance: button; *overflow: visible; }
+
+input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
+input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+
+/*
+ * Remove inner padding and border in FF3/4: h5bp.com/l
+*/
+
+button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+
+/*
+ * 1. Remove default vertical scrollbar in IE6/7/8/9
+ * 2. Allow only vertical resizing
+*/
+
+textarea { overflow: auto; vertical-align: top; resize: vertical; }
+
+
+/**
+
+User
+**/
+
+body {
+	width: 800px;
+	text-align: center;
+}
+div#maincontent{
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 600px;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 12pt;
+	text-align: left;
+}
+div#maincontent a, a:link, a:visited {
+	color: #464646;
+	text-decoration: none;
+}
+
+div#button_area{
+	padding-left:150px;
+	padding-right:150px;
+	text-align:center;
+}
+
+div#button_left{
+	float:left;
+	width: 50%;
+	text-align:center;
+}
+
+div#button_right{
+	float:right;
+	width: 50%;
+	text-align:center;
+}
+
+input.button{
+	border-color:white black black white;
+	border-style:solid;
+	border-width:1px;
+	background-color: #E5E5E5;
+	padding: 5px;
+	color: black;
+	font-weight: bold;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+input.button:hover {
+	background-color: grey;
+	border-color:white black black white;
+	border-style:solid;
+	border-width:1px;
+}
+div#logo {
+	height: 125px;
+	font-size: 24px;
+}
+img.logo {
+	float: left;
+	padding: 5px;
+}
+
+/* ==|== media queries ======================================================
+   PLACEHOLDER Media Queries for Responsive Design.
+   These override the primary ('mobile first') styles
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 480px) {
+	/* Style adjustments for viewports 480px and over go here */
+
+}
+
+@media only screen and (min-width: 768px) {
+	/* Style adjustments for viewports 768px and over go here */
+
+}
