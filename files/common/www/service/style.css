@@ -63,13 +63,3 @@ input.button:hover {
 	border-style:solid;
 	border-width:1px;
 }
-/*start mobile design*/
-@media only screen and (min-width: 480px) {
-	/* Style adjustments for viewports 480px and over go here */
-
-}
-
-@media only screen and (min-width: 768px) {
-	/* Style adjustments for viewports 768px and over go here */
-
-}
