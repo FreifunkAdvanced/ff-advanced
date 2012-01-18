@@ -1,20 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!doctype html>
+<html class="no-js" lang="de">
+	<head>
+		<meta charset="utf-8">
+		<title>Freifunk Rheinland Redirect</title>
+	</head>
+	<body style="margin:0px;">
+		<div style="width:100%;padding:5px 0;background-color:#FFCB05;text-align:center;border-bottom:3px solid #E0256C"><a style="color:#000;font-weight:bold;text-decoration:none" href="targeturl">Weiter zur gesuchten Seite &gt;&gt;&gt;</a></div>
 
-<html xmlns="http://www.w3.org/1999/xhtml" 
-  xml:lang="en" lang="en">
-
-<head>
-  <title>Freifunk Rheinland</title>
-
-  <link rel="stylesheet" type="text/css" href="/ffrhein.css" />
- 
-
-</head>
-<body style="margin:0px;">
-<div style="width:100%;padding:0px;background-color: #E5E5E5;text-align: center"><a href="targeturl">Weiter zur gesuchten Seite...</a></div>
-<iframe src="http://www.freifunk-rheinland.net/" width="100%" height="1000px"></iframe>
-</body>
+		<iframe id="frame" src="http://www.freifunk-rheinland.net/" width="99%"></iframe>
+		<script>
+			function pageY(elem) {
+				return elem.offsetParent ? (elem.offsetTop + pageY(elem.offsetParent)) : elem.offsetTop;
+			}
+			function resizeIframe() {
+				var height = document.documentElement.clientHeight;
+				height -= pageY(document.getElementById('frame')) + 20 ;
+				height = (height < 0) ? 0 : height;
+				document.getElementById('frame').style.height = height + 'px';
+			}
+			window.onresize = resizeIframe;
+			resizeIframe();
+		</script>
+	</body>
 </html>
