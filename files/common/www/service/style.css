@@ -20,7 +20,7 @@ header {
 header h1 {
 	color: #E0256C;
 	float: right;
-	margin-right: 1em;
+	margin-right: 10px;
 }
 #maincontent {
 	border-bottom: 5px solid #E0256C;
@@ -92,7 +92,7 @@ and (max-width : 480px) {
 	}
 }
 @media only screen
-/*and (-webkit-min-device-pixel-ratio: 2)*/
+and (-webkit-min-device-pixel-ratio: 2)
 and (min-width : 640px)
 and (max-width : 640px) {
 	body {
@@ -113,7 +113,7 @@ and (max-width : 640px) {
 	}
 }
 @media only screen
-/*and (-webkit-min-device-pixel-ratio: 2)*/
+and (-webkit-min-device-pixel-ratio: 2)
 and (min-width : 960px)
 and (max-width : 960px) {
 	body {
@@ -131,5 +131,16 @@ and (max-width : 960px) {
 		margin: .5em auto;
 		font-size: 2em;
 		width: 820px;
+	}
+}
+@media only screen
+and (min-width : 550px)
+and (max-width : 960px) {
+
+	body {
+		width: 500px;
+	}
+	header h1 {
+		float: none;
 	}
 }
