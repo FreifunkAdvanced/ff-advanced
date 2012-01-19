@@ -1,0 +1,65 @@
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+body { margin: 0; font-size: 1em; line-height: 1.4; }
+body, button, input, select, textarea { font-family: sans-serif; color: #222; }
+ul, ol { margin: 1em 0; padding: 0 0 0 40px; }
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+textarea { overflow: auto; vertical-align: top; resize: vertical; }
+/*end h5bp*/
+body {
+	width: 800px;
+	background-color: #FFCB05;
+	margin: 0 auto;
+	text-align: left;
+}
+a {
+	color: #000;
+}
+header {
+	border-bottom: 5px solid #E0256C;
+	padding-bottom: 2em;
+}
+header h1 {
+	float: right;
+	margin-right: 1em;
+}
+#maincontent {
+	padding: 2em 1em 1em;
+	background-color: #fff;
+	-webkit-box-shadow: 2px 0px 5px 3px #111;
+	-moz-box-shadow: 2px 0px 5px 3px #111;
+	box-shadow: 2px 0px 5px 3px #111;
+}
+.buttons {
+	width: 50%;
+	text-align:center;
+}
+#button_area{
+	margin: 1em auto;
+}
+
+div#button_left{
+	float:left;
+}
+
+div#button_right{
+	float:right;
+}
+
+input.button{
+	border-color:white black black white;
+	border-style:solid;
+	border-width:1px;
+	background-color: #E5E5E5;
+	padding: 5px;
+	color: black;
+	font-weight: bold;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+input.button:hover {
+	background-color: grey;
+	border-color:white black black white;
+	border-style:solid;
+	border-width:1px;
+}
