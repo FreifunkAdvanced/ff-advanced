@@ -94,7 +94,7 @@ and (max-width : 480px) {
 @media only screen
 and (-webkit-min-device-pixel-ratio: 2)
 and (min-width : 640px)
-and (max-width : 800px) {
+and (max-width : 640px) {
 	body {
 		width: 600px;
 		-webkit-text-size-adjust: 150%;
