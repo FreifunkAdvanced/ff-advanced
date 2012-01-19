@@ -91,3 +91,24 @@ and (max-width : 480px) {
 		height: 80px;
 	}
 }
+@media only screen
+and (-webkit-min-device-pixel-ratio: 2)
+and (min-width : 640px)
+and (max-width : 800px) {
+	body {
+		width: 600px;
+		-webkit-text-size-adjust: 150%;
+		font-size: 2em;
+	}
+	header h1 {
+		float: none;
+	}
+	#button_area div.buttons {
+		float: none;
+	}
+	.button {
+		margin: 1em auto;
+		font-size: 2em;
+		width: 550px;
+	}
+}
