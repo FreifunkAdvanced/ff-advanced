@@ -49,7 +49,7 @@ set network.mesh=interface
 set network.mesh.ifname=bat0
 set network.mesh.type=bridge
 set network.wlan=interface
-set network.wlan.ifname=ath0
+set network.wlan.ifname=athwifi0
 set network.wlan.mtu=1528
 EOF
 
