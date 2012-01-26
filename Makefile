@@ -1,5 +1,9 @@
 NUMPROC := 1
 OS := $(shell uname)
+REVISION=29909
+SVNURL=svn://svn.openwrt.org/openwrt/trunk/
+export REVISION
+export SVNURL
 export NUMPROC
 
 ifeq ($(OS),Linux)
@@ -20,7 +24,7 @@ endif
 
 openwrt/backfire/.repo_access:
 	mkdir -p openwrt dl
-	cd openwrt && svn co svn://svn.openwrt.org/openwrt/branches/backfire
+	cd openwrt && svn co -r $(REVISION) $(SVNURL) backfire
 	ln -s ../../dl $(@D)/
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update
