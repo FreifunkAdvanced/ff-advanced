@@ -21,7 +21,8 @@ update () {
     [ -n "$2" -a -n "$3" ] || printArgs
     oldversion=$(grep "^$2"$'\t' "$1" | cut -f2)
     tmpfile="$1.update"
-    echo -e "$2\t$(($oldversion + 1 + $RANDOM))\t$3" > "$tmpfile"
+    rand=$(head /dev/urandom | tr -dc "0123456789" | head -c5)
+    echo -e "$2\t$(($oldversion + 1 + $rand))\t$3" > "$tmpfile"
     merge "$1" "$tmpfile"
     if [ -n "$4" ]; then
 	# broadcast update
@@ -65,7 +66,8 @@ gossip() {
     # and below target size
     lc=$(wc -l <"$1")
     [ $lc == 0 ] && return
-    shuf -v seed=$RANDOM <"$1" >"$1.gossip"
+    rand=$(head /dev/urandom | tr -dc "0123456789" | head -c5)
+    shuf -v seed=$rand <"$1" >"$1.gossip"
     while [ $lc -ge 1 ]; do
 	head -n$lc "$1.gossip" | gzip >"$1.gossip.gz"
 	if [ $tgts -ge $(wc -c <"$1.gossip.gz") ]; then
