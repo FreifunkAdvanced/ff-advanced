@@ -22,7 +22,7 @@ endif
 
 openwrt/backfire/.repo_access:
 	mkdir -p openwrt dl
-	cd openwrt && svn co -r svn://svn.openwrt.org/openwrt/tags/backfire_10.03.1/ $(@D)
+	cd openwrt && svn co svn://svn.openwrt.org/openwrt/tags/backfire_10.03.1/ $(@D)
 	ln -s ../../dl $(@D)/
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update
