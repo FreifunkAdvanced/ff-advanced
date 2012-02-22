@@ -38,3 +38,4 @@ done
 
 # route everything
 iptables -I FORWARD -j ACCEPT
+iptables -I FORWARD -i br-mesh -d 192.168.0.0/16 -j DROP
