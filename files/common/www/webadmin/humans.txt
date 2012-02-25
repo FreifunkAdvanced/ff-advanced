@@ -3,18 +3,22 @@
 
 
 /* TEAM */
-  <your title>: <your name>
-  Site:
-  Twitter:
-  Location:
+  Web Application Developer: Tristan Leo
+  Site: http://www.tristan-leo.de
+  Twitter: @derveloper 
+  Location: Neuss/Germany
+
+  Firmware Developer: lcb01
+  Twitter: @lcb01
+
 
 /* THANKS */
-  Names (& URL):
+  Names (& URL): freifunk rheinland e.V., fNordeingang e.V.
 
 /* SITE */
   Standards: HTML5, CSS3
   Components: Modernizr, jQuery
-  Software:
+  Software: OpenWRT
 
 
 
