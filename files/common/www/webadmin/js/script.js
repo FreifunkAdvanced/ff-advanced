@@ -1,7 +1,12 @@
 $(function () {
+  var $spinner = null;
 
   var render = function render ($view) {
     var $main = $("#main");
+
+    if($spinner === null) {
+      $spinner = $main.html();
+    }
 
     $main.html($view);
   };
@@ -58,6 +63,10 @@ $(function () {
 
     routes: {
       "": "login"
+    },
+
+    before: function () {
+      render($spinner);
     },
 
     login: function () {

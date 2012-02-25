@@ -11,6 +11,7 @@
  */
 
 @import url("bootstrap.min.css");
+@import url("spinner.css");
 
 /* =============================================================================
    HTML5 display definitions
@@ -222,9 +223,13 @@ td { vertical-align: top; }
 
 
 
+header {
+  margin-bottom: 30px;
+}
 
-
-
+footer {
+  margin-top: 30px;
+}
 
 
 

@@ -37,6 +37,9 @@ dwsync.xml
 intermediate
 publish
 .idea
+*.iml
+*.iws
+*.ipr
 
 # build script local files
 build/buildinfo.properties
