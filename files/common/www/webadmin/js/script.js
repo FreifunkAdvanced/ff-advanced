@@ -22,7 +22,7 @@ $(function () {
 
     tagName: "form",
 
-    className: "login-form",
+    className: "login-form well",
 
     events: {
       "click #login": "login"
@@ -30,19 +30,29 @@ $(function () {
 
     render: function () {
       this.$el
+        .append($("<label/>")
+          .attr("for", "user")
+          .html("User"))
         .append($("<input/>")
+          .addClass("span3")
           .attr("type", "text")
           .attr("name", "user")
           .attr("id", "user"))
+        .append($("<label/>")
+          .attr("for", "user")
+          .html("Password"))
         .append($("<input/>")
+          .addClass("span3")
           .attr("type", "text")
           .attr("name", "password")
           .attr("id", "password"))
-        .append($("<input/>")
-          .attr("type", "button")
-          .attr("name", "login")
-          .attr("value", "Login")
-          .attr("id", "login"))
+        .append("<label/>")
+        .append($("<button/>")
+            .attr("type", "button")
+            .attr("name", "login")
+            .html("Login")
+            .attr("id", "login")
+            .addClass("btn"))
       ;
 
       return this;

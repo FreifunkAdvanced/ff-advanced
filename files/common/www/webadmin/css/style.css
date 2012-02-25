@@ -221,7 +221,9 @@ td { vertical-align: top; }
    ========================================================================== */
 
 
-
+#bowlG {
+  margin-left: 442px;
+}
 
 header {
   margin-bottom: 30px;
