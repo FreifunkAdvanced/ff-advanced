@@ -1,22 +1,7 @@
-function spinner () {
-  var opts = {
-    lines: 12, // The number of lines to draw
-    length: 12, // The length of each line
-    width: 10, // The line thickness
-    radius: 31, // The radius of the inner circle
-    color: '#000', // #rgb or #rrggbb
-    speed: 1, // Rounds per second
-    trail: 82, // Afterglow percentage
-    shadow: true, // Whether to render a shadow
-    hwaccel: true // Whether to use hardware acceleration
-  };
-  var $target = $("<div id='spinner' />");
-  return $target;
-}
-
 $(function () {
 
   var templates = {};
+  var $spinner = $("#spinner");
 
   var renderContent = function renderContent ( content, nofade ) {
     var $main = $("#main");
@@ -33,7 +18,7 @@ $(function () {
   };
 
   var fetchTemplate = function ( name, tplName, callback ) {
-    renderContent(spinner(), true);
+    renderContent($spinner, true);
 
     var view = arguments.callee;
 
