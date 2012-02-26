@@ -1,92 +1,126 @@
 $(function () {
-  var $spinner = null;
 
-  var render = function render ($view) {
-    var $main = $("#main");
+  var templates = {};
 
-    if($spinner === null) {
-      $spinner = $main.html();
+  var fetchTemplate = function (view, name, tplName, callback) {
+
+    if (_.isUndefined(templates[name])) {
+      $.get("/templates/"+tplName+".html")
+            .success(function (tpl) {
+              templates[name] = tpl;
+              view.template = templates[name];
+              ich.addTemplate(name, view.template);
+              callback();
+            });
     }
-
-    $main.html($view);
+    else {
+      callback();
+    }
   };
 
-  var LoginModel = Backbone.Model.extend({
-    login: function () {
-      //TODO: Login
-      console.log("logging in");
-    }
-  });
+  var app = function () {
 
-  var LoginFormView = Backbone.View.extend({
+    var $spinner = null;
 
-    tagName: "form",
+    var renderContent = function renderContent ( content ) {
+      var $main = $("#main");
 
-    className: "login-form well",
+      if ( $spinner === null ) {
+        $spinner = $main.html();
+      }
 
-    events: {
-      "click #login": "login"
-    },
+      $main.html(content);
+    };
 
-    render: function () {
-      this.$el
-        .append($("<label/>")
-          .attr("for", "user")
-          .html("User"))
-        .append($("<input/>")
-          .addClass("span3")
-          .attr("type", "text")
-          .attr("name", "user")
-          .attr("id", "user"))
-        .append($("<label/>")
-          .attr("for", "user")
-          .html("Password"))
-        .append($("<input/>")
-          .addClass("span3")
-          .attr("type", "text")
-          .attr("name", "password")
-          .attr("id", "password"))
-        .append("<label/>")
-        .append($("<button/>")
-            .attr("type", "button")
-            .attr("name", "login")
-            .html("Login")
-            .attr("id", "login")
-            .addClass("btn"))
-      ;
+    var LoginModel = Backbone.Model.extend({
+      login: function () {
+        //TODO: Login
+        console.log("logging in");
+        Backbone.history.navigate("baseConfig", {trigger: true});
+      }
+    });
 
-      return this;
-    },
+    var LoginFormView = Backbone.View.extend({
 
-    login: function () {
-      var loginModel = new LoginModel({
-        user: this.$el.find("#user").val(),
-        password: this.$el.find("#password").val()
-      });
+      id: "login-form",
 
-      loginModel.login();
-    }
+      events: {
+        "click #login": "login"
+      },
 
-  });
+      render: function () {
+        var me = this;
+        fetchTemplate(this, "login", "login", function () {
+          me.setElement(ich.login());
+          renderContent(me.$el);
+        });
+        return this;
+      },
 
-  var WebadminRouter = Backbone.Router.extend({
+      login: function () {
+        var loginModel = new LoginModel({
+          user: this.$el.find("#user").val(),
+          password: this.$el.find("#password").val()
+        });
 
-    routes: {
-      "": "login"
-    },
+        loginModel.login();
+      }
 
-    before: function () {
-      render($spinner);
-    },
+    });
 
-    login: function () {
-      var loginForm = new LoginFormView();
-      render(loginForm.render().$el);
-    }
+    var BaseConfigView = Backbone.View.extend({
 
-  });
+      tagName: "div",
 
-  new WebadminRouter();
-  Backbone.history.start({pushState: true});
+      id: "base-config",
+
+      events: {
+        "click #save": "save"
+      },
+
+      render: function () {
+        var me = this;
+        fetchTemplate(this, "baseConfig", "base_config", function () {
+          me.setElement(ich.baseConfig());
+          renderContent(me.$el);
+        });
+        return this;
+      },
+
+      save: function () {
+        //TODO: save given values
+      }
+
+    });
+
+    var WebadminRouter = Backbone.Router.extend({
+
+      routes: {
+        "": "login",
+        "baseConfig": "baseConfig"
+      },
+
+      before: function () {
+        renderContent($spinner);
+      },
+
+      login: function () {
+        var loginForm = new LoginFormView();
+        loginForm.render();
+      },
+
+      baseConfig: function () {
+        var baseConfig = new BaseConfigView();
+        baseConfig.render();
+      }
+
+    });
+
+    new WebadminRouter();
+    Backbone.history.start({pushState: false});
+
+  };
+
+  app();
 
 });

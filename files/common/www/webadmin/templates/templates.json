@@ -1,0 +1,10 @@
+[
+  {
+    name: "login",
+    template: "login"
+  },
+  {
+    name: "baseConfig",
+    template: "base_config"
+  }
+]
