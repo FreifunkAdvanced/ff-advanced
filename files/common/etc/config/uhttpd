@@ -46,3 +46,17 @@ config disabled redirection
 	option script_timeout	10
 	option network_timeout	30
 	option tcp_keepalive	10
+
+# webadmin instance
+config disabled webadmin
+	option home		/www/webadmin
+	option error_page	/admin
+	option index_page	admin
+	option cgi_prefix	/
+
+	# default options
+	option rfc1918_filter	1
+	option script_timeout	10
+	option network_timeout	30
+	option tcp_keepalive	10
+
