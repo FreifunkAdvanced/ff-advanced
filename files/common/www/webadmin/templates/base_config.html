@@ -1,36 +1,32 @@
-<h2>Basis Konfiguration</h2>
 <div class="row">
-  <div class="span8">
-    <form class="form-horizontal" action=".">
-      <fieldset>
-        <legend>Grundlegende Einstellungen deines Freifunk Routers</legend>
-        <div class="control-group">
+  <div class="eight columns">
+    <div class="panel">
+      <h4>Basis Konfiguration</h4>
+
+      <form class="nice" action=".">
+        <fieldset>
+          <legend>Grundlegende Einstellungen deines Freifunk Routers</legend>
           <label class="control-label" for="name">Routername</label>
+          <input type="text" class="input-text" name="name" id="name">
 
-          <div class="controls">
-            <input type="text" class="input-xlarge" name="name" id="name">
+          <p class="help-block">so soll dein Router heissen</p>
 
-            <p class="help-block">so soll dein Router heissen</p>
-          </div>
-        </div>
-
-        <div class="control-group">
           <label class="control-label" for="description">Beschreibung</label>
+          <textarea class="input-medium" name="description" id="description" rows="3" cols="5"></textarea>
+        </fieldset>
 
-          <div class="controls">
-            <textarea class="input-xlarge" name="description" id="description" rows="3" cols="5"></textarea>
-          </div>
-        </div>
         <div class="form-actions">
-          <button id="save" type="button" class="btn btn-primary">Speichern</button>
-          <button type="reset" class="btn">Zurücksetzen</button>
+          <button id="save" type="button" class="button">Speichern</button>
+          <button type="reset" class="button">Zurücksetzen</button>
         </div>
-      </fieldset>
-    </form>
+      </form>
+    </div>
   </div>
-  <div class="span4">
-    <h3>Hilfe</h3>
+  <div class="four columns">
+    <div class="panel">
+      <h5>Hilfe</h5>
 
-    <p>Hilfe foo text</p>
+      <p>Hilfe foo text</p>
+    </div>
   </div>
 </div>

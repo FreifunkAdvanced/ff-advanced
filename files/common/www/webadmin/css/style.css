@@ -10,7 +10,8 @@
  * ==|== normalize ==========================================================
  */
 
-@import url("bootstrap.min.css");
+@import url("foundation.css");
+@import url("app.css");
 @import url("spinner.css");
 
 /* =============================================================================

@@ -13,7 +13,7 @@ config.init({
   },
 
   concat: {
-    'intermediate/js/scripts.js': [ 'js/libs/mustache.js', 'js/libs/backbone/underscore-min.js', 'js/libs/backbone/backbone-min.js', 'js/bootstrap.min.js', 'js/plugins.js', 'js/script.js' ],
+    'intermediate/js/scripts.js': [ 'js/libs/mustache.js', 'js/libs/backbone/underscore-min.js', 'js/libs/backbone/backbone-min.js', 'js/foundation.js', 'js/app.js', 'js/plugins.js', 'js/script.js' ],
     'intermediate/css/style.css': [ 'css/*.css' ]
   },
 
@@ -43,7 +43,7 @@ config.init({
   },
 
   watch: {
-    files: ['js/*.js', 'css/**', '*.html'],
+    files: ['js/*.js', 'css/**', '*.html', 'templates/*.html'],
     tasks: 'default',
 
     reload: {
