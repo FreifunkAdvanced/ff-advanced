@@ -224,7 +224,6 @@ h1 {
 }
 
 #spinner {
-  margin-left: 432px;
   background: url("img/ajax-loader-large.gif") no-repeat;
   width: 66px;
   height: 66px;

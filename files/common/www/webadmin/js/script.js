@@ -108,7 +108,12 @@ $(function () {
 
       routes: {
         "": "login",
-        "baseConfig": "baseConfig"
+        "baseConfig": "baseConfig",
+        "spinner": "spinner"
+      },
+
+      spinner: function () {
+        renderContent($spinner, true);
       },
 
       login: function () {
