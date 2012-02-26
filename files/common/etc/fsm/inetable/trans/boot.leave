@@ -14,5 +14,6 @@ rm /tmp/gwip-init
 # start service httpd, listening on the link-local addrs of mesh and
 # lan
 enable_httpd service
+enable_httpd webadmin $(uci get network.lan.ipaddr):80
 change_service_httpd_listen
 /etc/init.d/uhttpd restart
