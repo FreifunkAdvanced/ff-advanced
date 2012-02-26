@@ -35,7 +35,11 @@ $(function () {
         $spinner = $main.html();
       }
 
-      $main.html(content);
+      $main.fadeOut(function () {
+        $main.html(content);
+        $main.fadeIn();
+      });
+
     };
 
     var LoginModel = Backbone.Model.extend({
