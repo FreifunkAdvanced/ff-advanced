@@ -11,7 +11,6 @@
  */
 
 @import url("foundation.css");
-@import url("spinner.css");
 
 /* =============================================================================
    HTML5 display definitions
@@ -244,7 +243,7 @@ footer {
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: #f5f5f5;
+  background-color: #FFCC33;
   border: 1px solid #eee;
   border: 1px solid rgba(0, 0, 0, 0.05);
   -webkit-border-radius: 4px;
@@ -276,6 +275,27 @@ footer {
 .well p.help-block {
   font-size: 0.7em;
   line-height: 0.7em;
+}
+
+.well label {
+  font-weight: bold;
+}
+
+.well form.nice div.form-field input:focus,
+.well form.nice input.input-text:focus,
+.well form.nice textarea:focus {
+  background-color: #d9c8c4;
+}
+
+.well form.nice div.form-field input,
+.well form.nice input.input-text,
+.well form.nice textarea {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.help.well {
+  background-color: #ffa1c2;
 }
 
 fieldset textarea.last,
