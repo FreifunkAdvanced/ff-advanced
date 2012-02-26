@@ -284,7 +284,7 @@ footer {
 .well form.nice div.form-field input:focus,
 .well form.nice input.input-text:focus,
 .well form.nice textarea:focus {
-  background-color: #d9c8c4;
+  background-color: #f2deda;
 }
 
 .well form.nice div.form-field input,
@@ -298,11 +298,21 @@ footer {
   background-color: #ffa1c2;
 }
 
+form.nice button.button {
+  color: #f0f0f0;
+  background-color: #CD2960;
+}
+
+form.nice button.button:hover {
+  background-color: #ff3275;
+}
+
 fieldset textarea.last,
 fieldset input.last {
   margin-bottom: 8px;
 }
 
+.well button.button.danger,
 .button.danger {
   background: none repeat scroll 0 0 #e91c21;
 }
