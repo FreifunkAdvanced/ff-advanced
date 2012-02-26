@@ -2,16 +2,22 @@ $(function () {
 
   var templates = {};
 
-  var fetchTemplate = function (view, name, tplName, callback) {
+  var fetchTemplate = function (name, tplName, callback) {
+    var view = arguments.callee;
+
+    if(_.isFunction(tplName)) {
+      callback = tplName;
+      tplName = name;
+    }
 
     if (_.isUndefined(templates[name])) {
       $.get("/templates/"+tplName+".html")
-            .success(function (tpl) {
-              templates[name] = tpl;
-              view.template = templates[name];
-              ich.addTemplate(name, view.template);
-              callback();
-            });
+        .success(function (tpl) {
+          templates[name] = tpl;
+          view.template = templates[name];
+          ich.addTemplate(name, view.template);
+          callback();
+        });
     }
     else {
       callback();
@@ -50,7 +56,7 @@ $(function () {
 
       render: function () {
         var me = this;
-        fetchTemplate(this, "login", "login", function () {
+        fetchTemplate("login", function () {
           me.setElement(ich.login());
           renderContent(me.$el);
         });
@@ -80,7 +86,7 @@ $(function () {
 
       render: function () {
         var me = this;
-        fetchTemplate(this, "baseConfig", "base_config", function () {
+        fetchTemplate("baseConfig", "base_config", function () {
           me.setElement(ich.baseConfig());
           renderContent(me.$el);
         });
