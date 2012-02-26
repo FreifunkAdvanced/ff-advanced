@@ -2,9 +2,11 @@
    Author:
    ========================================================================== */
 
-h1 {
+header h1 {
   font-size: 2.5em;
 }
+
+
 
 #spinner {
   background: url("img/ajax-loader-large.gif") no-repeat;
@@ -12,7 +14,7 @@ h1 {
   height: 66px;
 }
 
-header {
+#header {
   margin-top: 30px;
   margin-bottom: 30px;
 }
