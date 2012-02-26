@@ -11,8 +11,6 @@ function spinner () {
     hwaccel: true // Whether to use hardware acceleration
   };
   var $target = $("<div id='spinner' />");
-  var spinner = (new Spinner(opts)).spin();
-  $target.html(spinner.el);
   return $target;
 }
 

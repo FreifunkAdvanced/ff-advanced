@@ -225,9 +225,10 @@ h1 {
 }
 
 #spinner {
-  margin-left: 462px;
-  width: 96px;
-  height: 96px;
+  margin-left: 432px;
+  background: url("img/ajax-loader-large.gif") no-repeat;
+  width: 66px;
+  height: 66px;
 }
 
 header {
