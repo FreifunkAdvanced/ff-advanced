@@ -220,12 +220,18 @@ td { vertical-align: top; }
    Author:
    ========================================================================== */
 
+h1 {
+  font-size: 2.5em;
+}
 
-#bowlG {
-  margin-left: 442px;
+#spinner {
+  margin-left: 462px;
+  width: 96px;
+  height: 96px;
 }
 
 header {
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 

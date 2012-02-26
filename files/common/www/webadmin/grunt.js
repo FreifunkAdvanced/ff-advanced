@@ -28,11 +28,11 @@ config.init({
   rev: {
     js: ['publish/js/*.js'],
     css: ['publish/css/*.css'],
-    img: ['publish/img/*']
+    img: []
   },
 
   usemin: {
-    files: ['publish/*.html']
+    files: []
   },
 
   manifest: '<config:usemin>',
@@ -74,6 +74,6 @@ config.init({
 });
 
 // Run the following tasks...
-task.registerTask('default', 'intro clean mkdirs concat css min rev usemin manifest');
+task.registerTask('default', 'intro clean mkdirs concat manifest');
 
 task.registerTask('reload', 'connect watch:reload');

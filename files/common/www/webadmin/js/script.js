@@ -1,18 +1,52 @@
+function spinner () {
+  var opts = {
+    lines: 12, // The number of lines to draw
+    length: 12, // The length of each line
+    width: 10, // The line thickness
+    radius: 31, // The radius of the inner circle
+    color: '#000', // #rgb or #rrggbb
+    speed: 1, // Rounds per second
+    trail: 82, // Afterglow percentage
+    shadow: true, // Whether to render a shadow
+    hwaccel: true // Whether to use hardware acceleration
+  };
+  var $target = $("<div id='spinner' />");
+  var spinner = (new Spinner(opts)).spin();
+  $target.html(spinner.el);
+  return $target;
+}
+
 $(function () {
 
   var templates = {};
 
-  var fetchTemplate = function (name, tplName, callback) {
+  var renderContent = function renderContent ( content, nofade ) {
+    var $main = $("#main");
+
+    if ( _.isUndefined(nofade) || !nofade ) {
+      $main.fadeOut(function () {
+        $main.html(content);
+        $main.fadeIn();
+      });
+    }
+    else {
+      $main.html(content);
+    }
+  };
+
+  var fetchTemplate = function ( name, tplName, callback ) {
+    renderContent(spinner(), true);
+
     var view = arguments.callee;
 
-    if(_.isFunction(tplName)) {
+    if ( _.isFunction(tplName) ) {
       callback = tplName;
       tplName = name;
     }
 
-    if (_.isUndefined(templates[name])) {
-      $.get("/templates/"+tplName+".html")
-        .success(function (tpl) {
+    if ( _.isUndefined(templates[name]) ) {
+      $.get("/templates/" + tplName + ".html")
+        .success(function ( tpl ) {
           templates[name] = tpl;
           view.template = templates[name];
           ich.addTemplate(name, view.template);
@@ -25,22 +59,6 @@ $(function () {
   };
 
   var app = function () {
-
-    var $spinner = null;
-
-    var renderContent = function renderContent ( content ) {
-      var $main = $("#main");
-
-      if ( $spinner === null ) {
-        $spinner = $main.html();
-      }
-
-      $main.fadeOut(function () {
-        $main.html(content);
-        $main.fadeIn();
-      });
-
-    };
 
     var LoginModel = Backbone.Model.extend({
       login: function () {
@@ -108,10 +126,6 @@ $(function () {
       routes: {
         "": "login",
         "baseConfig": "baseConfig"
-      },
-
-      before: function () {
-        renderContent($spinner);
       },
 
       login: function () {
