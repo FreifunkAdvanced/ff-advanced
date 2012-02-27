@@ -50,9 +50,9 @@ config disabled redirection
 # webadmin instance
 config disabled webadmin
 	option home		/www/webadmin
-	option error_page	/admin
-	option index_page	admin
-	option cgi_prefix	/
+	option error_page	/index.html
+	option index_page	index.html
+	option cgi_prefix	/cgi-bin
 
 	# default options
 	option rfc1918_filter	1
