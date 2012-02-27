@@ -100,6 +100,20 @@ form.nice button.button:hover {
   background-color: #ff3275;
 }
 
+input.input-text,
+form.nice input.input-text,
+form.nice textarea {
+  border: 1px solid #aaa;
+}
+
+.well form.nice {
+    margin: 0 0 0 0;
+}
+
+form fieldset {
+  border-color: #888;
+}
+
 fieldset textarea.last,
 fieldset input.last {
   margin-bottom: 8px;
