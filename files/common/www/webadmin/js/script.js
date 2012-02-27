@@ -41,13 +41,44 @@ $(function () {
     }
   };
 
+  var updateConfig = function updateConfig(option, value, success) {
+    $.getJSON("/ws/config/update", {
+      option: option,
+      value: value
+    }).success(success);
+  };
+
+  var readConfig = function readConfig(option, success) {
+    var config = {};
+    $.getJSON("/ws/config/read", {
+      option: option
+    })
+      .success(function(data) {
+        config.option = data.option;
+        config.value = data.value;
+        success(config);
+      }
+    );
+  };
+
   var app = function () {
 
     var LoginModel = Backbone.Model.extend({
       login: function () {
         //TODO: Login
-        console.log("logging in");
-        Backbone.history.navigate("baseConfig", {trigger: true});
+        $.getJSON("/ws/login", {
+          username: this.get("username"),
+          password: this.get("password")
+        })
+          .success(function(data) {
+            if(data.valid) {
+              console.log("logging in");
+              Backbone.history.navigate("baseConfig", {trigger: true});
+            }
+            else {
+              alert("Falscher Benutzer und/oder Passwort");
+            }
+          });
       }
     });
 
