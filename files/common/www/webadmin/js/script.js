@@ -73,7 +73,7 @@ $(function () {
           .success(function(data) {
             if(data.valid) {
               console.log("logging in");
-              Backbone.history.navigate("baseConfig", {trigger: true});
+              Backbone.history.navigate("!baseConfig", {trigger: true});
             }
             else {
               alert("Falscher Benutzer und/oder Passwort");
@@ -139,8 +139,8 @@ $(function () {
 
       routes: {
         "": "login",
-        "baseConfig": "baseConfig",
-        "spinner": "spinner"
+        "!baseConfig": "baseConfig",
+        "!spinner": "spinner"
       },
 
       spinner: function () {
