@@ -41,23 +41,26 @@ $(function () {
     }
   };
 
-  var configClient = function configClient(mode, data, success) {
-    var fn = mode === "update" ? $.post : $.getJSON;
-    fn("/config/"+mode, data).success(success);
-  };
+  window.configClient = (function configClient() {
+    var client = function configClient(mode, data, success) {
+      var fn = mode === "update" ? $.post : $.getJSON;
+      fn("/config/"+mode, data).success(success);
+    };
+    return {
+      updateConfig: function updateConfig(option, value, success) {
+        client("update", {
+          option: option,
+          value: value
+        }, success);
+      },
 
-  var updateConfig = function updateConfig(option, value, success) {
-    configClient("update", {
-      option: option,
-      value: value
-    }, success);
-  };
-
-  var readConfig = function readConfig(option, success) {
-    configClient("update", {
-      option: option
-    }, success);
-  };
+      readConfig: function readConfig(option, success) {
+        client("update", {
+          option: option
+        }, success);
+      }
+    };
+  })();
 
   var app = function () {
 
