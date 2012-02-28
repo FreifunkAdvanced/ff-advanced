@@ -43,7 +43,7 @@ $(function () {
 
   var configClient = function configClient(mode, data, success) {
     var fn = mode === "update" ? $.post : $.getJSON;
-    fn("/ws/config/"+mode, data).success(success);
+    fn("/config/"+mode, data).success(success);
   };
 
   var updateConfig = function updateConfig(option, value, success) {
