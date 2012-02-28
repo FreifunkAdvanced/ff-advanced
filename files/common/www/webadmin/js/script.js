@@ -41,24 +41,22 @@ $(function () {
     }
   };
 
+  var configClient = function configClient(mode, data, success) {
+    var fn = mode === "update" ? $.post : $.getJSON;
+    fn("/ws/config/"+mode, data).success(success);
+  };
+
   var updateConfig = function updateConfig(option, value, success) {
-    $.getJSON("/ws/config/update", {
+    configClient("update", {
       option: option,
       value: value
-    }).success(success);
+    }, success);
   };
 
   var readConfig = function readConfig(option, success) {
-    var config = {};
-    $.getJSON("/ws/config/read", {
+    configClient("update", {
       option: option
-    })
-      .success(function(data) {
-        config.option = data.option;
-        config.value = data.value;
-        success(config);
-      }
-    );
+    }, success);
   };
 
   var app = function () {
