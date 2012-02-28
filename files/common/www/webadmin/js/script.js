@@ -41,21 +41,21 @@ $(function () {
     }
   };
 
-  window.configClient = (function configClient() {
+  window.config = (function configClient() {
     var client = function configClient(mode, data, success) {
       var fn = mode === "update" ? $.post : $.getJSON;
       fn("/config/"+mode, data).success(success);
     };
     return {
-      updateConfig: function updateConfig(option, value, success) {
+      update: function updateConfig(option, value, success) {
         client("update", {
           option: option,
           value: value
         }, success);
       },
 
-      readConfig: function readConfig(option, success) {
-        client("update", {
+      read: function readConfig(option, success) {
+        client("read", {
           option: option
         }, success);
       }
