@@ -74,6 +74,10 @@ $(function () {
 
   var app = function () {
 
+    var redirect = function redirect(route) {
+      Backbone.history.navigate("!"+route, {trigger: true});
+    };
+
     var LoginModel = Backbone.Model.extend({
       login: function () {
         //TODO: Login
@@ -84,7 +88,7 @@ $(function () {
           .success(function(data) {
             if(data.valid) {
               console.log("logging in");
-              Backbone.history.navigate("!baseConfig", {trigger: true});
+              redirect("baseConfig");
             }
             else {
               alert("Falscher Benutzer und/oder Passwort");
@@ -150,12 +154,7 @@ $(function () {
 
       routes: {
         "": "login",
-        "!baseConfig": "baseConfig",
-        "!spinner": "spinner"
-      },
-
-      spinner: function () {
-        renderContent($spinner, true);
+        "!baseConfig": "baseConfig"
       },
 
       login: function () {
