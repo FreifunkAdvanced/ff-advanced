@@ -43,7 +43,7 @@ $(function () {
 
   window.config = (function configClient() {
     var client = function configClient(mode, data, success) {
-      var fn = mode === "update" ? $.post : $.getJSON;
+      var fn = mode === "update" ? $.post : $.get;
       fn("/config/"+mode, data).success(success);
     };
     return {
@@ -57,7 +57,17 @@ $(function () {
       read: function readConfig(option, success) {
         client("read", {
           option: option
-        }, success);
+        }, function (data) {
+          var options = [];
+          var lines = data.split('\n');
+          for each ( var line in lines ) {
+            var value = line.split('=').pop();
+            var option = line.split('.').pop().split('=')[0];
+            var config = {option: option, value: value};
+            options.push(config);
+          }
+          success(options);
+        });
       }
     };
   })();
