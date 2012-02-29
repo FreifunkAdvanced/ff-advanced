@@ -7,7 +7,7 @@ config wifi-device  wifi0
 config wifi-iface
 	option device	wifi0
 	option mode		adhoc
-	option ssid		batbone.freifunk-wuppertal.net
+	option ssid		FFW-BATBONE
 	option bssid	02:CA:FF:EE:E1:BA
 	option hidden	1
 	option encryption	none
