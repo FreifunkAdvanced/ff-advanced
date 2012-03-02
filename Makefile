@@ -51,7 +51,7 @@ image/%: config/$$(REPO)-$$(HW).config openwrt/$$(REPO)/.repo_access
 	-rm -r openwrt/$(REPO)/files openwrt/$(REPO)/bin/$(PLATFORM)/openwrt*
 	toolbin/merge_config --merge --verbose --dst openwrt/$(REPO)/files \
 	  files/common $(shell toolbin/extract_variants files/$(HW))
-	./name_firmware openwrt/$(REPO)
+	toolbin/name_firmware openwrt/$(REPO)
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $(shell dirname $@)
 	rsync -a openwrt/$(REPO)/bin/$(PLATFORM)/ $@/
