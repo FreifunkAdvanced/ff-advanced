@@ -34,7 +34,7 @@ merge_file () {
 	exfl "$1" || fail "$1 requested but does not exist"
 	if [ -f "$2.patch" ]; then
 	    [ -f "$1" ] || fail "$1 is no regular file, not patching"
-	    patch $(! $quiet || echo --silent) -B trash/ "$1" <"$2.patch" 
+	    patch $(! $quiet || echo --silent) -B .trash/ "$1" <"$2.patch" 
 	elif [ -f "$2.delete" ]; then
 	    rm "$1"
 	fi
@@ -94,6 +94,7 @@ else
 fi
 
 # iterate over all dirs
+mkdir -p .trash
 while [ $# -gt 0 ]; do
     ${op}_${mode} "$dst~" "$1"
     shift
@@ -101,4 +102,4 @@ done
 
 [ -d "$dst" ] && rm -r "$dst"
 mv "$dst~" "$dst"
-rm trash/* 2>/dev/null || true
+rm -r .trash/* 2>/dev/null || true
