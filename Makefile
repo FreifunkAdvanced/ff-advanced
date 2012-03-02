@@ -1,3 +1,9 @@
+# default targets
+all: image/backfire/openwrt-ar71xx-tl-wr841nd-v5
+
+# parallelization
+.NOTPARALLEL:
+
 NUMPROC := 1
 OS := $(shell uname)
 export NUMPROC
@@ -16,29 +22,37 @@ ifeq ($(NUMPROC),0)
         NUMPROC = 1
 endif
 
-.NOTPARALLEL:
+# fetching and maintaing OpenWRT repositories
+define init-repo
+mkdir -p openwrt dl
+cd openwrt && svn co $(REPO_URL)
+cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+cd $(@D) && ./scripts/feeds update
+cd $(@D) && ./scripts/feeds install -a -p ffj
+cd $(@D) && $(MAKE) package/symlinks
+touch $@
+endef
 
+openwrt/trunk/.repo_access: REPO_URL=svn://svn.openwrt.org/openwrt/trunk/
+openwrt/trunk/.repo_access:
+	$(init-repo)
+
+openwrt/backfire/.repo_access: REPO_URL=svn://svn.openwrt.org/openwrt/branches/backfire
 openwrt/backfire/.repo_access:
-	mkdir -p openwrt dl
-	cd openwrt && svn co svn://svn.openwrt.org/openwrt/branches/backfire
-	ln -s ../../dl $(@D)/
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
-	cd $(@D) && ./scripts/feeds update
-	cd $(@D) && ./scripts/feeds install -a -p ffj
-	cd $(@D) && $(MAKE) package/symlinks
-	touch $@
+	$(init-repo)
 
 update/%: openwrt/%/.repo_access
-	cd $< && svn update
-	cd $< && ./scripts/feeds update
-	cd $< && $(MAKE) package/symlinks
-	touch $</.repo_access
+	cd openwrt/$(@F) && svn update
+	cd openwrt/$(@F) && ./scripts/feeds update
+	cd openwrt/$(@F) && $(MAKE) package/symlinks
+	touch openwrt/$(@F)/.repo_access
 
 # format config/($repo)-$(platform)-$(model).config
 .SECONDEXPANSION:
 config/%.config: config
 	toolbin/merge_config --merge --verbose --dst $@ \
 	  $(shell toolbin/extract_variants $(shell echo $@ | sed 's/.config$$//') 2>/dev/null)
+
 
 # format image/($repo)/openwrt-$(platform)-$(model)
 .SECONDEXPANSION:
