@@ -55,3 +55,7 @@ image/%: config/$$(REPO)-$$(HW).config openwrt/$$(REPO)/.repo_access
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $(shell dirname $@)
 	rsync -a openwrt/$(REPO)/bin/$(PLATFORM)/ $@/
+
+clean: 
+	-rm -r config/*.config image/*
+	-for i in openwrt/*; do (cd $$i && $(MAKE) clean); done
