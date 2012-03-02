@@ -1,0 +1,104 @@
+#!/bin/bash -e
+
+fail () {
+    echo "$1" 2>&1
+    exit 1
+}
+
+help () {
+    fail "Usage:
+$0 --merge --dst location [--verbose] base-src diff-src1 diff-src2 ..."
+}
+
+filter_suffix () {
+    sed -e 's/.patch$//' -e 's/.delete$//'
+}
+
+# exists as file or symbolic link
+exfl () {
+    [ -f "$1" -o -L "$1" ]
+}
+
+merge_file () {
+    c="$(ls $2{,.patch,.delete} 2>/dev/null | wc -l)"
+    [ $c -le 1 ] || fail "more than one operation available for $2"
+    if [ $c -eq 0 ]; then
+	$quiet || echo "  ignoring $2"
+	return 0
+    else
+	$quiet || echo "  using $2"
+    fi
+    if exfl "$2"; then
+	cp --no-dereference "$2" "$1"
+    else
+	exfl "$1" || fail "$1 requested but does not exist"
+	if [ -f "$2.patch" ]; then
+	    [ -f "$1" ] || fail "$1 is no regular file, not patching"
+	    patch $(! $quiet || echo --silent) -B trash/ "$1" <"$2.patch" 
+	elif [ -f "$2.delete" ]; then
+	    rm "$1"
+	fi
+    fi
+}
+
+merge_dir () {
+    if [ -d $2 ]; then
+	$quiet || echo "from directory $2"
+	find $2 -printf "%P\n" | grep -v '^$' | filter_suffix | sort -u | (
+	    while read f; do
+		if [ -d "$2/$f" ]; then
+		    mkdir -p "$1/$f"
+		else
+		    merge_file "$1/$f" "$2/$f"
+		fi		
+	    done)
+    else
+	$quiet || echo "ignoring $2"
+    fi
+}
+
+# parse cmd line options (except merge srcs)
+[ $# -gt 0 ] || help
+quiet=true
+while [ $# -gt 0 ]; do
+    case "$1" in
+	--merge)
+	    op=merge
+	    ;;
+	--verbose)
+	    quiet=false
+	    ;;
+	--dst)
+	    [ $# -gt 1 ] || help
+	    dst="$2"
+	    shift
+	    ;;
+	*)
+	    break
+	    ;;
+    esac
+    shift
+done
+[ -n "$op" -a -n "$dst" ] || help
+
+# determine wether merging dirs or files
+[ $# -gt 0 ] || help
+if [ -f "$1" ]; then
+    mode=file
+elif [ -d "$1" ]; then
+    mode=dir
+    [ -d "$dst~" ] && rm -r "$dst~"
+    mkdir "$dst~"
+else
+    fail "$1 is neiter file nor directory"
+fi
+
+# iterate over all dirs
+while [ $# -gt 0 ]; do
+    ${op}_${mode} "$dst~" "$1"
+    shift
+done
+
+[ -d "$dst" ] && rm -r "$dst"
+mv "$dst~" "$dst"
+rm trash/* 2>/dev/null || true

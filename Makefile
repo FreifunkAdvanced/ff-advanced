@@ -36,35 +36,22 @@ update/%: openwrt/%/.repo_access
 
 # format config/($repo)-$(platform)-$(model).config
 .SECONDEXPANSION:
-config/%.config: REPO=$(shell echo $(@F) | cut -f1 -d-)
-config/%.config: PLATFORM=$(shell echo $(@F) | cut -f2 -d- | cut -f1 -d.)
-config/%.config: MODEL=$(shell echo $(@F) | cut -f3- -d- | cut -f1 -d.)
-config/%.config: $$(shell find config -iname '$$(REPO).config') \
-			     $$(shell find config -iname '$$(REPO)-$$(PLATFORM).patch') \
-				 $$(shell find config -iname '$$(REPO)-$$(PLATFORM)-$$(MODEL).patch')
-	cp config/$(REPO).config $@~
-	if [ -n "$(MODEL)" ]; then 	\
-		patch $@~ <config/$(REPO)-$(PLATFORM).patch && \
-		patch $@~ <config/$(REPO)-$(PLATFORM)-$(MODEL).patch; \
-	else \
-		patch $@~ <config/$(REPO)-$(PLATFORM).patch; \
-	fi
-	mv $@~ $@
+config/%.config: config
+	toolbin/merge_config --merge --verbose --dst $@ \
+	  $(shell toolbin/extract_variants $(shell echo $@ | sed 's/.config$$//') 2>/dev/null)
 
 # format image/($repo)/openwrt-$(platform)-$(model)
 .SECONDEXPANSION:
 image/%: REPO=$(shell basename $(@D))
+image/%: HW=$(shell echo $(@F) | cut -f2- -d-)
 image/%: PLATFORM=$(shell echo $(@F) | cut -f2 -d-)
-image/%: MODEL=$(shell echo $(@F) | cut -f3- -d-)
-image/%: config/$$(REPO)-$$(PLATFORM)-$$(MODEL).config \
-			 openwrt/$$(REPO)/.repo_access 
-	@echo === Building $(REPO), $(PLATFORM), $(MODEL) ===
+image/%: config/$$(REPO)-$$(HW).config openwrt/$$(REPO)/.repo_access 
+	@echo === Building $(REPO), $(HW) ===
 	cp $< openwrt/$(REPO)/.config
-	-rm -r openwrt/$(REPO)/files openwrt/$(REPO)/bin/$(PLATFORM)
-	cp -a files/common openwrt/$(REPO)/files
-	[ -d files/$(PLATFORM) ] && rsync -a files/$(PLATFORM)/ openwrt/$(REPO)/files/
-	[ -d files/$(PLATFORM)-$(MODEL) ] && rsync -a files/$(PLATFORM)-$(MODEL)/ openwrt/$(REPO)/files/
+	-rm -r openwrt/$(REPO)/files openwrt/$(REPO)/bin/$(PLATFORM)/openwrt*
+	toolbin/merge_config --merge --verbose --dst openwrt/$(REPO)/files \
+	  files/common $(shell toolbin/extract_variants files/$(HW))
 	./name_firmware openwrt/$(REPO)
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
-	mkdir -p $@
+	mkdir -p $(shell dirname $@)
 	rsync -a openwrt/$(REPO)/bin/$(PLATFORM)/ $@/

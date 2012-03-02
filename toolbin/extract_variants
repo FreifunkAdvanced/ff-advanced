@@ -1,0 +1,22 @@
+#!/bin/sh
+
+print_ext () {
+    ls -d -- "$1"{,.delete,.patch} 2>/dev/null
+}
+
+if [ "$1" == "--ext" ]; then
+    print=print_ext
+    shift
+else
+    print=echo
+fi
+
+(
+    str="$1"
+    while echo "$str" | grep -q -- -; do
+	[ -n "$(print_ext "$str")" ] && $print "$str"
+	str="$(echo "$str" | sed 's/-[^-]*$//')"
+    done
+    [ -n "$(print_ext "$str")" ] && $print "$str"
+) | tac
+
