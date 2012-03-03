@@ -14,6 +14,7 @@ BACKFIREVERSION := 10.03.1
 #SVNREVISION := 29909
 SVNREVISION := 30795
 #SVNREVISION := `svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g"`
+#SVNREVISION := `svn info openwrt/trunk| grep "Rev:" | sed -e "s/.*: //g"`
 
 # FFJ
 FFJVERSION := git-dcce1a8
@@ -216,14 +217,14 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	cp $< openwrt/$(REPO)/.config
 
 	-rm -r openwrt/$(REPO)/files
-#	 not needed, make gets rid of old files by itself
-#	-rm -r openwrt/$(REPO)/bin/$(PLAT)
+	# not needed, make gets rid of old files by itself
+	#-rm -r openwrt/$(REPO)/bin/$(PLAT)
 
 	cp -a files/common openwrt/$(REPO)/files
 	[ -d files/$(REPO)/$(PLAT) ] && rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
 	[ -d files/$(REPO)/$(PLAT)-$(MODEL) ] && rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
 
-#	./name_firmware openwrt/$(REPO)
+	#./name_firmware openwrt/$(REPO)
 	echo $(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && \
 	echo -n "-modified"`_$(REPO)-`[[ "$(REPO)" == "trunk" ]] && \
 	echo $(SVNREVISION) || echo $(BACKFIREVERSION)` > openwrt/$(REPO)/files/etc/firmware
@@ -238,6 +239,7 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 
 	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
 
+	# It’s all about this command :-)
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 
 	mkdir -p $@
