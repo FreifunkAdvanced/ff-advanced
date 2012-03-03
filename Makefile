@@ -29,7 +29,7 @@ COMMUNITY = duesseldorf krefeld neuss solingen wuppertal
 export COMMUNITY
 
 # disable for screen flooding, enable for quiet run
-#MAKEFLAGS += -s --no-print-directory
+MAKEFLAGS += -s --no-print-directory
 
 ifeq ($(OS),Linux)
         NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
@@ -237,9 +237,10 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	-e "s/FFRLversion/$(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && echo -n "-modified"`_$(REPO)/g" \
 	-e "s/buildSystem/`uname -n`/g" > openwrt/$(REPO)/files/etc/banner
 
+	[[ "$(REPO)" == "backfire" ]] && \
 	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
 
-	# It’s all about this command :-)
+	# It’s all about this command :-) disable for dry run
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 
 	mkdir -p $@
