@@ -100,6 +100,7 @@ $(function () {
     var LoginFormView = Backbone.View.extend({
 
       id: "login-form",
+      tagName: "div",
 
       events: {
         "click #login": "login"
@@ -108,8 +109,8 @@ $(function () {
       render: function () {
         var me = this;
         fetchTemplate("login", function () {
-          me.setElement(ich.login());
-          renderContent(me.$el);
+          me.$el.html(ich.login());
+          renderContent(me.el);
         });
         return this;
       },
@@ -138,8 +139,8 @@ $(function () {
       render: function () {
         var me = this;
         fetchTemplate("baseConfig", "base_config", function () {
-          me.setElement(ich.baseConfig());
-          renderContent(me.$el);
+          me.$el.html(ich.baseConfig());
+          renderContent(me.el);
         });
         return this;
       },

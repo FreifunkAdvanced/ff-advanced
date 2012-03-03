@@ -22,22 +22,24 @@ endif
 
 openwrt/backfire/.repo_access:
 	mkdir -p openwrt dl
-	cd openwrt && svn co svn://svn.openwrt.org/openwrt/tags/backfire_10.03.1/ $(@D)
-	ln -s ../../dl $(@D)/
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
-	cd $(@D) && ./scripts/feeds update
-	cd $(@D) && ./scripts/feeds install -a -p ffj
-	cd $(@D) && $(MAKE) package/symlinks
+	cd openwrt && svn co svn://svn.openwrt.org/openwrt/tags/backfire_10.03.1/ backfire
+	#pwd
+	#ln -s ../dl backfire/
+	cat backfire/feeds.conf.default feeds.conf > backfire/feeds.conf
+	cd backfire && ./scripts/feeds update
+	cd backfire && ./scripts/feeds install -a -p ffj
+	cd backfire && $(MAKE) package/symlinks
 	touch $@
 
 openwrt/trunk/.repo_access:
 	mkdir -p openwrt dl
 	cd openwrt && svn co -r $(SVNREVISION) svn://svn.openwrt.org/openwrt/trunk/ trunk
-	ln -s ../../dl $(@D)/
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
-	cd $(@D) && ./scripts/feeds update
-	cd $(@D) && ./scripts/feeds install -a -p ffj
-	cd $(@D) && $(MAKE) package/symlinks
+	pwd
+	#ln -s ../dl $(@D)/backfire/
+	cat backfire/feeds.conf.default feeds.conf > backfire/feeds.conf
+	cd backfire && ./scripts/feeds update
+	cd backfire && ./scripts/feeds install -a -p ffj
+	cd backfire && $(MAKE) package/symlinks
 	touch $@
 
 update/%: openwrt/%/.repo_access

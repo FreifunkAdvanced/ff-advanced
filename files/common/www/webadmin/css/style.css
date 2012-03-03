@@ -1,3 +1,5 @@
+@import "foundation.css";
+
 /* ==|== primary styles =====================================================
    Author:
    ========================================================================== */
@@ -122,4 +124,12 @@ fieldset input.last {
 .well button.button.danger,
 .button.danger {
   background: none repeat scroll 0 0 #e91c21;
+}
+
+#login-form input {
+  width: 100%;
+}
+
+#login-form .well {
+  width: 400px;
 }
