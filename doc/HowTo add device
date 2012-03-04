@@ -1,0 +1,16 @@
+Add a new device
+================
+
+cd openwrt/trunk/
+cp ../../config/trunk .config
+make menuconfig
+./scripts/diffconfig.sh | diff ../../config/trunk - > ../../config/trunk-ar71xx-tl-wr841.patch
+
+
+Change the base config
+======================
+
+cd openwrt/trunk/
+cp ../../config/backfire .config
+make menuconfig
+./scripts/diffconfig.sh > ../../config/backfire
