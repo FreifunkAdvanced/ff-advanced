@@ -1,5 +1,5 @@
 # default targets
-all: image/backfire/openwrt-ar71xx-tl-wr841nd-v5
+all: image/trunk/openwrt-ar71xx-tl-wr841
 
 # parallelization
 .NOTPARALLEL:
