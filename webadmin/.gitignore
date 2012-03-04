@@ -35,7 +35,7 @@ dwsync.xml
 .svn
 .CVS
 intermediate
-publish
+#publish
 .idea
 *.iml
 *.iws
