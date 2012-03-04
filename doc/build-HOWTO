@@ -1,0 +1,64 @@
+Usage: make [options] [target] ...
+
+Options: type "make -h" to see the options
+
+Image targets:
+  all			- Build default images
+  image			- Build all possible images
+  image-<repository>	- Build all images for certain repository
+  image-<repository>-<platform>
+			- Build all images for certain platform
+  image-<repository>-<platform>-<community>
+			- Build images only for this community
+   # repository:
+	backfire	- OpenWrt Backfire $(BACKFIREVERSION)
+	trunk		- OpenWrt Trunk r$(SVNREVISION)
+   # platform:
+	atheros		- Atheros AR231x/AR5312 (D-Link DIR-300)
+	ar71xx		- Atheros AR7xxx/AR9xxx (TP-Link TL-WR...)
+   # community:
+	duesseldorf	- Freifunk Düsseldorf
+	krefeld		- Freifunk Krefeld
+	neuss		- Freifunk Neuss
+	solingen	- Freifunk Solingen
+	wuppertal	- Freifunk Wuppertal
+
+Config targets:
+  config-all		- Create all .config files for OpenWrt
+  config-<repository>
+  config-<repository>-<platform>
+  config-<repository>-<platform>-<community>
+			- Create certain OpenWrt .config files
+
+Fetching targets:
+  fetch			- Get all external repositories
+  fetch-<platform>	- Get OpeenWrt <platform>
+  update		- Update all existing external repositories
+
+Cleaning targets:'
+  clean			- Remove generated images
+  mrproper		- clean + clean OpenWrt
+  distclean		- clean + get rid of OpenWrt (files, sources, )
+
+About targets:
+  info			- Version information
+
+Help targets
+  help			- this help
+  confighelp		- another help
+
+To save Space on your harddrive you can import your OpenWrt repository by
+symlinking its directory in this buildroot:
+
+ $ ln -s ~/openwrt
+ $ ln -s ~/openwrt/trunk/dl
+
+or
+
+ $ ln -s ~/openwrt
+ $ ln -s ~/openwrt/backfire/dl
+
+otherwise Freifunk Rheinland Buildroot downloads OpenWrt by itself.
+
+Execute "make image-backfire" or "make image-trunk" to build all images of
+certain OpenWrt repository. For further info see the ./README file

@@ -1,425 +1,140 @@
-4c4
-< # Thu Jan 26 23:45:02 2012
----
-> # Thu Jan 26 23:49:10 2012
-10,11c10,11
-< # CONFIG_TARGET_atheros is not set
-< CONFIG_TARGET_ar71xx=y
----
-> CONFIG_TARGET_atheros=y
-> # CONFIG_TARGET_ar71xx is not set
-57,96d56
-< # CONFIG_TARGET_ixp4xx_generic is not set
-< # CONFIG_TARGET_ixp4xx_harddisk is not set
-< # CONFIG_TARGET_at91_netus is not set
-< # CONFIG_TARGET_at91_tqma9263 is not set
-< # CONFIG_TARGET_at91_flexibity is not set
-< # CONFIG_TARGET_orion_generic is not set
-< # CONFIG_TARGET_orion_harddisk is not set
-< # CONFIG_TARGET_x86_generic is not set
-< # CONFIG_TARGET_x86_olpc is not set
-< # CONFIG_TARGET_x86_xen_domu is not set
-< # CONFIG_TARGET_x86_ep80579 is not set
-< # CONFIG_TARGET_x86_net5501 is not set
-< # CONFIG_TARGET_x86_kvm_guest is not set
-< # CONFIG_TARGET_x86_geos is not set
-< # CONFIG_TARGET_x86_alix2 is not set
-< # CONFIG_TARGET_x86_thincan is not set
-< # CONFIG_TARGET_adm5120_router_le is not set
-< # CONFIG_TARGET_adm5120_router_be is not set
-< # CONFIG_TARGET_malta_le is not set
-< # CONFIG_TARGET_malta_be is not set
-< # CONFIG_TARGET_au1000_au1500 is not set
-< # CONFIG_TARGET_au1000_au1550 is not set
-< # CONFIG_TARGET_ps3_petitboot is not set
-< # CONFIG_TARGET_s3c24xx_openmoko_gta02 is not set
-< CONFIG_TARGET_ar71xx_generic=y
-< # CONFIG_TARGET_ar71xx_nand is not set
-< # CONFIG_TARGET_omap35xx_beagleboard is not set
-< # CONFIG_TARGET_omap35xx_gumstix is not set
-< # CONFIG_TARGET_xburst_qi_lb60 is not set
-< # CONFIG_TARGET_xburst_n516 is not set
-< # CONFIG_TARGET_xburst_n526 is not set
-< # CONFIG_TARGET_xburst_id800wt is not set
-< # CONFIG_TARGET_lantiq_ar9 is not set
-< # CONFIG_TARGET_lantiq_ase is not set
-< # CONFIG_TARGET_lantiq_danube is not set
-< # CONFIG_TARGET_lantiq_falcon_stable is not set
-< # CONFIG_TARGET_lantiq_falcon is not set
-< # CONFIG_TARGET_lantiq_vr9 is not set
-< # CONFIG_TARGET_ramips_rt288x is not set
-< # CONFIG_TARGET_ramips_rt305x is not set
-119c79
-< # CONFIG_TARGET_atheros_Default is not set
----
-> CONFIG_TARGET_atheros_Default=y
-211c171
-< CONFIG_TARGET_ar71xx_generic_Default=y
----
-> # CONFIG_TARGET_ar71xx_generic_Default is not set
-319,323c279,282
-< CONFIG_HAS_SUBTARGETS=y
-< CONFIG_TARGET_BOARD="ar71xx"
-< CONFIG_TARGET_ARCH_PACKAGES="ar71xx"
-< CONFIG_DEFAULT_TARGET_OPTIMIZATION="-Os -pipe -mips32r2 -mtune=mips32r2 -fno-caller-saves"
-< CONFIG_LINUX_2_6_39=y
----
-> CONFIG_TARGET_BOARD="atheros"
-> CONFIG_TARGET_ARCH_PACKAGES="atheros"
-> CONFIG_DEFAULT_TARGET_OPTIMIZATION="-Os -pipe -mips32 -mtune=mips32 -fno-caller-saves"
-> CONFIG_LINUX_2_6_37=y
-328a288
-> CONFIG_DEFAULT_gpioctl=y
-331,335c291
-< CONFIG_DEFAULT_kmod-ath9k=y
-< CONFIG_DEFAULT_kmod-button-hotplug=y
-< CONFIG_DEFAULT_kmod-input-core=y
-< CONFIG_DEFAULT_kmod-input-gpio-keys-polled=y
-< CONFIG_DEFAULT_kmod-input-polldev=y
----
-> CONFIG_DEFAULT_kmod-ath5k=y
-337,341d292
-< CONFIG_DEFAULT_kmod-leds-gpio=y
-< CONFIG_DEFAULT_kmod-ledtrig-usbdev=y
-< CONFIG_DEFAULT_kmod-usb-core=y
-< CONFIG_DEFAULT_kmod-usb-ohci=y
-< CONFIG_DEFAULT_kmod-usb2=y
-349d299
-< CONFIG_DEFAULT_uboot-envtools=y
-359d308
-< CONFIG_USES_TARGZ=y
-372c321
-< CONFIG_TARGET_ROOTFS_TARGZ=y
----
-> # CONFIG_TARGET_ROOTFS_TARGZ is not set
-440c389
-< CONFIG_TARGET_OPTIMIZATION="-Os -pipe -mips32r2 -mtune=mips32r2 -fno-caller-saves"
----
-> CONFIG_TARGET_OPTIMIZATION="-Os -pipe -mips32 -mtune=mips32 -fno-caller-saves"
-505a455
-> CONFIG_BUSYBOX_USE_LIBRPC=y
-541c491
-< # CONFIG_BUSYBOX_CONFIG_FEATURE_HAVE_RPC is not set
----
-> CONFIG_BUSYBOX_CONFIG_FEATURE_HAVE_RPC=y
-823,824c773,776
-< CONFIG_BUSYBOX_CONFIG_CMP=y
-< # CONFIG_BUSYBOX_CONFIG_DIFF is not set
----
-> # CONFIG_BUSYBOX_CONFIG_CMP is not set
-> CONFIG_BUSYBOX_CONFIG_DIFF=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_DIFF_LONG_OPTIONS is not set
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_DIFF_DIR is not set
-878c830,831
-< # CONFIG_BUSYBOX_CONFIG_MESG is not set
----
-> CONFIG_BUSYBOX_CONFIG_MESG=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_MESG_ENABLE_ONLY_GROUP is not set
-885c838
-< CONFIG_BUSYBOX_CONFIG_FEATURE_SHADOWPASSWDS=y
----
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_SHADOWPASSWDS is not set
-936c889,890
-< # CONFIG_BUSYBOX_CONFIG_BLKID is not set
----
-> CONFIG_BUSYBOX_CONFIG_BLKID=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_BLKID_TYPE is not set
-964c918,919
-< # CONFIG_BUSYBOX_CONFIG_MKSWAP is not set
----
-> CONFIG_BUSYBOX_CONFIG_MKSWAP=y
-> CONFIG_BUSYBOX_CONFIG_FEATURE_MKSWAP_UUID=y
-971c926
-< # CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_NFS is not set
----
-> CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_NFS=y
-983c938,939
-< # CONFIG_BUSYBOX_CONFIG_SWAPONOFF is not set
----
-> CONFIG_BUSYBOX_CONFIG_SWAPONOFF=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_SWAPON_PRI is not set
-994c950,971
-< # CONFIG_BUSYBOX_CONFIG_VOLUMEID is not set
----
-> CONFIG_BUSYBOX_CONFIG_VOLUMEID=y
-> 
-> #
-> # Filesystem/Volume identification
-> #
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_EXT=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_BTRFS is not set
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_REISERFS=y
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_FAT=y
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_HFS=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_JFS is not set
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_XFS=y
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_NTFS=y
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_ISO9660=y
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_UDF=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_LUKS is not set
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_LINUXSWAP=y
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_CRAMFS is not set
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_ROMFS is not set
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_SYSV is not set
-> # CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_OCFS2 is not set
-> CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_LINUXRAID=y
-1175c1152
-< # CONFIG_BUSYBOX_CONFIG_KILLALL5 is not set
----
-> CONFIG_BUSYBOX_CONFIG_KILLALL5=y
-1265c1242
-< # CONFIG_PACKAGE_librt is not set
----
-> CONFIG_PACKAGE_librt=y
-1269d1245
-< # CONFIG_PACKAGE_nvram is not set
-1437d1412
-< # CONFIG_PACKAGE_luci-proto-3g is not set
-1509,1536c1484
-< CONFIG_PACKAGE_kmod-crypto-core=y
-< CONFIG_PACKAGE_kmod-crypto-aes=y
-< CONFIG_PACKAGE_kmod-crypto-arc4=y
-< # CONFIG_PACKAGE_kmod-crypto-authenc is not set
-< # CONFIG_PACKAGE_kmod-crypto-cbc is not set
-< # CONFIG_PACKAGE_kmod-crypto-crc32c is not set
-< # CONFIG_PACKAGE_kmod-crypto-deflate is not set
-< # CONFIG_PACKAGE_kmod-crypto-des is not set
-< # CONFIG_PACKAGE_kmod-crypto-ecb is not set
-< # CONFIG_PACKAGE_kmod-crypto-hash is not set
-< # CONFIG_PACKAGE_kmod-crypto-hmac is not set
-< # CONFIG_PACKAGE_kmod-crypto-hw-geode is not set
-< # CONFIG_PACKAGE_kmod-crypto-hw-hifn-795x is not set
-< # CONFIG_PACKAGE_kmod-crypto-hw-padlock is not set
-< # CONFIG_PACKAGE_kmod-crypto-iv is not set
-< # CONFIG_PACKAGE_kmod-crypto-manager is not set
-< # CONFIG_PACKAGE_kmod-crypto-md4 is not set
-< # CONFIG_PACKAGE_kmod-crypto-md5 is not set
-< # CONFIG_PACKAGE_kmod-crypto-michael-mic is not set
-< # CONFIG_PACKAGE_kmod-crypto-misc is not set
-< # CONFIG_PACKAGE_kmod-crypto-null is not set
-< # CONFIG_PACKAGE_kmod-crypto-ocf is not set
-< # CONFIG_PACKAGE_kmod-crypto-rng is not set
-< # CONFIG_PACKAGE_kmod-crypto-sha1 is not set
-< # CONFIG_PACKAGE_kmod-crypto-test is not set
-< # CONFIG_PACKAGE_kmod-crypto-user is not set
-< # CONFIG_PACKAGE_kmod-crypto-wq is not set
-< # CONFIG_PACKAGE_kmod-crypto-xts is not set
----
-> # CONFIG_PACKAGE_kmod-crypto-core is not set
-1543,1544d1490
-< # CONFIG_PACKAGE_kmod-fs-btrfs is not set
-< # CONFIG_PACKAGE_kmod-fs-cifs is not set
-1581,1583c1527
-< CONFIG_PACKAGE_kmod-leds-gpio=y
-< # CONFIG_PACKAGE_kmod-leds-rb750 is not set
-< # CONFIG_PACKAGE_kmod-leds-wndr3700-usb is not set
----
-> # CONFIG_PACKAGE_kmod-leds-gpio is not set
-1589c1533
-< CONFIG_PACKAGE_kmod-ledtrig-usbdev=y
----
-> # CONFIG_PACKAGE_kmod-ledtrig-usbdev is not set
-1597d1540
-< # CONFIG_PACKAGE_kmod-lib-crc32c is not set
-1606c1549
-< CONFIG_PACKAGE_kmod-nls-base=y
----
-> # CONFIG_PACKAGE_kmod-nls-base is not set
-1702c1645
-< CONFIG_PACKAGE_kmod-bonding=m
----
-> # CONFIG_PACKAGE_kmod-bonding is not set
-1708d1650
-< # CONFIG_PACKAGE_kmod-ipsec is not set
-1730d1671
-< # CONFIG_PACKAGE_kmod-sctp is not set
-1741c1682
-< CONFIG_PACKAGE_kmod-button-hotplug=y
----
-> # CONFIG_PACKAGE_kmod-button-hotplug is not set
-1748c1689
-< CONFIG_PACKAGE_kmod-input-core=y
----
-> # CONFIG_PACKAGE_kmod-input-core is not set
-1753c1694
-< CONFIG_PACKAGE_kmod-input-gpio-keys-polled=y
----
-> # CONFIG_PACKAGE_kmod-input-gpio-keys-polled is not set
-1755c1696
-< CONFIG_PACKAGE_kmod-input-polldev=y
----
-> # CONFIG_PACKAGE_kmod-input-polldev is not set
-1761c1702
-< # CONFIG_PACKAGE_kmod-rfkill is not set
----
-> # CONFIG_PACKAGE_kmod-ramzswap is not set
-1767a1709
-> # CONFIG_PACKAGE_kmod-wrt55agv2-spidevs is not set
-1786d1727
-< # CONFIG_PACKAGE_kmod-spi-vsc7385 is not set
-1800c1741
-< CONFIG_PACKAGE_kmod-usb-core=y
----
-> # CONFIG_PACKAGE_kmod-usb-core is not set
-1803c1744
-< CONFIG_PACKAGE_kmod-usb-ohci=y
----
-> # CONFIG_PACKAGE_kmod-usb-ohci is not set
-1813c1754
-< CONFIG_PACKAGE_kmod-usb2=y
----
-> # CONFIG_PACKAGE_kmod-usb2 is not set
-1839,1845c1780
-< CONFIG_PACKAGE_kmod-ath=y
-< 
-< #
-< # Configuration
-< #
-< # CONFIG_ATH_USER_REGD is not set
-< # CONFIG_PACKAGE_ATH_DEBUG is not set
----
-> # CONFIG_PACKAGE_kmod-ath is not set
-1847,1848c1782,1783
-< CONFIG_PACKAGE_kmod-ath9k=y
-< CONFIG_PACKAGE_kmod-ath9k-common=y
----
-> # CONFIG_PACKAGE_kmod-ath9k is not set
-> # CONFIG_PACKAGE_kmod-ath9k-common is not set
-1853c1788
-< CONFIG_PACKAGE_kmod-cfg80211=y
----
-> # CONFIG_PACKAGE_kmod-cfg80211 is not set
-1864c1799,1801
-< CONFIG_PACKAGE_kmod-mac80211=y
----
-> # CONFIG_PACKAGE_kmod-mac80211 is not set
-> # CONFIG_PACKAGE_kmod-mac80211-hwsim is not set
-> CONFIG_PACKAGE_kmod-madwifi=y
-1869,1872c1806,1809
-< CONFIG_PACKAGE_MAC80211_DEBUGFS=y
-< CONFIG_PACKAGE_MAC80211_MESH=y
-< # CONFIG_PACKAGE_kmod-mac80211-hwsim is not set
-< # CONFIG_PACKAGE_kmod-madwifi is not set
----
-> # CONFIG_MADWIFI_COMPRESSION is not set
-> CONFIG_MADWIFI_SINGLE_MODULE=y
-> CONFIG_MADWIFI_RCA_MINSTREL=y
-> # CONFIG_MADWIFI_RCA_SAMPLERATE is not set
-1904d1840
-< CONFIG_PACKAGE_uboot-ar71xx-nbg460n_550n_550nh=y
-2252c2188
-< # CONFIG_PACKAGE_librpc is not set
----
-> CONFIG_PACKAGE_librpc=y
-2290a2227
-> # CONFIG_PACKAGE_libv4l is not set
-2659d2595
-< # CONFIG_PACKAGE_ipsec-tools is not set
-2668d2603
-< # CONFIG_PACKAGE_opennhrp is not set
-2677,2735d2611
-< # CONFIG_PACKAGE_strongswan4 is not set
-< # CONFIG_PACKAGE_strongswan4-app-charon is not set
-< # CONFIG_PACKAGE_strongswan4-app-pluto is not set
-< # CONFIG_PACKAGE_strongswan4-default is not set
-< # CONFIG_PACKAGE_strongswan4-libfast is not set
-< # CONFIG_PACKAGE_strongswan4-minimal is not set
-< # CONFIG_PACKAGE_strongswan4-mod-aes is not set
-< # CONFIG_PACKAGE_strongswan4-mod-af-alg is not set
-< # CONFIG_PACKAGE_strongswan4-mod-agent is not set
-< # CONFIG_PACKAGE_strongswan4-mod-attr is not set
-< # CONFIG_PACKAGE_strongswan4-mod-attr-sql is not set
-< # CONFIG_PACKAGE_strongswan4-mod-blowfish is not set
-< # CONFIG_PACKAGE_strongswan4-mod-constraints is not set
-< # CONFIG_PACKAGE_strongswan4-mod-coupling is not set
-< # CONFIG_PACKAGE_strongswan4-mod-curl is not set
-< # CONFIG_PACKAGE_strongswan4-mod-des is not set
-< # CONFIG_PACKAGE_strongswan4-mod-dhcp is not set
-< # CONFIG_PACKAGE_strongswan4-mod-dnskey is not set
-< # CONFIG_PACKAGE_strongswan4-mod-duplicheck is not set
-< # CONFIG_PACKAGE_strongswan4-mod-eap-md5 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-eap-mschapv2 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-eap-radius is not set
-< # CONFIG_PACKAGE_strongswan4-mod-farp is not set
-< # CONFIG_PACKAGE_strongswan4-mod-fips-prf is not set
-< # CONFIG_PACKAGE_strongswan4-mod-gcrypt is not set
-< # CONFIG_PACKAGE_strongswan4-mod-gmp is not set
-< # CONFIG_PACKAGE_strongswan4-mod-hmac is not set
-< # CONFIG_PACKAGE_strongswan4-mod-kernel-klips is not set
-< # CONFIG_PACKAGE_strongswan4-mod-kernel-netlink is not set
-< # CONFIG_PACKAGE_strongswan4-mod-kernel-pfkey is not set
-< # CONFIG_PACKAGE_strongswan4-mod-ldap is not set
-< # CONFIG_PACKAGE_strongswan4-mod-led is not set
-< # CONFIG_PACKAGE_strongswan4-mod-load-tester is not set
-< # CONFIG_PACKAGE_strongswan4-mod-md5 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-medcli is not set
-< # CONFIG_PACKAGE_strongswan4-mod-medsrv is not set
-< # CONFIG_PACKAGE_strongswan4-mod-mysql is not set
-< # CONFIG_PACKAGE_strongswan4-mod-pem is not set
-< # CONFIG_PACKAGE_strongswan4-mod-pgp is not set
-< # CONFIG_PACKAGE_strongswan4-mod-pkcs1 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-pubkey is not set
-< # CONFIG_PACKAGE_strongswan4-mod-random is not set
-< # CONFIG_PACKAGE_strongswan4-mod-resolve is not set
-< # CONFIG_PACKAGE_strongswan4-mod-revocation is not set
-< # CONFIG_PACKAGE_strongswan4-mod-sha1 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-sha2 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-smp is not set
-< # CONFIG_PACKAGE_strongswan4-mod-socket-default is not set
-< # CONFIG_PACKAGE_strongswan4-mod-socket-raw is not set
-< # CONFIG_PACKAGE_strongswan4-mod-sql is not set
-< # CONFIG_PACKAGE_strongswan4-mod-sqlite is not set
-< # CONFIG_PACKAGE_strongswan4-mod-stroke is not set
-< # CONFIG_PACKAGE_strongswan4-mod-uci is not set
-< # CONFIG_PACKAGE_strongswan4-mod-updown is not set
-< # CONFIG_PACKAGE_strongswan4-mod-whitelist is not set
-< # CONFIG_PACKAGE_strongswan4-mod-x509 is not set
-< # CONFIG_PACKAGE_strongswan4-mod-xauth is not set
-< # CONFIG_PACKAGE_strongswan4-mod-xcbc is not set
-< # CONFIG_PACKAGE_strongswan4-utils is not set
-2827,2828c2703
-< # CONFIG_PACKAGE_chat is not set
-< CONFIG_PACKAGE_crda=y
----
-> # CONFIG_PACKAGE_crda is not set
-2872c2747
-< CONFIG_PACKAGE_iw=y
----
-> # CONFIG_PACKAGE_iw is not set
-2926,2929c2801
-< CONFIG_PACKAGE_ppp=y
-< # CONFIG_PACKAGE_ppp-mod-pppoa is not set
-< CONFIG_PACKAGE_ppp-mod-pppoe=y
-< # CONFIG_PACKAGE_ppp-mod-radius is not set
----
-> # CONFIG_PACKAGE_ppp is not set
-2931,2932d2802
-< # CONFIG_PACKAGE_pppdump is not set
-< # CONFIG_PACKAGE_pppstats is not set
-2943d2812
-< # CONFIG_PACKAGE_sctp is not set
-2987,2990d2855
-< # CONFIG_PACKAGE_vsc7385-ucode-ap83 is not set
-< # CONFIG_PACKAGE_vsc7385-ucode-pb44 is not set
-< # CONFIG_PACKAGE_vsc7395-ucode-ap83 is not set
-< # CONFIG_PACKAGE_vsc7395-ucode-pb44 is not set
-2999,3000c2864,2865
-< # CONFIG_DRIVER_WEXT_SUPPORT is not set
-< CONFIG_DRIVER_11N_SUPPORT=y
----
-> CONFIG_DRIVER_WEXT_SUPPORT=y
-> # CONFIG_DRIVER_11N_SUPPORT is not set
-3327c3192
-< # CONFIG_PACKAGE_comgt is not set
----
-> # CONFIG_PACKAGE_compcache is not set
-3359c3224
-< # CONFIG_PACKAGE_gpioctl is not set
----
-> CONFIG_PACKAGE_gpioctl=y
-3423d3287
-< # CONFIG_PACKAGE_rbcfg is not set
-3465c3329
-< CONFIG_PACKAGE_uboot-envtools=y
----
-> # CONFIG_PACKAGE_uboot-envtools is not set
+--- trunk.config	2012-03-02 20:11:05.000000000 +0100
++++ trunk-atheros.config	2012-03-02 19:26:34.000000000 +0100
+@@ -1,11 +1,19 @@
+ CONFIG_HAVE_DOT_CONFIG=y
++CONFIG_TARGET_atheros=y
++CONFIG_TARGET_atheros_Default=y
++CONFIG_TARGET_BOARD="atheros"
++CONFIG_TARGET_ARCH_PACKAGES="atheros"
++CONFIG_DEFAULT_TARGET_OPTIMIZATION="-Os -pipe -mips32 -mtune=mips32 -fno-caller-saves"
++CONFIG_LINUX_2_6_37=y
+ CONFIG_DEFAULT_base-files=y
+ CONFIG_DEFAULT_busybox=y
+ CONFIG_DEFAULT_dnsmasq=y
+ CONFIG_DEFAULT_dropbear=y
+ CONFIG_DEFAULT_firewall=y
++CONFIG_DEFAULT_gpioctl=y
+ CONFIG_DEFAULT_hotplug2=y
+ CONFIG_DEFAULT_iptables=y
++CONFIG_DEFAULT_kmod-ath5k=y
+ CONFIG_DEFAULT_kmod-ipt-nathelper=y
+ CONFIG_DEFAULT_libc=y
+ CONFIG_DEFAULT_libgcc=y
+@@ -43,6 +51,7 @@
+ CONFIG_EXTERNAL_KERNEL_TREE=""
+ CONFIG_KERNEL_GIT_CLONE_URI=""
+ CONFIG_KERNEL_GIT_LOCAL_REPOSITORY=""
++CONFIG_TARGET_OPTIMIZATION="-Os -pipe -mips32 -mtune=mips32 -fno-caller-saves"
+ CONFIG_SOFT_FLOAT=y
+ CONFIG_EXTRA_BINUTILS_CONFIG_OPTIONS=""
+ CONFIG_BINUTILS_VERSION="2.22"
+@@ -79,6 +88,7 @@
+ CONFIG_PACKAGE_base-files-network=y
+ CONFIG_EXTROOT_SETTLETIME=20
+ CONFIG_PACKAGE_busybox=y
++CONFIG_BUSYBOX_USE_LIBRPC=y
+ CONFIG_BUSYBOX_CONFIG_HAVE_DOT_CONFIG=y
+ CONFIG_BUSYBOX_CONFIG_INCLUDE_SUSv2=y
+ CONFIG_BUSYBOX_CONFIG_PLATFORM_LINUX=y
+@@ -93,6 +103,7 @@
+ CONFIG_BUSYBOX_CONFIG_FEATURE_PREFER_APPLETS=y
+ CONFIG_BUSYBOX_CONFIG_BUSYBOX_EXEC_PATH="/proc/self/exe"
+ CONFIG_BUSYBOX_CONFIG_FEATURE_SYSLOG=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_HAVE_RPC=y
+ CONFIG_BUSYBOX_CONFIG_LFS=y
+ CONFIG_BUSYBOX_CONFIG_CROSS_COMPILER_PREFIX=""
+ CONFIG_BUSYBOX_CONFIG_EXTRA_CFLAGS=""
+@@ -206,6 +217,7 @@
+ CONFIG_BUSYBOX_CONFIG_FEATURE_VI_OPTIMIZE_CURSOR=y
+ CONFIG_BUSYBOX_CONFIG_AWK=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_AWK_LIBM=y
++CONFIG_BUSYBOX_CONFIG_DIFF=y
+ CONFIG_BUSYBOX_CONFIG_SED=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_ALLOW_EXEC=y
+ CONFIG_BUSYBOX_CONFIG_FIND=y
+@@ -238,6 +250,7 @@
+ CONFIG_BUSYBOX_CONFIG_FEATURE_USE_INITTAB=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_INIT_SYSLOG=y
+ CONFIG_BUSYBOX_CONFIG_INIT_TERMINAL_TYPE="linux"
++CONFIG_BUSYBOX_CONFIG_MESG=y
+ CONFIG_BUSYBOX_CONFIG_PASSWD=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_PASSWD_WEAK_CHECK=y
+ CONFIG_BUSYBOX_CONFIG_INSMOD=y
+@@ -246,20 +259,36 @@
+ CONFIG_BUSYBOX_CONFIG_FEATURE_LSMOD_PRETTY_2_6_OUTPUT=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_CHECK_TAINTED_MODULE=y
+ CONFIG_BUSYBOX_CONFIG_DEFAULT_MODULES_DIR="/lib/modules"
++CONFIG_BUSYBOX_CONFIG_BLKID=y
+ CONFIG_BUSYBOX_CONFIG_DMESG=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_DMESG_PRETTY=y
+ CONFIG_BUSYBOX_CONFIG_HEXDUMP=y
+ CONFIG_BUSYBOX_CONFIG_HWCLOCK=y
++CONFIG_BUSYBOX_CONFIG_MKSWAP=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_MKSWAP_UUID=y
+ CONFIG_BUSYBOX_CONFIG_MOUNT=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_HELPERS=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_NFS=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_CIFS=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_FLAGS=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_FSTAB=y
+ CONFIG_BUSYBOX_CONFIG_PIVOT_ROOT=y
++CONFIG_BUSYBOX_CONFIG_SWAPONOFF=y
+ CONFIG_BUSYBOX_CONFIG_SWITCH_ROOT=y
+ CONFIG_BUSYBOX_CONFIG_UMOUNT=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_UMOUNT_ALL=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_MOUNT_LOOP=y
++CONFIG_BUSYBOX_CONFIG_VOLUMEID=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_EXT=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_REISERFS=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_FAT=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_HFS=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_XFS=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_NTFS=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_ISO9660=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_UDF=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_LINUXSWAP=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_VOLUMEID_LINUXRAID=y
+ CONFIG_BUSYBOX_CONFIG_LESS=y
+ CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_MAXLINES=9999999
+ CONFIG_BUSYBOX_CONFIG_CROND=y
+@@ -312,6 +341,7 @@
+ CONFIG_BUSYBOX_CONFIG_FREE=y
+ CONFIG_BUSYBOX_CONFIG_KILL=y
+ CONFIG_BUSYBOX_CONFIG_KILLALL=y
++CONFIG_BUSYBOX_CONFIG_KILLALL5=y
+ CONFIG_BUSYBOX_CONFIG_PGREP=y
+ CONFIG_BUSYBOX_CONFIG_PIDOF=y
+ CONFIG_BUSYBOX_CONFIG_PKILL=y
+@@ -352,6 +382,7 @@
+ CONFIG_PACKAGE_libc=y
+ CONFIG_PACKAGE_libgcc=y
+ CONFIG_PACKAGE_libpthread=y
++CONFIG_PACKAGE_librt=y
+ CONFIG_PACKAGE_mtd=y
+ CONFIG_PACKAGE_opkg=y
+ CONFIG_PACKAGE_swconfig=y
+@@ -380,6 +411,9 @@
+ CONFIG_PACKAGE_kmod-ppp=y
+ CONFIG_PACKAGE_kmod-pppoe=y
+ CONFIG_PACKAGE_kmod-tun=y
++CONFIG_PACKAGE_kmod-madwifi=y
++CONFIG_MADWIFI_SINGLE_MODULE=y
++CONFIG_MADWIFI_RCA_MINSTREL=y
+ CONFIG_PACKAGE_iptables=y
+ CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
+ CONFIG_PACKAGE_iptables-mod-filter=y
+@@ -392,11 +426,14 @@
+ CONFIG_PACKAGE_SAMBA_MAX_DEBUG_LEVEL=-1
+ CONFIG_PACKAGE_udp-broadcast=y
+ CONFIG_WPA_MSG_MIN_PRIORITY=3
++CONFIG_DRIVER_WEXT_SUPPORT=y
+ CONFIG_PACKAGE_wpad-mini=y
+ CONFIG_PACKAGE_libip4tc=y
+ CONFIG_PACKAGE_libip6tc=y
+ CONFIG_PACKAGE_libxtables=y
+ CONFIG_PACKAGE_libnl-tiny=y
++CONFIG_PACKAGE_librpc=y
+ CONFIG_PACKAGE_libuci=y
+ CONFIG_PACKAGE_flock=y
++CONFIG_PACKAGE_gpioctl=y
+ 
