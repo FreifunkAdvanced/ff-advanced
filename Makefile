@@ -1,6 +1,6 @@
 VERSION := $(shell echo git-`git log --format=format:%h -n1`)
 DATE := $(shell git log --format=format:%cd --date=short -n1)
-
+SHELL := /bin/bash
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
 # More info can be located in ./README
@@ -106,15 +106,6 @@ fetch-trunk: openwrt/trunk/.repo_access
 .NOTPARALLEL:
 openwrt/backfire/.repo_access:
 	mkdir -p openwrt dl
-<<<<<<< HEAD
-	cd openwrt && svn co svn://svn.openwrt.org/openwrt/tags/backfire_10.03.1/ backfire
-	#pwd
-	#ln -s ../dl backfire/
-	cat backfire/feeds.conf.default feeds.conf > backfire/feeds.conf
-	cd backfire && ./scripts/feeds update
-	cd backfire && ./scripts/feeds install -a -p ffj
-	cd backfire && $(MAKE) package/symlinks
-=======
 	@echo '  SVN 	  OpenWrt Backfire $(BACKFIREVERSION)'
 	svn co -q svn://svn.openwrt.org/openwrt/tags/backfire_$(BACKFIREVERSION)/ $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
@@ -125,21 +116,11 @@ openwrt/backfire/.repo_access:
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Backfire $(BACKFIREVERSION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
->>>>>>> ada87ec6509432147e55bd8b346966fc9ba07c8e
 	touch $@
 
 .NOTPARALLEL:
 openwrt/trunk/.repo_access:
 	mkdir -p openwrt dl
-<<<<<<< HEAD
-	cd openwrt && svn co -r $(SVNREVISION) svn://svn.openwrt.org/openwrt/trunk/ trunk
-	pwd
-	#ln -s ../dl $(@D)/backfire/
-	cat backfire/feeds.conf.default feeds.conf > backfire/feeds.conf
-	cd backfire && ./scripts/feeds update
-	cd backfire && ./scripts/feeds install -a -p ffj
-	cd backfire && $(MAKE) package/symlinks
-=======
 	@echo '  SVN     OpenWrt Trunk r$(SVNREVISION)'
 	svn co -q -r $(SVNREVISION) svn://svn.openwrt.org/openwrt/trunk/ $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
@@ -150,7 +131,6 @@ openwrt/trunk/.repo_access:
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
->>>>>>> ada87ec6509432147e55bd8b346966fc9ba07c8e
 	touch $@
 
 # ------------------------------------
@@ -266,4 +246,3 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	mkdir -p $@
 	#mv openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
-
