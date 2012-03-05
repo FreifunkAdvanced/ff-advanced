@@ -1,0 +1,15 @@
+1,4c1,3
+< CONFIG_TARGET_ar71xx=y
+< CONFIG_TARGET_ar71xx_generic=y
+< CONFIG_TARGET_ar71xx_generic_Default=y
+< CONFIG_ATH_USER_REGD=y
+---
+> CONFIG_TARGET_atheros=y
+> CONFIG_TARGET_atheros_Default=y
+> CONFIG_TARGET_BOARD="atheros"
+6d4
+< CONFIG_BUSYBOX_CONFIG_BLKID=y
+23d20
+< CONFIG_BUSYBOX_CONFIG_VOLUMEID=y
+55d51
+< # CONFIG_PACKAGE_uboot-envtools is not set
