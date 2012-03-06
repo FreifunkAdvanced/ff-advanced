@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 print_ext () {
     ls -d -- "$1"{,.delete,.patch} 2>/dev/null
