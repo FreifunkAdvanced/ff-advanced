@@ -3,26 +3,12 @@ all: image/trunk/openwrt-ar71xx-tl-wr841 \
      image/trunk/openwrt-ar71xx-tl-wr741 \
      image/trunk/openwrt-atheros
 
-# parallelization
+# parallelization:
+#   This Makefile reuses the same OpenWRT repo for multiple targets,
+#   thus must process these targets serially. .NOTPARALLEL is _not_
+#   inherited by sub-makes, and passing -jX to this Makefile results
+#   in parallel builds for all submakes processes.
 .NOTPARALLEL:
-
-NUMPROC := 1
-OS := $(shell uname)
-export NUMPROC
-
-ifeq ($(OS),Linux)
-        NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
-else ifeq ($(OS),Darwin)
-        NUMPROC := $(shell sysctl hw.ncpu | awk '{print $$2}')
-endif
-
-# Always use # of processory plus 1
-NUMPROC:=$$((${NUMPROC}+1))
-NUMPROC:=$(shell echo ${NUMPROC})
-
-ifeq ($(NUMPROC),0)
-        NUMPROC = 1
-endif
 
 # fetching and maintaing OpenWRT repositories
 define init-repo
@@ -69,7 +55,7 @@ image/%: config/$$(REPO)-$$(HW).config openwrt/$$(REPO)/.repo_access
 	  files/common $(shell toolbin/extract_variants files/$(HW))
 	toolbin/name_firmware openwrt/$(REPO)
 	cd openwrt/$(REPO) && while true; do echo; done | make oldconfig >/dev/null
-	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+	cd openwrt/$(REPO) && $(MAKE)
 	mkdir -p $(shell dirname $@)
 	rsync -a openwrt/$(REPO)/bin/$(PLATFORM)/ $@/
 
