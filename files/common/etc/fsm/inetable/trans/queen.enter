@@ -26,8 +26,11 @@ if [ -z "$oct3" ]; then
     # TODO: log warning about IPv4 addr space exhaustion
 fi
 [ -n "$oct3" ]
-gwip=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 1)) 1 \
-     | grep ^START | cut -f2 -d=)
+net_mesh=$(uci get cloud.cur.net_mesh)
+gwip=$(      ipcalc.sh $net_mesh $(($oct3 * 256 + 1))   1 | grep ^START | cut -f2 -d=)
+dhcp_start=$(ipcalc.sh $net_mesh $(($oct3 * 256 + 2))   1 | grep ^START | cut -f2 -d=)
+dhcp_end=$(  ipcalc.sh $net_mesh $(($oct3 * 256 + 254)) 1 | grep ^START | cut -f2 -d=)
+
 p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
 
 # activate gw mode
@@ -43,6 +46,8 @@ set dhcp.mesh.start=2
 set dhcp.mesh.limit=254
 set dhcp.mesh.leasetime=$DHCPLeaseTime
 set dhcp.mesh.interface=mesh
+set dhcp.mesh.start_ip=$dhcp_start
+set dhcp.mesh.end_ip=$dhcp_end
 " | uci batch
 /etc/init.d/dnsmasq restart
 
