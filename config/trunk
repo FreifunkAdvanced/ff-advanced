@@ -25,11 +25,11 @@ CONFIG_BUSYBOX_USE_LIBRPC=y
 CONFIG_IMAGEOPT=y
 # CONFIG_KERNEL_ELF_CORE is not set
 CONFIG_KMOD_BATMAN_ADV_BATCTL=y
-CONFIG_KMOD_BATMAN_ADV_DEBUG_LOG=y
 # CONFIG_PACKAGE_MAC80211_MESH is not set
 CONFIG_PACKAGE_bridge=y
 CONFIG_PACKAGE_flock=y
 CONFIG_PACKAGE_hostapd-mini=y
+CONFIG_PACKAGE_ip6tables=y
 CONFIG_PACKAGE_kmod-batman-adv=y
 CONFIG_PACKAGE_kmod-button-hotplug=y
 CONFIG_PACKAGE_kmod-input-core=y
@@ -44,14 +44,12 @@ CONFIG_PACKAGE_kmod-lib-crc16=y
 CONFIG_PACKAGE_kmod-lib-textsearch=y
 # CONFIG_PACKAGE_kmod-ppp is not set
 CONFIG_PACKAGE_kmod-tun=y
-CONFIG_PACKAGE_libncurses=y
-CONFIG_PACKAGE_libopenssl=y
+CONFIG_PACKAGE_libip6tc=y
 CONFIG_PACKAGE_libpthread=y
 CONFIG_PACKAGE_librpc=y
 CONFIG_PACKAGE_librt=y
 CONFIG_PACKAGE_n2n=y
 # CONFIG_PACKAGE_ppp is not set
-CONFIG_PACKAGE_terminfo=y
 # CONFIG_PACKAGE_uboot-envtools is not set
 CONFIG_PACKAGE_udp-broadcast=y
 CONFIG_PACKAGE_uhttpd=y
