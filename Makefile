@@ -13,7 +13,7 @@ all: image/trunk/openwrt-ar71xx-tl-wr841 \
 # fetching and maintaing OpenWRT repositories
 define init-repo
 mkdir -p openwrt dl
-cd openwrt && svn co $(REPO_URL)
+cd openwrt && svn co $(shell [ -n "$(REPO_VSN)" ] && echo -r $(REPO_VSN)) $(REPO_URL)
 cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 cd $(@D) && ./scripts/feeds update
 cd $(@D) && ./scripts/feeds install -a -p ffj
@@ -22,6 +22,7 @@ touch $@
 endef
 
 openwrt/trunk/.repo_access: REPO_URL=svn://svn.openwrt.org/openwrt/trunk/
+openwrt/trunk/.repo_access: REPO_VSN=30772
 openwrt/trunk/.repo_access:
 	$(init-repo)
 
