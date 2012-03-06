@@ -75,4 +75,6 @@ image/%: config/$$(REPO)-$$(HW).config openwrt/$$(REPO)/.repo_access
 
 clean: 
 	-rm -r config/*.config image/*
+
+allclean: clean
 	-for i in openwrt/*; do (cd $$i && $(MAKE) clean); done
