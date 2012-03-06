@@ -1,6 +1,6 @@
 #!/bin/ash
 
-if [[ `uci get batman-adv.bat0.gw_mode` = "server" ]]; then
+if [[ ` batctl gw_mode | awk '{print $1}'` = "server" ]]; then
   
   n2n_pwd=`wget http://www.freifunk-jena.de/n2n -O - -q`
   n2n1_pwd_old=`uci get n2n.@edge[1].key`
