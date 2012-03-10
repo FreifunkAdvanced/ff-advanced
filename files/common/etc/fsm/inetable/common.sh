@@ -19,15 +19,18 @@ mesh_del_ipv4 () {
     ifconfig br-mesh 0.0.0.0
     echo "
 delete network.mesh.ipaddr
-delete network.mesh.proto
 delete network.mesh.netmask
 " | uci batch
+    if [ "$(uci -q get network.mesh.ip6addr)" == "" ]; then
+	uci delete network.mesh.proto
+    fi
 }
 
 mesh_add_ipv6 () {
     ifconfig br-mesh add $1
     echo "
 set network.mesh.ip6addr=$1
+set network.mesh.proto=static
 " | uci batch
 }
 
@@ -36,6 +39,9 @@ mesh_del_ipv6() {
     echo "
 delete network.mesh.ip6addr
 " | uci batch
+    if [ "$(uci -q get network.mesh.ipaddr)" == "" ]; then
+        uci delete network.mesh.proto
+    fi
 }
 
 # enable/disable uhttpd instance in uci config; the parameters are
@@ -54,12 +60,11 @@ disable_httpd () {
 }
 
 # change the interfaces the service httpd is listening on;
-# automatically adds linklocal IPv6 addresses of br-mesh and br-lan
+# automatically adds the ULA IPv6 address of br-mesh
 change_service_httpd_listen () {
     uci delete uhttp.service.listen_http &>/dev/null || true
     for i in $1 \
-	[$(ifconfig br-mesh | egrep -o 'fe80[:0-9a-f]*')%br-mesh]:80 \
-	[$(ifconfig br-lan  | egrep -o 'fe80[:0-9a-f]*')%br-lan]:80; do
+	[$(ifconfig br-mesh | egrep -o 'f[c-d][:0-9a-f]*')%br-mesh]:80 ; do
 	uci add_list uhttpd.service.listen_http=$i
     done
 }
