@@ -11,8 +11,18 @@ p2ptbl init  /tmp/p2ptbl/gwip
 p2ptbl merge /tmp/p2ptbl/gwip /tmp/gwip-init
 rm /tmp/gwip-init
 
-# start service httpd, listening on the link-local addrs of mesh and
-# lan
+# Generate ULA Ip6 addr for the node mesh interface and set it
+# All Nodes generate these addresses to have a reboot persistent address
+if [ "$(ifconfig br-mesh | egrep -o 'f[c-d][:0-9a-f]*')" == "" ]; then
+        MacAddr=$(ifconfig br-mesh | grep HWaddr | awk '{print $5}' | tr -d "\n" | tr ':' ' ' | awk '{print $1$2":"$3$4":"$5$6}')
+        ULAAddr=$(uci get cloud.cur.net_ip6ula | egrep -o 'f[c-d][:0-9a-f]*' | sed -e 's/:$//')
+        NodeSubnet="FFFF:"
+        NewIP6Addr="$ULAAddr$NodeSubnet$MacAddr"
+	mesh_add_ipv6 "$NewIP6Addr/64"
+fi
+
+# start service httpd listening on ULA IP6 Address of the mesh interface.
+# start webadmin httpd listening on the LAN IP4 Address.
 enable_httpd service
 enable_httpd webadmin $(uci get network.lan.ipaddr):80
 change_service_httpd_listen
