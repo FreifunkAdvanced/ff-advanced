@@ -3,6 +3,8 @@ config interface
 	option AdvSendAdvert	1
 	option AdvManagedFlag	1
 	option AdvOtherConfigFlag 1
+	# Nodes dont announce a ip6 default route
+	option AdvDefaultLifetime 0
 	list client		''
 	option ignore		0
 
