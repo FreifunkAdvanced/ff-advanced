@@ -1,0 +1,24 @@
+config system
+	option hostname ffnode
+	option 'zonename' 'Europe/Berlin'
+	option 'timezone' 'CET-1CEST,M3.5.0,M10.5.0/3'
+
+config 'timeserver'
+	list 'server'	'ntp1.ptb.de'
+	list 'server'	'ntp2.ptb.de'
+
+
+config button
+	option button	reset
+	option action	released
+	option handler	"logger reboot"
+	option min	0
+	option max	4
+
+config button
+	option button	reset
+	option action	released
+	option handler	"logger factory default"
+	option min	5
+	option max	30
+
