@@ -1,0 +1,47 @@
+Was ist Miniconfig?
+-------------------
+
+Im Gegensatz zum Zeroconfig-Ansatz, in dem sich das Gerät vollständig selbst
+konfiguriert, ist der Miniconfig-Ansatz die minimale Konfiguration des Routers
+über eine Weboberfläche. Über sie kann der Routerbesitzer triviale Einstellungen
+wie Passwort oder Standort selbst ändern. Darüber hinaus können Updates als kom-
+primierte Tar-Dateien vom Benutzer selbst eingespielt werden. Er ist bei minima-
+len Konfigurationsänderungen und Verbesserungen durch die Entwickler nicht mehr
+gezwungen eine neue Firmware auf den Router zu spielen. Dies ist erst bei gra-
+vierenden Systemänderungen wie Kernel-Updates, Erweiterungen der Programmviel-
+falt der OpenWrt-Zusammenstellung.
+
+Durch den Miniconfig-Ansatz ist es möglich eine Firmware für alle Freifunk
+Rheinland Funkzellen zu erstellen. Der Benutzer muss nur die Richtige Image für
+seinen Router auswählen. Sollte der Router in eine andere Funkzelle umziehen,
+muss sein Besitzer nur noch Kleinigkeiten über die Weboberfläche selbst ändern.
+
+Wie generiere ich eine Miniconfig-Image?
+----------------------------------------
+
+cp settings.mk.example settings.mk
+
+Bearbeite die „settings.mk“:
+
+SVNREVISION = die Aktuelle OpenWrt-Revision
+NAME = Dein Name
+MAIL = Deine eMail für Rückfragen der Firmwarenutzer
+
+make mcimage
+
+Mit „make help“ sind weitere Einstellungen aufgelistet. Wenn noch nicht bereits
+geschehen, wird OpenWrt automatisch heruntergeladen und kompiliert. Je nach
+Geschwindigkeit des Rechners kann dieser Prozess viel Zeit in Anspruch nehmen.
+
+Wo finde ich meine erstellten Firmware-Images?
+----------------------------------------------
+
+Die neu erstellte Firmware befindet sich im Ordner
+images/<Datum>_<FFRL_Buildroot_Vers.>/miniconfig-ar71xx-trunk-<OpenWrt-Revision>
+
+Für die Unterstützten TP-Link Router sind diese Firmware-Images von Bedeutung:
+* openwrt-ar71xx-generic-tl-<Routermodell>-<RouterVers.>-squashfs-factory.bin
+  für Router mit Herstellerfirmware
+* openwrt-ar71xx-generic-tl-<Routermodell>-<RouterVers.>-squashfs-sysupgrade.bin
+  für Router mit OpenWrt
+
