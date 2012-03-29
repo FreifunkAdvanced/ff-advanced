@@ -1,0 +1,4 @@
+config cloud cur
+	option net_robinson	'21.0.0.0/8'
+	option net_fake		'22.0.0.0/8'
+
