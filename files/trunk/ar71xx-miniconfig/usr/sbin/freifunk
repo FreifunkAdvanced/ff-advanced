@@ -1,0 +1,365 @@
+#!/bin/sh
+#
+# freifunk - configures a Freifunk Rheinland router
+# Copyright (C) 2012  Philipp Psurek <phip@vmail.me>
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+version(){
+echo "Freifunk Version 0.0.20120328"
+
+cat << EOF
+Copyright © 2012 Philipp Psurek <phip@vmail.me>
+Lizenz GPLv3+: GNU GPL Version 3 oder höher <http://gnu.org/licenses/gpl.html>
+Dies ist freie Software: Sie können sie ändern und weitergeben.
+Es gibt keinerlei Garantien, soweit wie es das Gesetz erlaubt.
+EOF
+}
+
+usage(){
+cat << EOF
+Aufruf: freifunk <Befehl> [<Argument>]
+        freifunk <Option>
+
+Befehle:
+  set               setzt ein Argument
+  list              listet die verfügbaren 
+
+Argumente:
+  com <code>        Freifunkzelle
+  latlong           Knotenkoordinaten
+  miniconfig on|off schaltet die Konfiguration über den Webbrowser an oder aus
+
+Optionen:
+  -h, --help        Hilfe
+  -v, --version     Version
+
+EOF
+list_com
+
+cat << EOF
+
+Freifunk manipuliert nur die gängigsten UCI-Befehle und ist kein Ersatz für UCI.
+EOF
+}
+
+get_case(){
+all_case
+}
+
+set_case(){
+all_case
+}
+
+list_case(){
+all_case
+}
+
+all_case(){
+case "$comcase" in
+  com)
+    comconfig
+    exit 0
+    ;;
+  hostname)
+    hostnameconfig
+    exit 0
+    ;;
+  latlong)
+    latlongconfig
+    exit 0
+    ;;
+  miniconfig)
+    miniconfig
+    exit 0
+    ;;
+  *)
+    fehler
+    ;;
+esac
+}
+
+comconfig(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+
+com=$casearg
+
+# Kanaleinstellung und Senderleistung
+uci set wireless.radio0=wifi-device
+uci set wireless.radio0.type=mac80211
+uci set wireless.radio0.channel=$(uci get ff.${com}.channel)
+uci set wireless.radio0.phy=phy0
+uci set wireless.radio0.txpower=20
+uci set wireless.radio0.country=DE
+uci set wireless.radio0.disabled=0
+#uci show wireless.radio0
+
+# B.A.T.M.A.N.-adv Schnittstelle
+uci set wireless.@wifi-iface[0]=wifi-iface
+uci set wireless.@wifi-iface[0].device=radio0
+uci set wireless.@wifi-iface[0].mode=adhoc
+uci set wireless.@wifi-iface[0].hidden=0
+uci set wireless.@wifi-iface[0].encryption=none
+uci set wireless.@wifi-iface[0].ssid=$(uci get ff.${com}.batssid)
+uci set wireless.@wifi-iface[0].bssid=$(uci get ff.${com}.bssid)
+#uci show wireless.@wifi-iface[0]
+
+# Accesspoint SSID
+[[ "$(uci get wireless.@wifi-iface[1] 2>/dev/null)" == "wifi-iface" ]] || \
+	uci add wireless wifi-iface >/dev/null 2>&1
+uci set wireless.@wifi-iface[1]=wifi-iface
+uci set wireless.@wifi-iface[1].device=radio0
+uci set wireless.@wifi-iface[1].network=mesh
+uci set wireless.@wifi-iface[1].mode=ap
+uci set wireless.@wifi-iface[1].encryption=none
+uci set wireless.@wifi-iface[1].wmm=0
+uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
+#uci show wireless.@wifi-iface[1]
+
+	# Weitere SSIDs
+	ssid2="$(uci get ff.${com}.ssid2 2>/dev/null)"
+	if [[ "${ssid2}" == "" ]]; then
+		uci delete wireless.@wifi-iface[2] 2> /dev/null
+	else
+		[[ "$(uci get wireless.@wifi-iface[2] 2>/dev/null)" == "wifi-iface" ]] || \
+			uci add wireless wifi-iface >/dev/null 2>&1
+
+		uci set wireless.@wifi-iface[2]=wifi-iface
+		uci set wireless.@wifi-iface[2].device=radio0
+		uci set wireless.@wifi-iface[2].network=mesh
+		uci set wireless.@wifi-iface[2].mode=ap
+		uci set wireless.@wifi-iface[2].encryption=none
+		uci set wireless.@wifi-iface[2].wmm=0
+		uci set wireless.@wifi-iface[2].ssid=${ssid2}
+		#uci show wireless.@wifi-iface[2]
+	fi
+
+	# Netzwerkeinstellungen
+	if [[ "${ssid2}" == "" ]]; then
+		[[ "$(uci get network.wlan.ifname)" != "wlan0-1" ]] \
+		&& uci set network.wlan.ifname=wlan0-1 \
+		&& uci commit network.wlan.ifname
+
+		[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-1" ]] \
+		&& uci set batman-adv.bat0.interfaces=wlan0-1 \
+		&& uci commit batman-adv.bat0.interfaces
+	else
+		[[ "$(uci get network.wlan.ifname)" != "wlan0-2" ]] \
+		&& uci set network.wlan.ifname=wlan0-2 \
+		&& uci commit network.wlan.ifname
+
+		[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-2" ]] \
+		&& uci set batman-adv.bat0.interfaces=wlan0-2 \
+		&& uci commit batman-adv.bat0.interfaces
+	fi
+
+# cloud
+uci set cloud.cur.net_mesh=$(uci get ff.${com}.subnet)
+uci set cloud.cur.net_ip6ula=$(uci get ff.${com}.ip6ula)
+
+# alte n2n löschen
+while uci delete n2n.@edge[-1] 2> /dev/null ; do true; done
+
+# neue n2ns anlegen
+n2namount=$(uci get ff.$(uci get ff.${com}.n2n).amount)
+i=1
+while [  $i -le $n2namount ]; do
+	let j=i-1
+	uci add n2n edge 2>&1 > /dev/null
+	#uci set n2n.@edge[${j}].ipaddr=1.2.3.4
+	uci set n2n.@edge[${j}].supernode=$(uci get ff.$(uci get ff.${com}.n2n).n2n${i})
+	uci set n2n.@edge[${j}].port=$(uci get ff.$(uci get ff.${com}.n2n).port${i})
+	uci set n2n.@edge[${j}].community=$(uci get ff.${com}.com)${i}
+	uci set n2n.@edge[${j}].key=$(uci get ff.${com}.com)${i}
+	uci set n2n.@edge[${j}].devname=n2n${i}
+	#uci set n2n.@edge[${j}].route=""
+	let i=i+1
+done
+
+# uci commit ;-)
+uci commit cloud
+uci commit n2n
+uci commit wireless
+
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+  uci show wireless
+  uci show batman-adv
+  uci show network.wlan
+  uci show cloud.cur
+  uci show n2n
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+  list_com
+else
+  fehler
+fi
+}
+
+list_com(){
+echo "Freifunkzellen:"
+# Freifunkzellen aus /etc/config/ff auslesen
+for com in $(uci get ff.com.com); do
+  c=$(echo ${com} | wc -c)
+  fill=$(for i in $(seq $((17-$c))); do echo -n ' '; done)
+  echo "  ${com} ${fill} $(uci get ff.${com}.name)"
+done
+}
+
+
+hostnameconfig(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+  uci set system.@system[0].hostname=${casearg}
+  uci commit system.@system[0].hostname
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+  uci get system.@system[0].hostname
+  exit 0
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+  echo Nichts zum Auflisten.
+else
+  fehler
+fi
+}
+
+latlongconfig(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+	if [[ "$(uci get node.info 2> /dev/null)" == "info" ]]; then
+		uci set node.info.latlong=${casearg}
+	else
+		[[ -e /etc/config/node ]] || touch /etc/config/node
+		uci set node.info=info
+		uci set node.info.latlong=${casearg}
+	fi
+	uci commit node
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+	uci get node.info.latlong
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+	echo Nichts zum Auflisten.
+else
+  fehler
+fi
+}
+
+# ;-)
+vorlage(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+  exit 0
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+  exit 0
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+  exit 0
+else
+  fehler
+fi
+}
+
+miniconfig(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+  case "$casearg" in
+    on)
+      uci set node.miniconfig.status=
+      uci set uhttpd.miniconfig=uhttpd
+      uci commit node.miniconfig
+      uci commit uhttpd.miniconfig
+      /etc/init.d/uhttpd restart
+      exit 0
+      ;;
+    off)
+      uci set node.miniconfig.status=2
+      uci set uhttpd.miniconfig=disabled
+      uci commit node.miniconfig
+      uci commit uhttpd.miniconfig
+      #/etc/init.d/uhttpd restart
+      kill -s 9 $(ps | grep -e "$(uci get uhttpd.miniconfig.listen_http)" \
+      | head -n1 | awk '{printf $1}') #2> /dev/null
+      exit 0
+      ;;
+    *)
+      fehler
+      ;;
+  esac
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+  nodestatus=$(uci get node.miniconfig.status)
+  httpstatus=$(uci get uhttpd.miniconfig)
+  if [ "${httpstatus}" == "disabled" ]; then
+    echo "Miniconfig ist aus"
+    exit 0
+  elif [ "${nodestatus}" == "" ] || [ "${status}" == "0" ]; then
+    echo "Miniconfig ist an und wartet auf die Passworteingabe"
+    exit 0
+  elif [ "${nodestatus}" == "1" ]; then
+    echo "Miniconfig ist an und wartet auf die Konfiguration durch den Benutzer"
+    exit 0
+  elif [ "${nodestatus}" == "1" ]; then
+    echo "Miniconfig ist an und wartet auf die Konfiguration durch den Benutzer"
+    exit 0
+  else
+    echo "freifunk: Unbekannter Miniconfig-Zustand"
+    exit 1
+  fi
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+  echo "Optionen:
+  on                Webbrowser einschalten
+  off               Webbrowser ausschalten"
+    exit 0
+else
+  fehler
+fi
+}
+
+fehler(){
+echo "freifunk: unbekannte Eingabe:" $command $comcase $casearg >&2
+exit 1
+}
+
+if [ "$1" != "" ]; then
+  command=$1
+  comcase=$2
+  casearg=$3
+
+  case "$command" in
+  --help)
+    usage
+    exit 0
+    ;;
+  -h)
+    usage
+    exit 0
+    ;;
+  --version)
+    version
+    exit 0
+    ;;
+  -v)
+    version
+    exit 0
+    ;;
+  set)
+    set_case
+    exit 0
+    ;;
+  get)
+    get_case
+    exit 0
+    ;;
+  list)
+    list_case
+    exit 0
+    ;;
+  *)
+    fehler
+    ;;
+  esac
+else
+  usage
+fi
+
