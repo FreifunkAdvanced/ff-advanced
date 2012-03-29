@@ -3,51 +3,51 @@ Usage: make [options] [target] ...
 Options: type "make -h" to see the options
 
 Image targets:
-  all			- Build default images
-  image			- Build all possible images
-  image-<repository>	- Build all images for certain repository
+  mcimage               - Build the miniconfig image
+  dir300image           - Build an image for D-Link DIR-300
+  all                   - Build default images
+  image                 - Build all possible images
+  image-<repository>    - Build all images for certain repository
   image-<repository>-<platform>
-			- Build all images for certain platform
+                        - Build all images for certain platform
   image-<repository>-<platform>-<community>
-			- Build images only for this community
-  mcimage		- Build the miniconfig image
-  dir300image		- Build an image for D-Link DIR-300
-   # repository:
-	backfire	- OpenWrt Backfire $(BACKFIREVERSION)
-	trunk		- OpenWrt Trunk r$(SVNREVISION)
-   # platform:
-	atheros		- Atheros AR231x/AR5312 (D-Link DIR-300)
-	ar71xx		- Atheros AR7xxx/AR9xxx (TP-Link TL-WR...)
-   # community:
-	duesseldorf	- Freifunk Düsseldorf
-	krefeld		- Freifunk Krefeld
-	neuss		- Freifunk Neuss
-	solingen	- Freifunk Solingen
-	wuppertal	- Freifunk Wuppertal
+                        - Build images only for this community
+  # repository:
+        backfire        - OpenWrt Backfire $(BACKFIREVERSION)
+        trunk           - OpenWrt Trunk r$(SVNREVISION)
+  # platform:
+        atheros         - Atheros AR231x/AR5312 (D-Link DIR-300)
+        ar71xx          - Atheros AR7xxx/AR9xxx (TP-Link TL-WR...)
+  # community:
+        duesseldorf     - Freifunk Düsseldorf
+        krefeld         - Freifunk Krefeld
+        neuss           - Freifunk Neuss
+        solingen        - Freifunk Solingen
+        wuppertal       - Freifunk Wuppertal
 
 Config targets:
-  config-all		- Create all .config files for OpenWrt
+  config-all            - Create all .config files for OpenWrt
   config-<repository>
   config-<repository>-<platform>
   config-<repository>-<platform>-<community>
-			- Create certain OpenWrt .config files
+                        - Create certain OpenWrt .config files
 
 Fetching targets:
-  fetch			- Get all external repositories
-  fetch-<platform>	- Get OpeenWrt <platform>
-  update		- Update all existing external repositories
+  fetch                 - Get all external repositories
+  fetch-<platform>      - Get OpeenWrt <platform>
+  update                - Update all existing external repositories
 
 Cleaning targets:'
-  clean			- Remove generated images
-  mrproper		- clean + clean OpenWrt
-  distclean		- clean + get rid of OpenWrt (files, sources, )
+  clean                 - Remove generated images
+  mrproper              - clean + clean OpenWrt
+  distclean             - clean + get rid of OpenWrt (files, sources, )
 
 About targets:
-  info			- Version information
+  info                  - Version information
 
 Help targets
-  help			- this help
-  confighelp		- another help
+  help                  - this help
+  confighelp            - another help
 
 To save Space on your harddrive you can import your OpenWrt repository by
 symlinking its directory in this buildroot:

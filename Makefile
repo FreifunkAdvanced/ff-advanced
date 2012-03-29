@@ -43,8 +43,8 @@ settings.mk:
 	@echo "Please edit settings.mk first."
 	@echo "Copy & edit settings.mk.example for your purposes."
 
-mcimage:
-	@echo "Miniconfig image not implemented yet."
+mcimage: images/$(DATE)_$(VERSION)/miniconfig-ar71xx-trunk-r$(SVNREVISION)
+
 
 dir300image:
 	@echo "DIR-300 image not implemented yet. You have to move the files by yourself"
