@@ -1,0 +1,787 @@
+#!/bin/sh
+#
+# freifunk-web-miniconfig - configures a Freifunk Rheinland router over CGI
+# Copyright (C) 2012  Philipp Psurek <phip@vmail.me>
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# ------------------------------------------------------------------------------
+#
+# TODO: Passwortlogin
+# TODO: Menü
+# TODO: Updates einspielen
+# TODO: Noch mehr Konfigurationsmöglichkeiten
+# Dieses Programm wird für den Betrieb eines Freifunk-Knotens nicht benötigt und
+# sollte deshalb ausgeschaltet bleiben. Es dient eigentlich nur der einfachen
+# Konfiguration eines frisch gefläschten Routers.
+#
+# ------------------------------------------------------------------------------
+
+
+#----#
+# Die Magie kommt über die Standardeingabe an
+#----#
+
+#POST=$(cat /dev/stdin)
+POST=$(cat /proc/self/fd/0)
+
+#----#
+# __Header_&_Footer__
+#----#
+
+# Header für die Ausgabe von Text
+txtheader(){
+echo -en "Status: 200 OK\r\nContent-type: text/plain; charset=UTF-8\r\n\r\n"
+}
+
+# XHTML-Header Ausgabe
+header(){
+echo -en "Status: 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
+cat << EOF
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="stylesheet" href="/style.css" />
+<title>Freifunk Rheinland – Routerkonfiguration – ${title}</title>
+</head>
+
+<body>
+
+<div id="maincontent"><img src="/freifunk-logo.png" alt="image/png" />
+
+<h1>Freifunk Rheinland</h1>
+
+EOF
+}
+
+# Ende der XHTML-Ausgabe
+footer(){
+cat << EOF
+
+</div></body></html>
+EOF
+}
+
+#----#
+# Die meisten Blöcke erklären sich anhand von $title ;-)
+#----#
+
+welcome(){
+title="Willkommen"
+header
+
+cat << EOF
+<h2>Herzlichen Glückwunsch!</h2>
+
+<p>
+Wir beglückwünschen Sie zu ihrem neuen alten Router mit Freifunk-Erweiterung.
+</p>
+
+<p>
+Ihr Router kommuniziert noch nicht mit der Freifunk-Wolke. Bitte nehmen Sie sich
+ca. 5 Minuten Zeit, um ihn zu konfigurieren.
+</p>
+
+<div id="button_area"><div id="button_left" class="buttons">
+
+<form action="/cgi-bin/config" method="post">
+<table border="0" cellspacing="0" cellpadding="0"><tr><td>
+
+<input type="hidden" name="next" value="newpass" />
+<input class="button" type="submit" value="Weiter" />
+
+</td></tr></table>
+
+</form>
+</div><div style="clear: both"></div></div>
+EOF
+footer
+}
+
+#----#
+# __Eingabe-Seiten__
+# ab hier werden Eingaben vom Nutzer verlangt
+#----#
+
+password(){
+title="Passworteingabe"
+header
+
+cat << EOF
+<h2>Routerpasswort</h2>
+
+<p>
+Mit diesem Passwort wird Ihr Router vor unbefugten Zugriff gesichert. Wählen Sie
+eine Wortkombination, die nicht in einem Wörterbuch zu finden ist und nutzen Sie
+auch Großbuchstaben, Zahlen und Sonderzeichen. Merken Sie sich Ihr Passwort gut
+oder notieren Sie es an einem sicheren Ort. Sollten Sie ihr Passwort vergessen,
+kann der Router durch ein im Wiki beschriebenen Vorgang in den Ursprungszustand
+zurückgesetzt werden.
+</p>
+
+<div id="button_area">
+<p> ${fehler}
+Bitte geben Sie Ihren Passwort zwei mal ein:
+</p>
+<form action="/cgi-bin/config" method="post">
+<p>
+<input name="passwort1" type="password" size="30" maxlength="256" /><br />
+<input name="passwort2" type="password" size="30" maxlength="256" />
+</p>
+<div id="button_left" class="buttons">
+<p><input class="button" type="submit" value="Weiter"/></p>
+</div>
+</form>
+
+<form action="/cgi-bin/config" method="post">
+<div id="button_right" class="buttons">
+<p><input type="hidden" name="next" value="newpass" />
+<input class="button" type="submit" value="Nochmal" /></p>
+</div></form><div style="clear: both"></div>
+</div>
+EOF
+footer
+}
+
+passwortfehler(){
+fehler="Ihre eingegebenen Passwörter stimmen nicht überein."
+password
+}
+
+keinpasswort(){
+fehler="Sie haben kein Passwort eingegeben."
+password
+}
+
+#----#
+routername(){
+title="Routername"
+header
+
+cat << EOF
+<h2>Routername</h2>
+
+<p>
+Taufen Sie Ihren Router auf einen Namen, der Ihnen gefällt (max. 32 Zeichen, nur
+Buchstaben a-z und A-Z sowie Zahlen 0-9 und der Bindestrich „-“, der Name darf
+nicht mit einem Bindestrich anfangen oder aufhören). Dieser Name wird für alle
+sichtbar und identifiziert Ihren Router im Freifunk.
+</p>
+
+<div id="button_area">
+<form action="/cgi-bin/config" method="post">
+<p>
+<input name="hostname" type="text" size="30" maxlength="32" />
+</p>
+<div id="button_left" class="buttons">
+<p><input class="button" type="submit" value="Weiter"/></p>
+</div>
+</form>
+
+<form action="/cgi-bin/config" method="post">
+<div id="button_right" class="buttons">
+<p><input class="button" type="submit" value="Nochmal" /></p>
+</div></form><div style="clear: both"></div>
+</div>
+EOF
+}
+
+#----#
+setlocation(){
+title="Standort"
+header
+
+cat << EOF
+<h2>Standort</h2>
+
+Bitte Wählen Sie die Stadt, in der dieser Router aufgestellt wird. Jede Stadt
+hat ihre eigenen Freifunk-Einstellungen. Diese werden für Sie automatisch
+vorgenommen. Sollte sich ihre Stadt nicht in der Auswahl befinden, wählen Sie
+„Rheinland“.
+
+<div id="button_area">
+<form action="/cgi-bin/config" method="post">
+<p>
+<select name="com" size="1">
+EOF
+
+# Freifunkzellen aus /etc/config/ff auslesen
+for com in $(uci get ff.com.com); do
+echo "<option value=\"${com}\">$(uci get ff.${com}.name)</option>"
+done
+
+cat << EOF
+</select>
+</p>
+<div id="button_left" class="buttons">
+<p><input class="button" type="submit" value="Weiter"/></p>
+</div>
+</form>
+
+<form action="/cgi-bin/config" method="post">
+<div id="button_right" class="buttons">
+<p><input type="hidden" name="next" value="setlocation" />
+<input class="button" type="submit" value="Nochmal" /></p>
+</div></form><div style="clear: both"></div>
+</div>
+
+EOF
+footer
+}
+
+#----#
+getlatlong(){
+title="Standortkoordinaten"
+header
+
+cat << EOF
+<h2>Sehr genauer Standort</h2>
+
+<p>Über die Eingabe der geographischen Breite und Länge trägt sich Ihr
+Freifunk-Knoten in die Knotenkarte ein. Dadurch erhalten Sie und andere
+Freifunker einen schönen Überblick über einsatzfähige Knoten. Diese Angabe ist
+Freiwillig, wird für die Funktion Ihres Knotens nicht benötigt und kann
+problemlos Übersprungen werden.</p>
+
+<p>Wenn Sie Ihre geographischen Koordinaten nicht kennen, können Sie Ihren
+Standort über <a href="https://maps.google.de/" target="_blank">Google Maps</a>
+erfahren:</p>
+
+<ul>
+<li>navigieren Sie zu Ihrem Standort</li>
+<li>klicken Sie mit der rechten Maustaste auf Ihren Standort</li>
+<li>wählen Sie „Was ist hier?“ aus</li>
+<li>im Google-Maps-Eingabefeld erscheinen Ihre Koordinaten, kopieren Sie diese
+</li>
+<li>fügen Sie die Koordinaten hier ein</li>
+</ul>
+
+<div id="button_area">
+<form action="/cgi-bin/config" method="post">
+<p>Beispiel: 51.258813,7.146727</p>
+<p>
+<input name="latlong" type="text" size="30" maxlength="32" />
+</p>
+<div id="button_left" class="buttons">
+<p><input class="button" type="submit" value="Weiter"/></p>
+</div>
+</form>
+
+<form action="/cgi-bin/config" method="post">
+<div id="button_right" class="buttons">
+<p><input class="button" type="submit" value="Nochmal" /></p>
+</div></form><div style="clear: both"></div>
+</div>
+
+EOF
+footer
+}
+
+#----#
+# __Verarbeitende_Seiten__
+# ab hier werden die Nutzereingaben verarbeitet und der Verarbeitungsstatus wird
+# dem Nutzer angezeigt
+#----#
+
+passwordprepare(){
+# Passwortverarbeitung
+pass1=$(urldecode $(getvalue passwort1 \
+	&& echo $post | sed -e "s/passwort1=//g"))
+pass2=$(urldecode $(getvalue passwort2 \
+	&& echo $post | sed -e "s/passwort2=//g"))
+
+# Aufrufen der nötigen Seite
+[[ "$pass1" == "" ]] && keinpasswort && exit
+[[ "$pass1" == "$pass2" ]] && setpasswd && exit
+[[ "$pass1" != "$pass2" ]] &&  passwortfehler && exit
+}
+
+passwordset(){
+# Damit wird das Routerpasswort gesetzt
+echo "$pass1
+$pass2" | passwd 2>&1 && changed || passwordreset
+}
+
+passwordreset(){
+# für seltene Fälle
+echo "admin
+$pass1
+$pass2" | passwd 2>&1 && changed || unchanged
+}
+
+setpasswd(){
+header
+echo "<h2>Passwort wird geändert.</h2>"
+echo "<code>"
+
+# die Prozedur der Ausgabe von passwd
+passwordset | sed -e "s_\$_<br />_g"
+
+# übermittelt die erste abgeschlossene Konfigurationsphase an /etc/config/node
+setnode2uci miniconfig status=1
+commitnode2uci
+
+echo "</code>"
+footer
+}
+
+changed(){
+# Passwortänderung erfolgreich
+cat << EOF
+<h2>Passwort erfolgreich geändert.</h2>\
+<p>Bitte loggen Sie sich für weitere Konfigurationsschritte ein.</p>\
+<div id="button_area">\
+<form action="/cgi-bin/config" method="post">\
+<div id="button_left" class="buttons">\
+<p><input class="button" type="submit" value="Weiter" /></p>\
+</div></form><div style="clear: both"></div>\
+</div>
+EOF
+}
+
+unchanged(){
+# Passwortänderung misslungen
+echo "<p>Es gibt einen Fehler, bitte informieren Sie uns darüber.</p>"
+echo "<code> $pass1 $pass2 </code>"
+}
+
+#----#
+ucisethostname(){
+# Hostname über UCI setzen
+uci set "system.@system[0].${post}"
+uci commit "system.@system[0].hostname"
+}
+
+sethostname(){
+# Hostname erfolgreich geändert
+header
+echo "<div><code>"
+ucisethostname && echo "<br />OK" || echo "<br />Fehler"
+uci show "system.@system[0].hostname"
+echo "</code></div>"
+
+cat << EOF
+</code>\
+<p>Routername erfolgreich geändert.</p>
+<div id="button_area">
+<form action="/cgi-bin/config" method="post">
+<div id="button_left" class="buttons">
+<p><input type="hidden" name="next" value="setlocation" />
+<input class="button" type="submit" value="Weiter" /></p>
+</div></form><div style="clear: both"></div>
+</div>
+EOF
+footer
+}
+
+#----#
+setzelle(){
+# Übernahme der Funkzelleneinstellungen
+com=$(echo $post | sed -e "s/^com=//g")
+header
+title="Automatische Konfigurierung"
+
+cat << EOF
+<h2>Ihr Router wird nun automatisch konfiguriert</h2>
+
+<p>Klicken Sie bitte anschließend auf „Weiter“ unten auf dieser Seite.</p>
+
+EOF
+
+#echo "<code>"
+#uci show ff.${com} | sed -e "s_\$_<br />_g"
+#echo "</code>"
+#echo
+
+cat << EOF
+<h3>Grundlegende WLAN Einstellungen</h3>
+
+<p>Kanaleinstellung und Senderleistung.</p>"
+
+EOF
+
+echo "<code>"
+uci set wireless.radio0=wifi-device
+echo "."
+uci set wireless.radio0.type=mac80211
+echo "."
+uci set wireless.radio0.channel=$(uci get ff.${com}.channel)
+echo "."
+uci set wireless.radio0.phy=phy0
+echo "."
+uci set wireless.radio0.txpower=20
+echo "."
+uci set wireless.radio0.country=DE
+echo "."
+uci set wireless.radio0.disabled=0
+#uci show wireless.radio0 | sed -e "s_^_<br />_g"
+echo "</code>"
+
+cat << EOF
+
+<h3>Das vermaschte B.A.T.M.A.N.-adv Netzwerk</h3>
+
+<p>Die Kommunikation der Router untereinander erfolgt in diesem Netzwerk. Es
+basiert auf der B.A.T.M.A.N.-advanced-Technologie.</p>
+
+EOF
+
+echo "<code>"
+uci set wireless.@wifi-iface[0]=wifi-iface
+echo "."
+uci set wireless.@wifi-iface[0].device=radio0
+echo "."
+uci set wireless.@wifi-iface[0].network=
+echo "."
+uci set wireless.@wifi-iface[0].mode=adhoc
+echo "."
+uci set wireless.@wifi-iface[0].hidden=0
+echo "."
+uci set wireless.@wifi-iface[0].encryption=none
+echo "."
+uci set wireless.@wifi-iface[0].ssid=$(uci get ff.${com}.batssid)
+echo "."
+uci set wireless.@wifi-iface[0].bssid=$(uci get ff.${com}.bssid)
+#uci show wireless.@wifi-iface[0] | sed -e "s_^_<br />_g"
+echo "</code>"
+
+cat << EOF
+
+<h3>Die Accesspoints des Routers</h3>
+
+<h4>www.freifunk-rheinland.net</h4>
+
+<p>Unter dieser SSID können sich die Freifunk-Nutzer einwählen und werden von
+einem Knoten zum anderen weitergeleitet, wenn sie mobil unterwegs sind. Für ein
+besseres Mobilitätserlebnis, nutzen Sie das Mesh-Netz. Die Informationen dazu
+finden Sie im Wiki oder auf unseren Intormationseiten.</p>
+
+EOF
+
+echo "<code>"
+[[ "$(uci get wireless.@wifi-iface[1])" == "wifi-iface" ]] || \
+	uci add wireless wifi-iface 2> /dev/null
+echo "."
+uci set wireless.@wifi-iface[1]=wifi-iface
+echo "."
+uci set wireless.@wifi-iface[1].device=radio0
+echo "."
+uci set wireless.@wifi-iface[1].network=mesh
+echo "."
+uci set wireless.@wifi-iface[1].mode=ap
+echo "."
+uci set wireless.@wifi-iface[1].encryption=none
+echo "."
+uci set wireless.@wifi-iface[1].wmm=0
+echo "."
+uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
+echo "."
+#uci show wireless.@wifi-iface[1] | sed -e "s_^_<br />_g"
+echo "</code>"
+echo
+
+# Zusätzliche SSID für Funkzellen mit eigener Webseite
+ssid2="$(uci get ff.${com}.ssid2 2>/dev/null)"
+if [[ "${ssid2}" == "" ]]; then
+	notownssid
+else
+	townssid
+fi
+
+echo "<h2>Netzwerkeinstellungen</h2>"
+echo
+echo "<code>"
+
+# Modifizieren der BATMAN-Schnittstelle bei mehreren SSIDs
+if [[ "${ssid2}" == "" ]]; then
+	[[ "$(uci get network.wlan.ifname)" != "wlan0-1" ]] \
+	&& uci set network.wlan.ifname=wlan0-1 \
+	&& uci commit network.wlan.ifname
+
+	[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-1" ]] \
+	&& uci set batman-adv.bat0.interfaces=wlan0-1 \
+	&& uci commit batman-adv.bat0.interfaces
+else
+	[[ "$(uci get network.wlan.ifname)" != "wlan0-2" ]] \
+	&& uci set network.wlan.ifname=wlan0-2 \
+	&& uci commit network.wlan.ifname
+
+	[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-2" ]] \
+	&& uci set batman-adv.bat0.interfaces=wlan0-2 \
+	&& uci commit batman-adv.bat0.interfaces
+fi
+echo "."
+
+uci set cloud.cur.net_mesh=$(uci get ff.${com}.subnet)
+echo "."
+
+uci set cloud.cur.net_ip6ula=$(uci get ff.${com}.ip6ula)
+echo "."
+
+# Vorsicht: böse Schleife - löscht alle alten n2ns
+while uci delete n2n.@edge[-1] 2> /dev/null ; do true; done
+echo "."
+
+# neue n2ns anlegen
+n2namount=$(uci get ff.$(uci get ff.${com}.n2n).amount)
+i=1
+while [  $i -le $n2namount ]; do
+	let j=i-1
+	uci add n2n edge 2>&1 > /dev/null
+#	uci set n2n.@edge[${j}].ipaddr=1.2.3.4
+	uci set n2n.@edge[${j}].supernode=$(uci get ff.$(uci get ff.${com}.n2n).n2n${i})
+	uci set n2n.@edge[${j}].port=$(uci get ff.$(uci get ff.${com}.n2n).port${i})
+	uci set n2n.@edge[${j}].community=$(uci get ff.${com}.com)${i}
+	uci set n2n.@edge[${j}].key=$(uci get ff.${com}.com)${i}
+	uci set n2n.@edge[${j}].devname=n2n${i}
+#	uci set n2n.@edge[${j}].route=""
+	let i=i+1
+done
+echo ".<br />"
+
+uci commit cloud
+echo "."
+
+uci commit n2n
+echo "."
+
+uci commit wireless
+echo "."
+
+echo "</code>"
+echo
+
+#-----
+echo "<h2>Zusammenfassung</h2>"
+echo
+echo "<code>"
+uci show wireless | sed -e "s_^_<br />_g"
+uci show cloud.cur | sed -e "s_^_<br />_g"
+uci show n2n  | sed -e "s_^_<br />_g"
+echo "</code>"
+#-----
+cat << EOF
+<div id="button_area"><div id="button_left" class="buttons">
+
+<form action="/cgi-bin/config" method="post">
+<table border="0" cellspacing="0" cellpadding="0"><tr><td>
+
+<input type="hidden" name="next" value="latlong" />
+<input class="button" type="submit" value="Weiter" />
+
+</td></tr></table>
+
+</form>
+</div><div style="clear: both"></div></div>
+EOF
+footer
+exit
+}
+
+# Zusätzliche SSID für Funkzellen mit eigener Webseite
+townssid(){
+echo "<h4>${ssid2}</h4>"
+echo
+echo "<p>Lokale SSID für Ihre Stadt.</p>"
+echo
+echo "<code>"
+
+[[ "$(uci get wireless.@wifi-iface[2])" == "wifi-iface" ]] || \
+	uci add wireless wifi-iface
+
+uci set wireless.@wifi-iface[2]=wifi-iface
+echo "."
+uci set wireless.@wifi-iface[2].device=radio0
+echo "."
+uci set wireless.@wifi-iface[2].network=mesh
+echo "."
+uci set wireless.@wifi-iface[2].mode=ap
+echo "."
+uci set wireless.@wifi-iface[2].encryption=none
+echo "."
+uci set wireless.@wifi-iface[2].wmm=0
+echo "."
+uci set wireless.@wifi-iface[2].ssid=${ssid2}
+#uci show wireless.@wifi-iface[2] | sed -e "s_^_<br />_g"
+echo "</code>"
+echo
+}
+
+# Löschen bereits existierender Stadt-SSID
+notownssid(){
+uci delete wireless.@wifi-iface[2] 2> /dev/null
+}
+
+#----#
+# Übernahme der geographischen Breite und Länge
+setlanglong(){
+title="Knotenkoordinaten"
+post=`echo $post | sed -e "s/%2C/,/g"`
+header
+echo "<h2>Die Koordinaten werden gespeichert</h2>"
+
+echo "<code>"
+setnode | sed -e "s_^_<br />_g"
+
+# Konfiguration beendet
+setnode2uci miniconfig status=2
+commitnode2uci
+uci show node | sed -e "s_^_<br />_g"
+
+# uhttpd deaktivieren & Router neu starten
+nomoreminiconfig | sed -e "s_^_<br />_g"
+
+echo "</code>"
+
+cat << EOF
+<div id="button_area"><div id="button_left" class="buttons">
+
+<form action="/cgi-bin/config" method="post">
+<table border="0" cellspacing="0" cellpadding="0"><tr><td>
+
+<input type="hidden" name="next" value="" />
+<input class="button" type="submit" value="Fertig" />
+
+</td></tr></table>
+
+</form>
+</div><div style="clear: both"></div></div>
+EOF
+
+footer
+}
+
+
+#----#
+# Hiermit werden die Knoteninformationen gesetzt
+# eigene UCI-Faxen in /etc/config/node
+#----#
+
+setnode2uci(){
+if [[ "$(uci get node.info 2> /dev/null)" == "info" ]]; then
+	uci set node.$1.$2
+else
+	[[ -e /etc/config/node ]] || touch /etc/config/node
+	uci set node.$1=$1
+	uci set node.$1.$2
+fi
+}
+
+setnode(){
+setnode2uci info ${post}
+commitnode2uci
+}
+
+# Knotenänderungen abspeichern
+commitnode2uci(){
+uci commit node
+}
+#----#
+# __Hauptmenü__
+#----#
+# TODO
+weblogin(){
+title="Login"
+txtheader
+echo todo
+}
+
+index(){
+title="Hauptmenü"
+header
+footer
+}
+
+# dies deaktiviert miniconfig für immer
+nomoreminiconfig(){
+uci set uhttpd.miniconfig=disabled
+uci commit uhttpd.miniconfig
+uci show uhttpd
+
+echo "Router wird neu gestartet"
+reboot &
+}
+
+#----#
+# Trivialitäten
+#----#
+
+OK(){
+txtheader
+echo OK
+echo $POST
+}
+
+fehler(){
+txtheader
+echo "fehler, irgendetwas ging schief"
+echo $POST
+}
+
+urldecode(){
+uhttpd -d "$*"
+}
+
+#----#
+# entzaubern
+getvalue(){
+post=$(echo $POST | sed -e "s/\\&/\\n/g" | grep $1)
+}
+
+#----#
+# Startseiten
+#----#
+if [[ "${POST}" == "" ]]; then 
+	# kein Passwort vergeben
+	[[ "$(uci get node.miniconfig.status 2> /dev/zero)" == "" ]] \
+		&& welcome && exit
+	# noch nicht konfiguriert
+	[[ "$(uci get node.miniconfig.status 2> /dev/zero)" == "1" ]] \
+		&& routername && exit
+	# Login und Konfigurationsmenü
+	[[ "$(uci get node.miniconfig.status 2> /dev/zero)" == "2" ]] \
+		&& index && exit
+fi
+
+#----#
+# Aufrufen der Eingabeseiten
+#----#
+getvalue next && \
+if [[ $post == "next=newpass" ]]; then password && exit
+elif [[ $post == "next=setlocation" ]]; then setlocation && exit
+elif [[ $post == "next=latlong" ]]; then getlatlong && exit
+elif [[ $post == "next=" ]]; then index && exit
+fi
+
+#----#
+# Aufrufen der Verarbeitungsseiten
+#----#
+getvalue hostname && [[ "$(echo $post | cut -f1 -d=)" == "hostname" ]] \
+	&& sethostname && exit
+getvalue com && [[ "$(echo $post | cut -f1 -d=)" == "com" ]] \
+	&& setzelle && exit
+getvalue latlong && [[ "$(echo $post | cut -f1 -d=)" == "latlong" ]] \
+	&& setlanglong && exit
+getvalue passwort1 && [[ "$(echo $post | cut -f1 -d=)" == "passwort1" ]] \
+	&& passwordprepare && exit
+
+#----#
+# für den Fall der Fälle
+fehler
+
