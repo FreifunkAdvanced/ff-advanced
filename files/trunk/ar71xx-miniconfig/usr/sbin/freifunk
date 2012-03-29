@@ -262,10 +262,21 @@ else
 fi
 }
 
+# tweek bei nicht vorhandenen Einträgen
+setnode2uci(){
+if [[ "$(uci get node.$1 2> /dev/null)" == "$1" ]]; then
+  return 0
+else
+  [[ -e /etc/config/node ]] || touch /etc/config/node
+  uci set node.$1=$1
+fi
+}
+
 miniconfig(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
   case "$casearg" in
     on)
+      setnode2uci miniconfig
       uci set node.miniconfig.status=
       uci set uhttpd.miniconfig=uhttpd
       uci commit node.miniconfig
@@ -274,6 +285,7 @@ if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
       exit 0
       ;;
     off)
+      setnode2uci miniconfig
       uci set node.miniconfig.status=2
       uci set uhttpd.miniconfig=disabled
       uci commit node.miniconfig
@@ -308,8 +320,8 @@ elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
   fi
 elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
   echo "Optionen:
-  on                Webbrowser einschalten
-  off               Webbrowser ausschalten"
+  on                Miniconfig im Webbrowser einschalten
+  off               Miniconfig im Webbrowser ausschalten"
     exit 0
 else
   fehler
