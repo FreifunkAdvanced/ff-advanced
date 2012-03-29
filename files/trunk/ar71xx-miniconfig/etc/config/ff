@@ -77,6 +77,7 @@ config ffz gmrv
 	option bssid	02:CA:FF:EE:21:95
 	option subnet	"10.57.0.0/16"
 	option ip6ula	"fda0:747e:ab29:2195::/64"
+	option ssid2	"Freifunk Radevormwald"
 	option n2n	ffrln2n1
 
 config ffz sg 
