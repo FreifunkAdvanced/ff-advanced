@@ -18,6 +18,8 @@
 #
 # ------------------------------------------------------------------------------
 #
+# Version: 0.0.20120330
+#
 # TODO: Passwortlogin
 # TODO: Menü
 # TODO: Updates einspielen
@@ -455,9 +457,9 @@ uci set wireless.@wifi-iface[0].hidden=0
 echo "."
 uci set wireless.@wifi-iface[0].encryption=none
 echo "."
-uci set wireless.@wifi-iface[0].ssid=$(uci get ff.${com}.batssid)
+uci set wireless.@wifi-iface[0].ssid="$(uci get ff.${com}.batssid)"
 echo "."
-uci set wireless.@wifi-iface[0].bssid=$(uci get ff.${com}.bssid)
+uci set wireless.@wifi-iface[0].bssid="$(uci get ff.${com}.bssid)"
 #uci show wireless.@wifi-iface[0] | sed -e "s_^_<br />_g"
 echo "</code>"
 
@@ -617,7 +619,7 @@ uci set wireless.@wifi-iface[2].encryption=none
 echo "."
 uci set wireless.@wifi-iface[2].wmm=0
 echo "."
-uci set wireless.@wifi-iface[2].ssid=${ssid2}
+uci set wireless.@wifi-iface[2].ssid="${ssid2}"
 #uci show wireless.@wifi-iface[2] | sed -e "s_^_<br />_g"
 echo "</code>"
 echo
