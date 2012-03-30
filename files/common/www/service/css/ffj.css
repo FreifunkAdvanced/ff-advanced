@@ -1,0 +1,3 @@
+.hidden { display: none; }
+.loading:before { content: "wird geladen ..."; font-style: italic }
+img.olTileImage { max-width: none; }
