@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo -e 'Status: 200 OK\r
+Content-Type: application/json\r
+\r
+{"client_name": "mobilaptop",
+ "client_splash": [false],
+ "client_access": ["bridged"]
+}'
