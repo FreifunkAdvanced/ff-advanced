@@ -1,0 +1,99 @@
+update_hostname() {
+    uci set system.@system[0].hostname=$1
+    echo $1 > /proc/sys/kernel/hostname
+}
+
+update_geo() {
+    local auto=$1
+    local public=$2
+    local del=$3
+    uci -q batch <<EOF
+set system.position.automatic=$auto
+set system.position.public=$public
+EOF
+    if $del; then
+	    uci -q batch <<EOF
+delete system.position.lon
+delete system.position.lat
+delete system.position.street
+EOF
+    fi
+    if $auto && have_internet; then
+	# geolocate may fail (e.g. if another instance was running or
+	# the position could not be determined)
+	/sbin/geolocate || true
+        # close previously aquired lock
+	exec 667>&-
+    fi
+}
+
+update_node_db() {
+    true # TODO
+}
+
+use_router_pos=false
+# the POST input is given to this loop via HEREDOC to allow
+# manipulating variables in the current scope (especially for lazy
+# execution)
+while read key val; do
+    case "$key" in 
+	router_name)
+	    [ "$val" == "$(echo "$val" | tr -dc 'a-zA-Z0-9_')" ] \
+		|| fail 400 'Unerlaubte Zeichen verwendet'
+	    router_name=$val
+	    lazy 10 update_hostname $router_name
+	    lazy 90 update_node_db
+	    lazy 99 uci commit system
+	    ;;
+	router_qos|router_vpn|router_filter_wan)
+	    fail 403 'Diese Funktion ist noch nicht fertig'
+	    ;;
+	router_password)
+	    fail 403 'Diese Funktion ist noch nicht fertig'
+	    ;;
+	router_geo)
+	    router_geo="$val"
+	    case "$router_geo" in
+		private)
+		    lazy 00 update_geo false false true
+		    ;;
+		manual)
+		    lazy 00 update_geo false true false
+		    use_router_pos=true
+		    ;;
+		automatic)
+		    # only delete current position if we have internet
+		    # to immediately get the new position
+		    if have_internet; then
+			lazy 00 update_geo true true true
+    	                # obtain writing lock until geolocate obtains
+			# the same lock to close race cond; ignore
+			# failure to lock (prefer to process the
+			# request instead (-:)
+			exec 666>>/tmp/lock/geolocate
+			flock -n -x 667 || true
+		    else
+			lazy 00 update_geo true true false
+		    fi
+		    ;;
+		*)
+		    fail
+		    ;;
+	    esac
+	    lazy 90 update_node_db
+	    lazy 99 uci commit system
+	    ;;
+	router_pos_lon|router_pos_lat)
+	    if $use_router_pos; then
+		true
+	    fi
+	    ;;
+	router_pos_street)
+	    if $use_router_pos; then
+		true
+	    fi
+	    ;;
+	esac
+done <<EOF
+$(tr '=&' ' \n' | sort)
+EOF
