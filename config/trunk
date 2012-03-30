@@ -27,11 +27,13 @@ CONFIG_IMAGEOPT=y
 CONFIG_KMOD_BATMAN_ADV_BATCTL=y
 # CONFIG_PACKAGE_MAC80211_MESH is not set
 CONFIG_PACKAGE_bridge=y
+CONFIG_PACKAGE_ebtables=y
 CONFIG_PACKAGE_flock=y
 CONFIG_PACKAGE_hostapd-mini=y
 CONFIG_PACKAGE_ip6tables=y
 CONFIG_PACKAGE_kmod-batman-adv=y
 CONFIG_PACKAGE_kmod-button-hotplug=y
+CONFIG_PACKAGE_kmod-ebtables=y
 CONFIG_PACKAGE_kmod-input-core=y
 CONFIG_PACKAGE_kmod-input-gpio-buttons=y
 CONFIG_PACKAGE_kmod-input-polldev=y
