@@ -1,15 +1,15 @@
 #!/bin/sh -e
+
 . $IPKG_INSTROOT/etc/functions.sh
 . /etc/splash.sh
-
-echo -en "Status: 200 OK\r\n"
-echo -en "Content-Type: text/html\r\n"
-echo -en "\r\n"
+. /www/service/cgi-bin/common.sh
 
 # decode request params
-URL="http://$(sed 's/target_url=//g' | urldecode)"
+#URL="http://$(sed 's/target_url=//g' | urldecode || true)"
+URL="http://sotun.de/"
 USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \
 	 | awk 'BEGIN { FS = " " } ; { print $4 }')
+[ -n "$USER_MAC" ]
 
 # check if user is already splashed; splash otherwise
 lockSplash
@@ -25,7 +25,9 @@ config_foreach is_mac user
 if [ $ISSPLASHED -eq 0 ]; then
     # user is now free to go
     chain=$chain_prefix$chain_id
-    iptables -t nat -I $chain 1 -m mac --mac-source $USER_MAC -j ACCEPT
+    if have_internet; then
+	iptables -t nat -I $chain 1 -m mac --mac-source $USER_MAC -j ACCEPT
+    fi
 
     uci -q add splash_users user >/dev/null
     uci -q set splash_users.@user[-1].mac=$USER_MAC
@@ -34,4 +36,13 @@ fi
 unlockSplash
 
 # send response (encode / to not confuse sed)
-sed "s/targeturl/$(echo "$URL" | sed 's#/#\\/#g')/g" iframe.html
+
+echo -en "Status: 200 OK\r
+Content-Type: text/html\r
+\r
+"
+if have_internet; then
+    sed "s/targeturl/$(echo "$URL" | sed 's#/#\\/#g')/g" iframe.html
+else
+    cat internet.html
+fi

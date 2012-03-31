@@ -1,0 +1,34 @@
+#!/bin/sh -e
+
+. /www/service/cgi-bin/common.sh
+
+# try to get a lock within 3 seconds, get info without lock otherwise
+exec 666>>/tmp/lock/geolocate
+flock -w 3 -s 666 || true
+
+uci batch <<EOF 2>&1 | tee /tmp/www.foo | {
+get system.position.public
+get system.position.lon
+get system.position.lat
+get system.position.street
+EOF
+    read_uci public
+    read_uci lon
+    read_uci lat
+    read_uci street
+
+    if ! $public; then
+	fail 403 'Geolokation deaktiviert'
+    fi
+    if [ -z "$lon" -o -z "$lat" ]; then
+	fail 503 'Position noch nicht ermittelt'
+    fi
+
+    echo -e "Status: 200 OK\r
+Content-Type: application/json\r
+\r
+{\"router_pos_lon\": $lon,
+ \"router_pos_lat\": $lat,
+ \"router_pos_street\": \"$street\"
+}"
+}

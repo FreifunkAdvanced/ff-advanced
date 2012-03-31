@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo -e 'Status: 200 OK\r
+\r'
+
+env
+echo =================
+cat
+echo ========
+pwd

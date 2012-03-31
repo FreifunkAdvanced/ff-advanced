@@ -22,15 +22,17 @@ pingtest () {
 
 case "$1" in
     internet)
-	iftest $waniface && pingtest $waniface $TestHosts
+	IFace=$(uci get network.wan.ifname)
 	;;
     vpn)
-	iftest tun0 && pingtest tun0 $TestHosts
+	IFace=tun0
 	;;
     *)
 	echo "Usage:
 $0 <internet|vpn>" >&2
+	exit 1
 	;;
 esac
 
+iftest $IFace && pingtest $IFace $TestHosts
 exit 1

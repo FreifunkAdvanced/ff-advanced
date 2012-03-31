@@ -18,7 +18,6 @@ getoct () {
     | head -n1 \
     | cut -f1
 }
-
 # get the lowest free addr
 oct3=$(getoct free "sort -n")
 # no free addrs? -> steal an addr from a random ghost
@@ -31,18 +30,12 @@ if [ -z "$oct3" ]; then
     # TODO: log warning about IPv4 addr space exhaustion
 fi
 [ -n "$oct3" ]
-gwip=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 1)) 1 \
-     | grep ^START | cut -f2 -d=)
-
-DHCPStartIP=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 2)) 1 \
-     | grep ^START | cut -f2 -d=)
-
-DHCPEndIP=$(ipcalc.sh "$(uci get cloud.cur.net_mesh)" $(($oct3 * 256 + 254)) 1 \
-     | grep ^START | cut -f2 -d=)
+net_mesh=$(uci get cloud.cur.net_mesh)
+gwip=$(      ipcalc.sh $net_mesh $(($oct3 * 256 + 1))   1 | grep ^START | cut -f2 -d=)
+dhcp_start=$(ipcalc.sh $net_mesh $(($oct3 * 256 + 2))   1 | grep ^START | cut -f2 -d=)
+dhcp_end=$(  ipcalc.sh $net_mesh $(($oct3 * 256 + 254)) 1 | grep ^START | cut -f2 -d=)
 
 p2ptbl update $gwiptbl $oct3 "queen\t$NodeId" br-mesh
-
-
 
 # activate gw mode
 batctl gw server
@@ -57,15 +50,15 @@ set dhcp.mesh.start=2
 set dhcp.mesh.limit=254
 set dhcp.mesh.leasetime=$DHCPLeaseTime
 set dhcp.mesh.interface=mesh
-set dhcp.mesh.start_ip=$DHCPStartIP
-set dhcp.mesh.end_ip=$DHCPEndIP
+set dhcp.mesh.start_ip=$dhcp_start
+set dhcp.mesh.end_ip=$dhcp_end
 " | uci batch
 /etc/init.d/dnsmasq restart
 
 ## set splash
 # start redirection httpd (for splash), add GW IP to the addrs service
 # httpd listens on
-echo "http://$gwip/cgi-bin/splash? /sbin/urlencode" > /tmp/redirection_target
+echo "http://$gwip/cgi-bin/splash.html? /sbin/urlencode" > /tmp/redirection_target
 enable_httpd redirection    $gwip:81
 change_service_httpd_listen $gwip:80
 /etc/init.d/uhttpd restart

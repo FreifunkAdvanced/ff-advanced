@@ -4,4 +4,4 @@ echo -en "Content-Type: text/html\r\n"
 echo -en "\r\n"
 
 targeturl="$(echo "$QUERY_STRING" | tr -d '/')"
-sed "s/targeturl/$targeturl/g" splash.html
+sed "s/targeturl/$targeturl/g" index.html
