@@ -1,6 +1,6 @@
+SHELL := /bin/bash
 VERSION := $(shell echo git-`git log --format=format:%h -n1`)
 DATE := $(shell git log --format=format:%cd --date=short -n1)
-SHELL := /bin/bash
 
 include settings.mk
 
