@@ -1,3 +1,31 @@
 Collection of unpriorized ToDos, for a Roadmap see ROADMAP file
 
- DONE * Freeze the Batman-Adv stuff on next new Version, get rid of trunk (currently we use trunk because the last version of bat-adv doesn't support the gw_mode)
+- fake name server (better than current approach: use more than one IP
+  to distinguish between different hosts)
+- modified httpd that stays silent when non-http traffic comes in (to
+  prevent breaking buggy non-http applications)
+- periodically check for stale gwip entries
+  - especially check if own node has a stale entry (this is easier)
+- correct susupgrade (protect node-id, discard crontab)
+- add (DNS) address for node self service portal
+- better URL redirection schemes
+  - javascript based?
+  - or transparent proxy?
+- routable IPv6
+- adapt splash_click for mobile browsers ("weiter zu" is too small)
+- reintegrate N2N
+- use VPN to tunnel all internet access
+  - VPN/no-VPN variable?
+  - with some auto-config for the VPN
+- use iproute2 (from busybox) to replace `ifconfig ...|grep ...`
+- call `fsm watch inetable` once eth cable is plugged in/out
+
+files/common/sbin/test_connectivity:11:    # TODO: replace with something parallel
+files/common/etc/fsm/update/common.sh:14:NodeId=$(cat /proc/sys/kernel/random/boot_id) # TODO: replace with stable machine id
+files/common/etc/fsm/update/trans/scheduled.enter:8:# TODO: may be increase gossip frequency to allow faster updates
+files/common/etc/fsm/inetable/trans/queen.leave:20:# TODO remove splash iptable
+files/common/etc/fsm/inetable/trans/queen.enter:26:    # TODO: log warning about IPv4 addr space exhaustion
+files/common/etc/fsm/inetable/trans/queen.enter:64:# TODO: discard any other UDP traffic
+files/common/etc/fsm/inetable/trans/robinson.leave:20:# TODO: now that we have internet, send all packets destined to the
+files/common/etc/fsm/inetable/trans/queen-ghost.trans:15:# TODO: setup redirection of all traffic to another gateway
+files/common/etc/fsm/inetable/trans/ghost-queen.trans:14:# TODO: remove traffic redirection

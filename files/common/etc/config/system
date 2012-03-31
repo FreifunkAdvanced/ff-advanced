@@ -8,6 +8,16 @@ config 'timeserver'
 	list 'server' 'ntp2.ptb.de'
 
 
+config mesh mesh
+	option webif_password ''
+	option qos false
+	option vpn false
+	option filter_wan true
+
+config position position
+       option public true
+       option automatic true
+	   
 config button
 	option button	reset
 	option action	released

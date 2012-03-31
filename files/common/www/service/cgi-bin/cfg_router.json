@@ -1,0 +1,33 @@
+#!/bin/sh -e
+
+. /www/service/cgi-bin/common.sh
+check_node_auth
+
+# parse changes
+if [ $REQUEST_METHOD == POST ]; then
+    . /www/service/cgi-bin/cfg_router.commit
+fi
+
+# compute geo mode value (if not changed during this request)
+if [ -z "$router_geo" ]; then
+    if [ "$(uci get system.position.public)" == 'false' ]; then
+	router_geo=private
+    elif [ "$(uci get system.position.automatic)" == 'false' ]; then
+	router_geo=manual
+    else
+	router_geo=automatic
+    fi
+fi
+
+echo -e "Status: 200 OK\r
+Content-Type: application/json\r
+\r
+{\"router_name\":      \"${router_name-$(      uci get system.@system[0].hostname)}\",
+ \"router_password\":  \"${router_password-$(  uci get system.mesh.webif_password)}\",
+ \"router_qos\":        [${router_qos-$(       uci get system.mesh.qos)}],
+ \"router_vpn\":        [${router_vpn-$(       uci get system.mesh.vpn)}],
+ \"router_filter_wan\": [${router_filter_wan-$(uci get system.mesh.filter_wan)}],
+ \"router_geo\":        [\"$router_geo\"]
+}"
+
+exec_lazy

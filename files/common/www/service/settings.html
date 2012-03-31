@@ -1,0 +1,212 @@
+<html lang="de">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freifunk Jena</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/ffj.css">
+</head>
+<body>
+
+<div class="navbar"><div class="navbar-inner"><div class="container-fluid">
+<a class="brand" href="/">Freifunk Jena </a>
+<div class="nav-collapse"><ul class="nav">
+<li><a href="/services.html"><i class="icon-home   icon-white"></i> Lokale Dienste</a></li>
+<li><a href="/internet.html"><i class="icon-road   icon-white"></i> Internet</a></li>
+<li><a href="/status.html"><i   class="icon-signal icon-white"></i> Netzstatus</a></li>
+<li class="active"><a href="/settings.html"><i class="icon-cog    icon-white"></i> Einstellungen</a></li>
+</ul></div>
+</div></div></div>
+
+<div class="container-fluid">
+
+  <div class="tabbable tabs-left"><!-- TODO: remove tabs-left if
+  screen is too narrow !-->
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#overview" data-toggle="tab">&Uuml;bersicht</a></li>
+      <li><a href="#device" data-toggle="tab">Mein Ger&auml;t</a></li>
+      <li><a href="#lan" data-toggle="tab">Ger&auml;te im LAN</a></li>
+      <li><a href="#node" data-toggle="tab">Router</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="overview">
+	<div class="container-fluid">
+	  <div class="span3">
+	    <p>Unter <a href="#device" data-toggle="tab">Mein
+	      Ger&auml;t</a> kannst Du einstellen, wie sich Dein
+	      Computer im Freifunknetzwerk verhalten soll.</p>
+
+	    <p>Dein Computer wird dabei &uuml;ber seine <a href="#"
+	      id="tooltip-mac">MAC-Adresse</a> wiedererkannt. Deine aktuelle MAC-Adresse ist:</p>
+    
+	    <p><pre class="data-client_mac loading"></pre></p>
+	      
+	  </div>
+	  
+	  <div class="span3 only-wired hidden">
+	    <p>Unter <a href="#lan" data-toggle="tab">Ger&auml;te im
+	      LAN</a> kannst Du einstellen, wie sich per Kabel
+	      angeschlossene Ger&auml;te mit dem Freifunknetz
+	      verbinden sollen und Dienste im Freifunknetz bekannt
+	      machen.</p>
+	  </div>
+
+	  <div class="span3">
+	    <p>Um Deinen Freifunk <a href="#node"
+	      data-toggle="tab">Router</a> zu konfigurieren, musst Du
+	      Dich per Ethernetkabel mit ihm verbinden. Dies
+	      verhindert unberechtigen Zugriff auf das Ger&auml;t.</p>
+
+	    <p class="data-net_desc loading"></p>
+	  </div>
+
+	  <div class="span3">
+	    <p>Wenn Du noch keinen eigenen Router hast, kannst Du Dir
+	    unter <a href="http://www.freifunk-jena.de">Freifunk-Jena.de</a>
+	    einen besorgen.</p>
+	  </div>
+	</div>
+      </div>
+
+      <div class="tab-pane" id="device">
+	<h3>Ger&auml;teeinstellungen <small>f&uuml;r <span class="data-client_name loading"></span>
+	(<span class="data-client_mac"></span>)</small></h3>
+	
+	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	  <h4>Name <small>wird benutzt um die MAC-Adresse zu verstecken</small></h4>
+	  <input type="text" name="client_name" class="data">
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+	</form>
+
+	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	  <h4>Internetzugang</h4>
+	  <label class="checkbox inline">
+	    <input type="checkbox" name="client_splash" value="true" class="data">
+	    Splash dauerhaft deaktivieren
+	  </label>
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+	</form>
+
+	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	  <h4>Zugang zum Freifunknetz</h4>
+	  <label class="radio">
+	    <input type="radio" name="client_access" class="data" value="bridged"> direkte Verbindung mit dem
+	    Freifunknetzwerk (bridging). Uneingeschr&auml;nkte
+	    Funktionalit&auml;t und Dienstfreigabe m&ouml;glich
+	  </label>
+	  <label class="radio">
+	    <input type="radio" name="client_access" class="data" value="routed"> geroutete Verbindung: Zugriff auf das
+	    Freifunknetz funktioniert so wie Internetzugriff. Eine
+	    Programme (Chat, diverse Computerspiele) funktionieren
+	    nicht. Dienste koennen nicht freigegeben werden
+	  </label>
+	  <label class="radio">
+	    <input type="radio" name="client_access" class="data" value="isolated"> keine Verbindung
+	  </label>
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+	</form>
+      </div>
+
+      <div class="tab-pane" id="lan">
+	<h3>Ger&auml;teeinstellungen f&uuml;r andere Ger&auml;te im LAN</h3>
+
+	<p>Liste aller Gerate, Option neue hinzuzufuegen (per IP), per
+	Click auf ein Device kommt der gleiche Dialog wie fuer das
+	eigene Device</p>
+      </div>
+
+      <div class="tab-pane" id="node">
+	<h3>Routereinstellungen <small>f&uuml;r <span class="data-router_name loading"></span></h3>
+
+	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	  <h4>Name</h4>
+	  <input type="text" name="router_name" class="data">
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+	</form>
+
+	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	  <h4>Passwort</h4>
+	  <input type="text" name="router_password" class="data">
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+
+	  <div class="row-fluid">
+	    <div class="span6">
+	      <p>Ist ein Passwort gesetzt, dann muss dieses f&uuml;r
+		alle Einstellung angegeben werden, die den Router oder
+		andere Ger&auml;te im Kabelnetzwerk
+		betreffen. Einstellungen, die nur den eigenen Rechner
+		betreffen kann jeder Nutzer weiterhin ohne Passwort
+		vornehmen.</p>
+
+	      <p>Normalerweise sollte man kein Passwort setzen: die
+	        betroffenen Einstellung d&uuml;rfen auch ohne Passwort
+	        nur von Nutzern ge&auml;ndert werden, die per Kabel an
+	        den Router angeschlossen sind. Und die haben i.d.R
+	        bereits physische Gewalt &uuml;ber den Router und das
+	        Netzwerk.</p>
+	    </div>
+
+	    <div class="span6">
+	      <p><b>Kein wichtiges Passwort verwenden!</b>  Das hier
+		angegebene Passwort wird unsicher gespeichert,
+		&uuml;ber das Netzwerk &uuml;bertragen und im Klartext
+		angezeigt.</p>
+
+	      <p>Wurde das Passwort vergessen, dann muss der
+		Router <a href="foo">in den Auslieferungszustand
+		zur&uuml;ckgesetzt</a> werden. Das ist nicht tragisch
+		:-)</p>
+	    </div>
+	  </div>
+	</form>
+
+	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	  <h4>Internetzugang</h4>
+	  <label class="checkbox">
+	    <input type="checkbox" name="router_qos" value="true" class="data">
+	    LAN-Traffic gegen&uuml;ber WLAN-Traffic bevorzugen (QoS)
+	  </label>
+	  <label class="checkbox">
+	    <input type="checkbox" name="router_vpn" value="true" class="data">
+	    VPN verwenden
+	  </label>
+	  <label class="checkbox">
+	    <input type="checkbox" name="router_filter_wan" value="true" class="data">
+	    Zugriff auf lokale Netzwerke hinterm WAN-Port sperren
+	  </label>
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+	</form>
+
+	<form class="well" action="cgi-bin/cfg_router.json" method="post" id="geo">
+	  <h4>Routerstandort</h4>
+	  <div class="row-fluid">
+	    <div class="span6">
+	      <label class="radio">
+		<input type="radio" name="router_geo" class="data" value="automatic">automatisch ermitteln
+	      </label>
+	      <label class="radio">
+		<input type="radio" name="router_geo" class="data" value="manual">von Hand eingeben
+	      </label>
+	      <label class="radio">
+		<input type="radio" name="router_geo" class="data" value="private">nicht ver&ouml;ffentlichen
+	      </label>
+	    </div>
+	    <div class="span6">
+	      <input type="text" name="router_pos_lon" class="data">
+	      <input type="text" name="router_pos_lat" class="data">
+	      <input type="text" name="router_pos_street" class="data">
+	    </div>
+	  </div>
+	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
+	</form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/settings.js"></script>
+
+</body>
+</html>
