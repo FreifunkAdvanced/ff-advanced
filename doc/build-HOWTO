@@ -10,6 +10,8 @@ Image targets:
 			- Build all images for certain platform
   image-<repository>-<platform>-<community>
 			- Build images only for this community
+  mcimage		- Build the miniconfig image
+  dir300image		- Build an image for D-Link DIR-300
    # repository:
 	backfire	- OpenWrt Backfire $(BACKFIREVERSION)
 	trunk		- OpenWrt Trunk r$(SVNREVISION)
