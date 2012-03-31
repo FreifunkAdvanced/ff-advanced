@@ -24,6 +24,6 @@ fi
 # start service httpd listening on ULA IP6 Address of the mesh interface.
 # start webadmin httpd listening on the LAN IP4 Address.
 enable_httpd service
-enable_httpd webadmin $(uci get network.lan.ipaddr):80
+#enable_httpd webadmin $(uci get network.lan.ipaddr):80
 change_service_httpd_listen
 /etc/init.d/uhttpd restart
