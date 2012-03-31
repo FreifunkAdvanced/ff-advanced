@@ -1,0 +1,34 @@
+# settings.mk.example
+# copy this file to settings.mk and edit for your build process
+
+# Your signature for created images (for image release informations)
+NAME = 
+MAIL = 
+
+# Put your your default make targets in correct order
+DEFAULTIMAGES	= image-trunk-ar71xx
+
+# disable for screen flooding, enable for quiet run
+MAKEFLAGS	+= -s --no-print-directory
+
+# OpenWrt version
+# check the current SVN revision with
+# svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g"
+SVNREVISION	= 31036
+
+# OpenWrt Backfire version
+BACKFIREVERSION	= 10.03.1
+
+# Freifunk Jena  udp-broadcast
+FFJVERSION	= git-dcce1a8
+FFJDATE		= 2011-12-05
+
+# Supported OpenWrt branch
+REPOSITORY = backfire trunk
+
+# Supported platform
+PLATFORM = ar71xx atheros
+
+# Supported communitis (for zeroconfig images)
+COMMUNITY = duesseldorf krefeld neuss solingen wuppertal
+

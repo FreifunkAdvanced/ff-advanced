@@ -1,6 +1,9 @@
 SHELL := /bin/bash
 VERSION := $(shell echo git-`git log --format=format:%h -n1`)
 DATE := $(shell git log --format=format:%cd --date=short -n1)
+
+include settings.mk
+
 # *DOCUMENTATION*
 # To see a list of typical targets execute "make help"
 # More info can be located in ./README
@@ -9,27 +12,9 @@ NUMPROC := 1
 OS := $(shell uname)
 export NUMPROC
 
-# OpenWrt
-BACKFIREVERSION := 10.03.1
-#SVNREVISION := 29909
-SVNREVISION := 30795
-#SVNREVISION := `svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g"`
-#SVNREVISION := `svn info openwrt/trunk| grep "Rev:" | sed -e "s/.*: //g"`
-
-# FFJ
-FFJVERSION := git-dcce1a8
-FFJDATE := 2011-12-05
-
-
-REPOSITORY = backfire trunk
 export REPOSITORY
-PLATFORM = ar71xx atheros
 export PLATFORM
-COMMUNITY = duesseldorf krefeld neuss solingen wuppertal
 export COMMUNITY
-
-# disable for screen flooding, enable for quiet run
-MAKEFLAGS += -s --no-print-directory
 
 ifeq ($(OS),Linux)
         NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
@@ -45,22 +30,27 @@ ifeq ($(NUMPROC),0)
         NUMPROC = 1
 endif
 
-
-
 # ------------------------------------
 # Miscellaneous targets and flag lists
 # ------------------------------------
 
 # The first rule in the file had better be this one.  Don't put any above it.
 # This lives here to allow makefile fragments to contain dependencies.
-# Put your favorite make targets in correct order in this target.
-all: help
+# You can modify the default targets in settings.mk
+all: ${DEFAULTIMAGES}
+
+settings.mk:
+	@echo "Please edit settings.mk first."
+	@echo "Copy & edit settings.mk.example for your purposes."
+
+mcimage:
+	@echo "Miniconfig image not implemented yet."
+
+dir300image:
+	@echo "DIR-300 image not implemented yet. You have to move the files by yourself"
 
 help:
 	cat doc/build-HOWTO
-
-test:
-	cd config && $(MAKE) test-text1-text2-text3
 
 info:
 	@echo "Freifunk Rheinland Buildroot"
@@ -235,7 +225,7 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
 	-e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
 	-e "s/FFRLversion/$(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && echo -n "-modified"`_$(REPO)/g" \
-	-e "s/buildSystem/`uname -n`/g" > openwrt/$(REPO)/files/etc/banner
+	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner
 
 	[[ "$(REPO)" == "backfire" ]] && \
 	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
@@ -246,3 +236,4 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	mkdir -p $@
 	#mv openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
+
