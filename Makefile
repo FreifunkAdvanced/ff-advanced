@@ -127,11 +127,16 @@ openwrt/trunk/.repo_access:
 # Update targets
 # ------------------------------------
 
-update: update-backfire update-trunk
+settings_update: newSVN = $(shell svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g")
+settings_update: oldSVN = $(shell grep SVNREVISION settings.mk | sed -e "s/.*= //g")
+settings_update:
+	sed -i -e 's/$(oldSVN)/$(newSVN)/g' settings.mk
+
+update: settings_update update-backfire update-trunk
 
 update-backfire: openwrt/backfire/.update
 
-update-trunk: openwrt/trunk/.update
+update-trunk: settings_update openwrt/trunk/.update
 
 .NOTPARALLEL:
 openwrt/backfire/.update:
@@ -160,6 +165,21 @@ openwrt/trunk/.update:
 	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $(@D).repo_access
+
+# ------------------------------------
+# Clean targets
+# ------------------------------------
+
+clean: 
+	-rm -r config/*.config image/*
+
+mrpropper: mrpropper-backfire mrpropper-trunk
+
+mrpropper-backfire:
+	cd openwrt/backfire && $(MAKE) clean
+
+mrpropper-trunk:
+	cd openwrt/trunk && $(MAKE) clean
 
 # ------------------------------------
 # Build targets
@@ -229,6 +249,9 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 
 	[[ "$(REPO)" == "backfire" ]] && \
 	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
+
+	# make oldconfig for OpenWrt
+	cd openwrt/$(REPO) && while true; do echo; done | $(MAKE) oldconfig >/dev/null
 
 	# It’s all about this command :-) disable for dry run
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
