@@ -3,7 +3,7 @@ Usage: make [options] [target] ...
 Options: type "make -h" to see the options
 
 Image targets:
-  all			- Build default images
+  all			- Build default images in settings.mk
   image			- Build all possible images
   image-<repository>	- Build all images for certain repository
   image-<repository>-<platform>
@@ -27,10 +27,10 @@ Image targets:
 
 Config targets:
   config-all		- Create all .config files for OpenWrt
-  config-<repository>
-  config-<repository>-<platform>
-  config-<repository>-<platform>-<community>
+  config-[<repository>[-<platform>[-<community>]]]
 			- Create certain OpenWrt .config files
+Update targets:
+  update[-<repository>] - update settings.mk and fetch the newest OpenWrt
 
 Fetching targets:
   fetch			- Get all external repositories
