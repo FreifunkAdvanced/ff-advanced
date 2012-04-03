@@ -2,6 +2,16 @@ config system
 	option hostname FFJ
 	option timezone CET
 
+config mesh mesh
+	option webif_password ''
+	option qos false
+	option vpn false
+	option filter_wan true
+
+config position position
+       option public true
+       option automatic true
+
 config 'timeserver'
        list 'server' 'ntp1.ptb.de'
        list 'server' 'ntp2.ptb.de'

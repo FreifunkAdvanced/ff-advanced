@@ -1,0 +1,104 @@
+<html lang="de">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freifunk Jena</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/ffj.css">
+</head>
+<body>
+
+<div class="navbar"><div class="navbar-inner"><div class="container-fluid">
+<a class="brand" href="/">Freifunk Jena </a>
+<div class="nav-collapse"><ul class="nav">
+<li><a href="/services.html"><i class="icon-home   icon-white"></i> Lokale Dienste</a></li>
+<li><a href="/internet.html"><i class="icon-road   icon-white"></i> Internet</a></li>
+<li class="active"><a href="/status.html"><i   class="icon-signal icon-white"></i> Netzstatus</a></li>
+<li><a href="/settings.html"><i class="icon-cog    icon-white"></i> Einstellungen</a></li>
+</ul></div>
+</div></div></div>
+
+<div class="container-fluid">
+  <div class="span6">
+    <h2>&Uuml;bersichtskarte</h2>
+    <div style="width: 100%" id="nodemap"></div>
+  </div>
+  <div class="span6">
+    <h2>Liste aller Knoten</h2>
+    <table class="table table-striped">
+      <thead><tr>
+	<th>Knoten</th>
+	<th>Betreiber</th>
+	<th>Uplink</th>
+      </tr></thead>
+      <tbody id="nodetbl">
+	<tr><td colspan="3"><i>wird geladen ...</i></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js" defer></script>
+<script>
+$.getJSON('cgi-bin/online.json', function(haveInternet) {
+    var nodeTbl = $('#nodetbl');
+    var loadNodeData = $.getJSON("cgi-bin/nodes.json");
+
+    var nodeMap = $('#nodemap');
+    if (haveInternet) {
+	nodeMap.height(nodeMap.width() * 1.5);
+	var loadMap = $.ajax({url: "http://www.feinsterfug.de/ffj/webif/OpenLayers.js", dataType: "script", cached: true});
+    }else{
+	nodeMap.append("<div class=alert>Ohne Internetzugang funktioniert die Kartendarstellung in dieser Wolke nicht.</div>");
+	var loadMap = $.Deferred().reject();
+    }
+
+    $.when(loadNodeData).then(function(nodeData) {
+	nodeTbl.empty();	
+	$.each(nodeData, function(idx, node) {
+            nodeTbl.append("<tr><td>"
+			   + (node.name ? node.name : ("<i style=\"color: grey\">Unbenannt " + idx + "</i>")) 
+			   + "</td><td>"
+			   + (node.owner ? node.owner : ("<i style=\"color: grey\">Unbekannt " + idx + "</i>")) 
+			   + "</td><td>"
+			   + (node.uplink ? "<i class=\"icon-ok\"></i>" : "") + "</td></tr>");  
+	});
+    });
+
+    $.when(loadNodeData, loadMap).then(function(rawData) {
+	var nodeData = rawData[0];
+	var map = new OpenLayers.Map({
+	    div: 'nodemap',
+	    controls: [new OpenLayers.Control.Navigation(),
+		       new OpenLayers.Control.PanZoomBar(),
+		       new OpenLayers.Control.ScaleLine()]});
+        map.addLayer(new OpenLayers.Layer.OSM());
+
+	var nodeLayer = new OpenLayers.Layer.Vector("Nodes");
+        var t0 = new OpenLayers.Projection("EPSG:4326"); // transform from WGS 1984
+        var t1 = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection,
+	$.each(nodeData, function(idx, node) {
+	    if (node.pos)
+		nodeLayer.addFeatures(new OpenLayers.Feature.Vector(
+		    new OpenLayers.Geometry.Point(node.pos.lon, node.pos.lat).transform(t0,t1),
+		    {node: node},
+		    {externalGraphic: 'wifi.png', 
+		     graphicWidth:   32, graphicHeight: 37,
+		     graphicXOffset: -16, graphicYOffset: -36}));
+	});
+	map.addLayer(nodeLayer);
+	map.zoomToExtent(nodeLayer.getDataExtent(), true);
+
+	var markers = new OpenLayers.Control.SelectFeature(nodeLayer, {
+	    onSelect: function(feat) { alert("foo"); },
+	    onUnselect: function(feat) { alert(feat.data.node.id); },
+	    toogle: true
+	});
+	map.addControl(markers);
+	markers.activate();
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+[ -n "$REMOTE_HOST" ]
+{
+    grep ^$REMOTE_HOST </proc/net/arp \
+	| awk 'BEGIN { FS = " " } ; { print $4, $6 }'
+} | {
+    read client_mac iface
+    if [ "$iface" == br-lan ]; then wired=true; else wired=false; fi
+    router_name="$(uci get 'system.@system[0].hostname')"
+    echo -e "Status: 200 OK\r
+Content-Type: application/json\r
+\r
+{\"client_mac\": \"$client_mac\",
+ \"router_name\": \"$router_name\",
+ \"iface\": \"$iface\",
+ \"wired\": $wired
+}"
+}

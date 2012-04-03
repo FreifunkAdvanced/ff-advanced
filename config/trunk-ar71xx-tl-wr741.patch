@@ -1,0 +1,4 @@
+3c3
+< CONFIG_TARGET_ar71xx_generic_Default=y
+---
+> CONFIG_TARGET_ar71xx_generic_TLWR741=y
