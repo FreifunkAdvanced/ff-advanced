@@ -1,7 +1,6 @@
 # default targets
 all: image/trunk/openwrt-ar71xx-tl-wr841 \
-     image/trunk/openwrt-ar71xx-tl-wr741 \
-     image/trunk/openwrt-atheros
+     image/trunk/openwrt-ar71xx-tl-wr741
 
 # parallelization:
 #   This Makefile reuses the same OpenWRT repo for multiple targets,
