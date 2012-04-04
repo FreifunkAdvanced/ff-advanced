@@ -47,7 +47,7 @@ function fillData(key, val, def) {
 
 /// load data
 
-var loadBootstrap = $.ajax({url: "js/bootstrap.min.js", dataType: "script", cached: true});
+var loadBootstrap = $.ajax({url: "js/bootstrap.min.js", dataType: "script", cache: true});
 var loadCfg = {};
 $.each(['client_net', 'cfg_client', 'cfg_router', 'node_position'],
        function(i,name) {
