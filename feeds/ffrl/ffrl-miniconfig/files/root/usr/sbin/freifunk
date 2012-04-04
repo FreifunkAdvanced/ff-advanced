@@ -17,7 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version(){
-echo "Freifunk Version 0.0.20120330"
+echo "Freifunk Version 0.0.20120404"
 
 cat << EOF
 Copyright © 2012 Philipp Psurek <phip@vmail.me>
@@ -149,16 +149,20 @@ uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 	# Netzwerkeinstellungen
 	if [[ "${ssid2}" == "" ]]; then
 		[[ "$(uci get network.wlan.ifname)" != "wlan0-1" ]] \
+		&& uci set network.wlan=interface \
 		&& uci set network.wlan.ifname=wlan0-1 \
-		&& uci commit network.wlan.ifname
+		&& uci set network.wlan.mtu=1528 \
+		&& uci commit network.wlan
 
 		[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-1" ]] \
 		&& uci set batman-adv.bat0.interfaces=wlan0-1 \
 		&& uci commit batman-adv.bat0.interfaces
 	else
 		[[ "$(uci get network.wlan.ifname)" != "wlan0-2" ]] \
+		&& uci set network.wlan=interface \
 		&& uci set network.wlan.ifname=wlan0-2 \
-		&& uci commit network.wlan.ifname
+		&& uci set network.wlan.mtu=1528 \
+		&& uci commit network.wlan
 
 		[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-2" ]] \
 		&& uci set batman-adv.bat0.interfaces=wlan0-2 \
@@ -192,6 +196,8 @@ done
 uci commit cloud
 uci commit n2n
 uci commit wireless
+
+
 
 elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
   uci show wireless
