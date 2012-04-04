@@ -53,15 +53,9 @@
       
       <p><a href="foo"><i class="icon-home"></i> Lokale Dienste</a> in
       dieser Wolke:
-	<ul>
-	  <li>3 <a href="foo">Netzlaufwerke</a> (15,5 TB)</li>
-	  <li><a href="foo">Suche</a> in lokalen Resourcen</li>
-	  <li>5 <a href="foo">Internetzug&auml;nge</a> (<i class="icon-arrow-down"></i> 55 MB / <i class="icon-arrow-up"></i> 8,2 MB)</li>
-	  <li>2 <a href="foo">Videostreams</a></li>
-	  <li>4 <a href="foo">Gameserver</a> (23 <i class="icon-user"></i>)</li>
-	  <li>und <a href="foo">42 weitere</a></li>
-	</ul>
+	<ul id="service-ul"></ul>
       </p>
+      <p id="service-loading" class="loading"></p>
     </div>
     
     <div class="span4">
@@ -112,12 +106,22 @@
 </div>
 
 <script src="/js/jquery.min.js"></script>
+<script src="/js/parse_services.js"></script>
 <script src="/js/bootstrap.min.js" defer></script>
 <script>
 $.getJSON("cgi-bin/online.json", function(haveInternet) {
     if(!haveInternet)
 	$('#offline').removeClass('hidden');
-})
+});
+
+$.when(
+    $.getJSON('/cgi-bin/services.json'),
+    $.ajax({url: '/js/parse_services.js', dataType: 'script', cache: true})
+).done(function(res) {
+    services(res[0]).drawLine($('#service-ul'));
+    $('p#service-loading').remove();
+});
+
 </script>
 
 </body>
