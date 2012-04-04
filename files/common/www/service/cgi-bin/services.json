@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+. /www/service/cgi-bin/common.sh
+
+echo -e 'Status: 200 OK\r
+Content-Type: application/json\r
+\r
+['
+
+p2ptbl show /tmp/p2ptbl/service \
+       | sed '
+s/^/{"url": "/
+s/\t/", "expire": "/
+s/\t/", "source": "/
+s/\t/", "class": "/
+s/\t/", "desc": "/
+s/\t/", "custom1": "/
+s/\t/", "custom2": "/
+s/\t/", "custom3": "/
+s/$/"},/
+$s/,$//'
+
+echo ']'
