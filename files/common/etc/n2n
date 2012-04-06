@@ -1,0 +1,16 @@
+config edge
+        option ipaddr     '1.2.3.4'
+        option supernode  'cloudvpn1.freifunk-jena.de'
+        option port       '2009'
+        option community  'ffj1'
+        option key        'ffj1'
+        option devname    'n2n1'
+        option route      ''
+config edge
+        option ipaddr     '1.2.3.4'
+        option supernode  'cloudvpn2.freifunk-jena.de'
+        option port       '9876'
+        option community  'ffj2'
+        option key        'ffj2'
+        option devname    'n2n2'
+        option route      ''
