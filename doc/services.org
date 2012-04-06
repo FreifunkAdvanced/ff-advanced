@@ -1,0 +1,49 @@
+Services offered by users are to be discovered automatically and
+offered to all users of the mesh. For vendor independence several
+means of discovery and announcement are required. They are connected
+by the unified information storage.
+
+* Service information storage
+  Every mesh node holds a p2ptl (see overview.org) of all currently
+  available services. It is synchronized over the mesh interface.
+
+  It has the following columns (in-order):
+    * location (unique primary key) :: protocol-specific identifier
+        how to reach the resource (e.g. "1.2.3.4:22" for SSH,
+        "https://1.2.3.4/pron" for HTTP, "//lame/os" for SMB, ...)
+    * expiry time :: unix time after which the entry shall be deleted
+    * source :: how the service has been discovered: manual, portscan,
+        dnssd, ssdp
+    * class :: one of storage, internet, game, stream, search, ... to
+        be extended and refined
+    * description :: a human-readable (and typically human-written)
+        description of the service, e.g. "Toms pr0n archive"
+
+  Additional class-specific columns may follow that give
+  machine-readable information about the service:
+** storage
+   * capacity :: no. of bytes or empty if unknown
+   * used_capacity :: no. of bytes or empty if unknown
+   * writable :: true|false
+** internet
+   * external ip ::
+   * upstream :: no. of bytes/second or empty if unknown
+   * downstream :: no. of bytes/second or empty if unknown
+** game
+   * active players :: no. of players or empty if unknown
+** stream
+   none
+** search
+   none
+
+* Service discovery
+** manual Webif entry
+** Port scanning
+** DNS-SD (Zeroconf)
+** SSDP (UPNP)
+* Service announcement
+** Web interface
+** DNS
+   Zeroconf uses the domain advertised via DHCP to lookup local
+   services via DNS in the same way it uses mDNS (see [[http://www.dns-sd.org/ServerStaticSetup.html][HowTo]]). Our
+   service database could thus be announced via DNS for these clients.

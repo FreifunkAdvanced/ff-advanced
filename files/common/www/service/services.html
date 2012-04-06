@@ -17,7 +17,32 @@
 </ul></div>
 </div></div></div>
 
-hier gibt es irgendwann einmal eine automatisch generierte liste aller in der wolke verfuegbaren dienste
+<div class="container-fluid"><div class="row" id="service-container">
+  <div class="span3">
+    <h2>Lokale Dienste</h2>
+
+    <p>Im Freifunk Jena Netzwerk kann jeder Mensch Daten und Dienste
+    seiner Computer zur Verf&uuml;gung stellen und die Dienste anderer
+    Teilnehmer nutzen. Auf dieser Seite siehst du, welche Dienste
+    angeboten werden. Um Dienste auf deinem Computer oder in deinem
+    Netzwerk freizugeben, besuche <a href="/settings.html"
+    style="white-space:
+    nowrap"><i class="icon-cog"></i>&nbsp;Einstellungen</a>.</p>
+
+    <p class="loading"></p>
+  </div>
+</div></div>
+
+<script src="/js/jquery.min.js"></script>
+<script>
+$.when(
+    $.getJSON('/cgi-bin/services.json'),
+    $.ajax({url: '/js/parse_services.js', dataType: 'script', cache: true})
+).done(function(res) {
+    services(res[0]).drawContainer($('#service-container'));
+    $('p.loading').remove();
+});
+</script>
 
 </body>
 </html>
