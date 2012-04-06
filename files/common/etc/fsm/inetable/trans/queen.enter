@@ -58,6 +58,8 @@ echo "http://$gwip/cgi-bin/splash.html? /sbin/urlencode" > /tmp/redirection_targ
 enable_httpd redirection    $gwip:81
 change_service_httpd_listen $gwip:80
 /etc/init.d/uhttpd restart
+/etc/init.d/n2n enable
+/etc/init.d/n2n start
 
 # fill splash table
 splash_sync "$1"
