@@ -55,6 +55,18 @@ set dhcp.mesh.end_ip=$dhcp_end
 " | uci batch
 /etc/init.d/dnsmasq restart
 
+# generate wide-dhcpv6-server config and restart daemon
+ULAAddr=$(uci get cloud.cur.net_ip6ula | egrep -o 'f[c-d][:0-9a-f]*' | sed -e 's/:$//')
+echo "
+interface br-mesh {
+	address-pool mesh 3600;
+};
+pool mesh {
+	range $ULAAddr$oct3::1000 to $ULAAddr$oct3::2000;
+};
+" > /tmp/dhcp6s.conf
+/etc/init.d/dhcp6s restart
+
 ## set splash
 # start redirection httpd (for splash), add GW IP to the addrs service
 # httpd listens on

@@ -20,6 +20,9 @@ fi
 uci delete dhcp.mesh
 /etc/init.d/dnsmasq restart
 
+# disable dhcp6s
+/etc/init.d/dhcp6s stop
+
 # TODO remove splash iptable
 for mode in splashed unsplashed; do
     iptables -t nat -F prerouting_inet_$mode
