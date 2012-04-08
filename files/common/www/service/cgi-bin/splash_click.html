@@ -5,8 +5,8 @@
 . /www/service/cgi-bin/common.sh
 
 # decode request params
-#URL="http://$(sed 's/target_url=//g' | urldecode || true)"
-URL="http://sotun.de/"
+URL="http://$(sed 's/target_url=//g' | urldecode || true)"
+#URL="http://sotun.de/"
 USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \
 	 | awk 'BEGIN { FS = " " } ; { print $4 }')
 [ -n "$USER_MAC" ]
