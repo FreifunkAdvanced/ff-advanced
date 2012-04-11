@@ -274,7 +274,7 @@ images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openw
 	mkdir -p $@
 	rsync --exclude="*-squashfs.bin" --exclude="*.elf" --exclude="*-vmlinux.gz" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	cd $@/ && rm md5sums
-	cd $@/ && md5sum * > md5sums 2> /dev/null
+	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
 # format image/($repo)/openwrt-$(platform)-$(model)
 .SECONDEXPANSION:
