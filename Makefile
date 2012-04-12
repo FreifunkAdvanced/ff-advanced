@@ -76,8 +76,9 @@ settings.mk:
 
 mcimage: images/$(DATE)_$(VERSION)/miniconfig-ar71xx-trunk-r$(SVNREVISION)
 
-
 dir300image: images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION)
+
+wrt54gimage: images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION)
 
 help:
 	cat doc/build-HOWTO
@@ -279,6 +280,27 @@ images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openw
 	rsync --exclude="*-squashfs.bin" --exclude="*.elf" --exclude="*-vmlinux.gz" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	cd $@/ && rm md5sums
 	cd $@/ && md5sum * > md5sums 2> /dev/null || true
+
+# WRT54G build target
+images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): REPO="trunk"
+images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): PLAT="brcm47xx"
+images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): MODEL="miniconfig"
+images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
+	@echo '  BUILD   OpenWrt trunk for Linksys WRT54G'
+	cp -p config/wrt54g.config openwrt/trunk/.config
+	-rm -r openwrt/trunk/files
+	mkdir -p openwrt/trunk/files/etc/
+	$(create_firmware_file)
+	$(brand_firmware)
+
+	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+
+	mkdir -p $@
+	rsync -a openwrt/$(REPO)/bin/$(PLAT)/packages $@/
+	rsync --exclude="*3g*" --include="*wrt54g*" --include="*-rootfs.tar.gz" --exclude="*" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
+	#cd $@/ && rm md5sums || true
+	cd $@/ && md5sum * > md5sums 2> /dev/null || true
+
 
 # format image/($repo)/openwrt-$(platform)-$(model)
 .SECONDEXPANSION:
