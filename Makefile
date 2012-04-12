@@ -168,10 +168,12 @@ settings_update:
 	@echo '  MOD 	  settings.mk ($(oldSVN) -> $(newSVN))'
 	sed -i -e 's/$(oldSVN)/$(newSVN)/g' settings.mk
 
+.NOTPARALLEL:
 update: update-backfire update-trunk
 
 update-backfire: openwrt/backfire/.update
 
+.NOTPARALLEL:
 update-trunk: settings_update
 update-trunk: openwrt/trunk/.update
 
