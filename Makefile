@@ -72,6 +72,7 @@ all: ${DEFAULTIMAGES}
 settings.mk:
 	@echo "Please edit settings.mk first."
 	@echo "Copy & edit settings.mk.example for your purposes."
+	[ -e settings.mk ] || exit 1
 
 mcimage: images/$(DATE)_$(VERSION)/miniconfig-ar71xx-trunk-r$(SVNREVISION)
 
@@ -162,11 +163,12 @@ openwrt/trunk/.repo_access:
 # Update targets
 # ------------------------------------
 
-settings_update: newSVN = $(shell svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g")
-settings_update: oldSVN = $(shell grep SVNREVISION settings.mk | sed -e "s/.*= //g")
+settings_update: newSVN = $(shell svn info svn://svn.openwrt.org/openwrt/trunk/ 2> /dev/null | grep "Rev:" | sed -e "s/.*: //g" || exit 1)
+settings_update: oldSVN = $(shell LANG=C svn info openwrt/trunk/ 2> /dev/null | grep "Rev:" | sed -e "s/.*: //g" || exit 1)
 settings_update:
+	if [ "$(newSVN)" == "" ] || [ "$(oldSVN)" == "" ];then echo "  SVN 	  nicht erreichbar"; exit 1; fi
 	@echo '  MOD 	  settings.mk ($(oldSVN) -> $(newSVN))'
-	sed -i -e 's/$(oldSVN)/$(newSVN)/g' settings.mk
+	sed -i -e 's/SVNREVISION	=.*/SVNREVISION	= $(newSVN)/g' settings.mk
 
 .NOTPARALLEL:
 update: update-backfire update-trunk
