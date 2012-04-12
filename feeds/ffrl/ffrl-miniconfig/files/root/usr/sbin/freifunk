@@ -155,23 +155,23 @@ uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 
 	# Netzwerkeinstellungen
 	if [[ "${ssid2}" == "" ]]; then
-		[[ "$(uci get network.wlan.ifname)" != "${wifiif}0-1" ]] \
+		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-1" ]] \
 		&& uci set network.wlan=interface \
 		&& uci set network.wlan.ifname=${wifiif}0-1 \
 		&& uci set network.wlan.mtu=1528 \
 		&& uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces)" != "${wifiif}0-1" ]] \
+		[[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0-1" ]] \
 		&& uci set batman-adv.bat0.interfaces=${wifiif}0-1 \
 		&& uci commit batman-adv.bat0.interfaces
 	else
-		[[ "$(uci get network.wlan.ifname)" != "${wifiif}0-2" ]] \
+		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-2" ]] \
 		&& uci set network.wlan=interface \
 		&& uci set network.wlan.ifname=${wifiif}0-2 \
 		&& uci set network.wlan.mtu=1528 \
 		&& uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces)" != "${wifiif}0-2" ]] \
+		[[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0-2" ]] \
 		&& uci set batman-adv.bat0.interfaces=${wifiif}0-2 \
 		&& uci commit batman-adv.bat0.interfaces
 	fi
