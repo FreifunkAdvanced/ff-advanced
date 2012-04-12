@@ -42,8 +42,7 @@ endef
 
 define create_firmware_file
 #./name_firmware openwrt/$(REPO)
-echo $(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && \
-echo -n "-modified"`_$(REPO)-`[[ "$(REPO)" == "trunk" ]] && \
+echo $(DATE)_$(VERSION)_$(REPO)-`[[ "$(REPO)" == "trunk" ]] && \
 echo $(SVNREVISION) || echo $(BACKFIREVERSION)` > openwrt/$(REPO)/files/etc/firmware
 endef
 
@@ -53,7 +52,7 @@ sed config/misc/banner.$(MODEL) \
 -e "s/SVNRV/$(SVNREVISION)/g" \
 -e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
 -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
--e "s/FFRLversion/$(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && echo -n "-modified"`_$(REPO)/g" \
+-e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
 -e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner
 
 [[ "$(REPO)" == "backfire" ]] && \
