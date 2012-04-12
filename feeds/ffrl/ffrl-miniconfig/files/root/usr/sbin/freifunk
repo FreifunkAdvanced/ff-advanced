@@ -17,7 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version(){
-echo "Freifunk Version 0.0.20120404"
+echo "Freifunk Version 0.0.20120412"
 
 cat << EOF
 Copyright © 2012 Philipp Psurek <phip@vmail.me>
@@ -39,6 +39,7 @@ Befehle:
 Argumente:
   com <code>        Freifunkzelle
   latlong           Knotenkoordinaten
+  meship6 on|off    automatische Zuweisung einer IPv6 für statische Knoten
   miniconfig on|off schaltet die Konfiguration über den Webbrowser an oder aus
 
 Optionen:
@@ -80,6 +81,10 @@ case "$comcase" in
     latlongconfig
     exit 0
     ;;
+  meship6)
+    meship6
+    exit 0
+    ;;
   miniconfig)
     miniconfig
     exit 0
@@ -97,11 +102,13 @@ com=$casearg
 
 # Kanaleinstellung und Senderleistung
 uci set wireless.radio0=wifi-device
-uci set wireless.radio0.type=mac80211
+uci set wireless.radio0.type=${wifitype}
 uci set wireless.radio0.channel=$(uci get ff.${com}.channel)
-uci set wireless.radio0.phy=phy0
+[[ $(uci get wireless.radio0.macaddr 2> /dev/null) != "" ]] \
+	&& uci set wireless.radio0.phy= \
+	|| uci set wireless.radio0.phy=phy0
 uci set wireless.radio0.txpower=20
-uci set wireless.radio0.country=DE
+uci set wireless.radio0.country=${wificountry}
 uci set wireless.radio0.disabled=0
 #uci show wireless.radio0
 
@@ -148,24 +155,24 @@ uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 
 	# Netzwerkeinstellungen
 	if [[ "${ssid2}" == "" ]]; then
-		[[ "$(uci get network.wlan.ifname)" != "wlan0-1" ]] \
+		[[ "$(uci get network.wlan.ifname)" != "${wifiif}0-1" ]] \
 		&& uci set network.wlan=interface \
-		&& uci set network.wlan.ifname=wlan0-1 \
+		&& uci set network.wlan.ifname=${wifiif}0-1 \
 		&& uci set network.wlan.mtu=1528 \
 		&& uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-1" ]] \
-		&& uci set batman-adv.bat0.interfaces=wlan0-1 \
+		[[ "$(uci get batman-adv.bat0.interfaces)" != "${wifiif}0-1" ]] \
+		&& uci set batman-adv.bat0.interfaces=${wifiif}0-1 \
 		&& uci commit batman-adv.bat0.interfaces
 	else
-		[[ "$(uci get network.wlan.ifname)" != "wlan0-2" ]] \
+		[[ "$(uci get network.wlan.ifname)" != "${wifiif}0-2" ]] \
 		&& uci set network.wlan=interface \
-		&& uci set network.wlan.ifname=wlan0-2 \
+		&& uci set network.wlan.ifname=${wifiif}0-2 \
 		&& uci set network.wlan.mtu=1528 \
 		&& uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces)" != "wlan0-2" ]] \
-		&& uci set batman-adv.bat0.interfaces=wlan0-2 \
+		[[ "$(uci get batman-adv.bat0.interfaces)" != "${wifiif}0-2" ]] \
+		&& uci set batman-adv.bat0.interfaces=${wifiif}0-2 \
 		&& uci commit batman-adv.bat0.interfaces
 	fi
 
@@ -196,8 +203,6 @@ done
 uci commit cloud
 uci commit n2n
 uci commit wireless
-
-
 
 elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
   uci show wireless
@@ -251,6 +256,82 @@ elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
 	uci get node.info.latlong
 elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
 	echo Nichts zum Auflisten.
+else
+  fehler
+fi
+}
+
+# Tweeks für Statische Knoten
+meship6	(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+
+# Einstellungen für die Mesh-Brücke
+set_meship6_on(){
+MACIP6=$(uci get wireless.radio0.macaddr 2> /dev/null \
+         | tr ':' ' ' \
+         | awk '{print $1$2":"$3$4":"$5$6}')
+IP6ula=$(uci get cloud.cur.net_ip6ula 2> /dev/null \
+         | egrep -o 'f[c-d][:0-9a-f]{3}' \
+         | sed -e 's/::$/:/')
+
+if $([ "${MACIP6}" != "" ] && [ "${IP6ula}" != "" ]); then
+  uci set network.mesh=interface
+  uci set network.mesh.ifname=bat0
+  uci set network.mesh.type=bridge
+  uci set network.mesh.ip6addr=${MACIP6}FFFF:${IP6ula}/64
+  #uci set network.mesh.proto=static
+  #uci set network.mesh.ipaddr=
+  #uci set network.mesh.netmask=255.255.0.0
+  uci commit network.mesh
+
+  uci set batman-adv.bat0.gw_mode=client
+  uci commit batman-adv.bat0.gw_mode
+else
+  echo "Dieser Knoten sollte nicht manuell konfiguriert werden."
+  exit 1
+fi
+}
+
+set_meshn2n_on(){
+if [ -e /etc/init.d/n2n ]; then
+ /etc/init.d/n2n enable
+else
+  echo "n2n ist nicht installiert"
+fi
+}
+
+  case "$casearg" in
+    on)
+      set_meship6_on
+      [ -e /etc/init.d/n2n ] && /etc/init.d/n2n disable
+      exit 0
+      ;;
+    n2n)
+      set_meshn2n_on
+      set_meship6_on
+      exit 0
+      ;;
+    off)
+      exit 0
+      ;;
+    *)
+      fehler
+      ;;
+  esac
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+  uci get network.mesh 2> /dev/null
+  exit 0
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+  echo "
+Diese Einstellung ist für statische Knoten wie 
+* D-Link DIR-300
+* Linksys WRT54G
+oder andere, sich nicht automatisch konfigurierende Knoten bestimmt.
+Optionen:
+  on                Mesh einschalten
+  n2n               Mesh und n2n-Gateway einschalten
+  off               "
+  exit 0
 else
   fehler
 fi
@@ -340,6 +421,23 @@ echo "freifunk: unbekannte Eingabe:" $command $comcase $casearg >&2
 exit 1
 }
 
+# Plattformerkennung
+systemtype=$(cat /proc/cpuinfo | grep "system type" | sed -e "s/^.*: //g")
+
+# andere Wireless-Schnittstellen - andere Sitten:
+# D-Link DIR-300
+if [ "$systemtype" == "Atheros AR2317" ]; then
+  wifiif="ath"
+  wifitype="atheros"
+  wificountry="276"
+# TP-LINK und andere
+else
+  wifiif="wlan"
+  wifitype="mac80211"
+  wificountry="DE"
+fi
+
+# Eingabeverarbeitung
 if [ "$1" != "" ]; then
   command=$1
   comcase=$2
