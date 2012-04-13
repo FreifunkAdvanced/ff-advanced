@@ -100,7 +100,6 @@ if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
 
 # Generierung der Konfigurationsdateien
 [ -e /etc/config/cloud ] || touch /etc/config/cloud
-[ -e /etc/config/node ] || touch /etc/config/node
 
 com=$casearg
 
@@ -191,6 +190,7 @@ uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 	fi
 
 # cloud
+uci set cloud.cur=cloud
 uci set cloud.cur.net_robinson=21.0.0.0/8
 uci set cloud.cur.net_fake=22.0.0.0/8
 uci set cloud.cur.net_mesh=$(uci get ff.${com}.subnet)
@@ -221,7 +221,7 @@ uci commit n2n
 uci commit wireless
 
 # n2n bei manuell konfigurierten Knoten deaktivieren
-if [ "${wifitype}" == "atheros" ]; then
+if [ ! -d /etc/fsm ]; then
 /etc/init.d/n2n disable
 /etc/init.d/n2n stop
 fi
