@@ -17,7 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version(){
-echo "Freifunk Version 0.0.20120412"
+echo "Freifunk Version 0.0.20120413"
 
 cat << EOF
 Copyright © 2012 Philipp Psurek <phip@vmail.me>
@@ -39,7 +39,7 @@ Befehle:
 Argumente:
   com <code>        Freifunkzelle
   latlong           Knotenkoordinaten
-  meship6 on|off    automatische Zuweisung einer IPv6 für statische Knoten
+  static on|n2n|off erweitert die minimale Kompatibilität für statische Knoten
   miniconfig on|off schaltet die Konfiguration über den Webbrowser an oder aus
 
 Optionen:
@@ -81,8 +81,8 @@ case "$comcase" in
     latlongconfig
     exit 0
     ;;
-  meship6)
-    meship6
+  static)
+    static
     exit 0
     ;;
   miniconfig)
@@ -153,8 +153,18 @@ uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 		#uci show wireless.@wifi-iface[2]
 	fi
 
-	# Netzwerkeinstellungen
-	if [[ "${ssid2}" == "" ]]; then
+	# Auswahl der richtigen B.A.T.M.A.N.-Schnittstelle
+	if [ "${wifitype}" == "atheros" ]; then
+		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0" ]] \
+		&& uci set network.wlan=interface \
+		&& uci set network.wlan.ifname=${wifiif}0 \
+		&& uci set network.wlan.mtu=1528 \
+		&& uci commit network.wlan
+
+		[[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0" ]] \
+		&& uci set batman-adv.bat0.interfaces=${wifiif}0 \
+		&& uci commit batman-adv.bat0.interfaces
+	elif [[ "${ssid2}" == "" ]]; then
 		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-1" ]] \
 		&& uci set network.wlan=interface \
 		&& uci set network.wlan.ifname=${wifiif}0-1 \
@@ -204,6 +214,12 @@ uci commit cloud
 uci commit n2n
 uci commit wireless
 
+# n2n bei manuell konfigurierten Knoten deaktivieren
+if [ "${wifitype}" == "atheros" ]; then
+/etc/init.d/n2n disable
+/etc/init.d/n2n stop
+fi
+
 elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
   uci show wireless
   uci show batman-adv
@@ -222,8 +238,8 @@ echo "Freifunkzellen:"
 # Freifunkzellen aus /etc/config/ff auslesen
 for com in $(uci get ff.com.com); do
   c=$(echo ${com} | wc -c)
-  fill=$(for i in $(seq $((17-$c))); do echo -n ' '; done)
-  echo "  ${com} ${fill} $(uci get ff.${com}.name)"
+  fill=$(for i in $(seq $((7-$c))); do echo -n ' '; done)
+  echo "  ${com} ${fill}           $(uci get ff.${com}.name)"
 done
 }
 
@@ -262,48 +278,84 @@ fi
 }
 
 # Tweeks für Statische Knoten
-meship6	(){
+static(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+
+if [ -d /etc/fsm ]; then
+  echo "Dieser knoten wird durch eine Zustandsmaschine automatisch konfiguriert. Die manuelle Konfiguration wird tapfer verweigert."
+exit 1
+fi
+
 
 # Einstellungen für die Mesh-Brücke
 set_meship6_on(){
+# prüfen, ob nicht schon eine IPv6 vergeben wurde
+if [ "$(uci get network.mesh.ip6addr 2> /dev/null)" == "" ]; then
+
 MACIP6=$(uci get wireless.radio0.macaddr 2> /dev/null \
          | tr ':' ' ' \
          | awk '{print $1$2":"$3$4":"$5$6}')
 IP6ula=$(uci get cloud.cur.net_ip6ula 2> /dev/null \
-         | egrep -o 'f[c-d][:0-9a-f]{3}' \
+         | egrep -o 'f[c-d][:0-9a-f]*' \
          | sed -e 's/::$/:/')
 
 if $([ "${MACIP6}" != "" ] && [ "${IP6ula}" != "" ]); then
   uci set network.mesh=interface
   uci set network.mesh.ifname=bat0
   uci set network.mesh.type=bridge
-  uci set network.mesh.ip6addr=${MACIP6}FFFF:${IP6ula}/64
-  #uci set network.mesh.proto=static
+  uci set network.mesh.ip6addr=${IP6ula}FFFF:${MACIP6}/64
+  uci set network.mesh.proto=static
   #uci set network.mesh.ipaddr=
   #uci set network.mesh.netmask=255.255.0.0
   uci commit network.mesh
 
   uci set batman-adv.bat0.gw_mode=client
   uci commit batman-adv.bat0.gw_mode
-else
+elif [ "${MACIP6}" == "" ]; then
   echo "Dieser Knoten sollte nicht manuell konfiguriert werden."
+  exit 1
+elif [ "${IP6ula}" == "" ]; then
+  echo "Ihre Freifunkzelle hat keinen IPv6 Prefix."
+  exit 1
+else
+  echo "Dieser Knoten kann mit diesem Programm nicht manuell konfiguriert werden."
+  exit 1
+fi
+
+else
+  echo "Die IPv6 wurde schon vergeben." > /proc/self/fd/2
   exit 1
 fi
 }
 
 set_meshn2n_on(){
-if [ -e /etc/init.d/n2n ]; then
- /etc/init.d/n2n enable
+if [ -e /etc/init.d/ffrl-n2n ]; then
+  /etc/init.d/ffrl-n2n enable
+  /etc/init.d/ffrl-n2n start
 else
   echo "n2n ist nicht installiert"
+  exit 1
+fi
+}
+
+set_meshn2n_off(){
+[ -e /etc/init.d/n2n ] && /etc/init.d/n2n disable 2> /dev/null
+[ -e /etc/init.d/n2n ] && /etc/init.d/n2n stop 2> /dev/null
+[ -e /etc/init.d/ffrl-n2n ] && /etc/init.d/ffrl-n2n disable 2> /dev/null
+[ -e /etc/init.d/ffrl-n2n ] && /etc/init.d/ffrl-n2n stop 2> /dev/null
+}
+
+del_mesh_if(){
+if [ "$(uci get network.mesh 2> /dev/null)" == "interface" ]; then
+uci del network.mesh=interface 2> /dev/zero
+uci commit network
 fi
 }
 
   case "$casearg" in
     on)
-      set_meship6_on
-      [ -e /etc/init.d/n2n ] && /etc/init.d/n2n disable
+      set_meshn2n_off
+      set_meship6_on 
       exit 0
       ;;
     n2n)
@@ -312,6 +364,8 @@ fi
       exit 0
       ;;
     off)
+      del_mesh_if
+      set_meshn2n_off
       exit 0
       ;;
     *)
@@ -326,11 +380,26 @@ elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
 Diese Einstellung ist für statische Knoten wie 
 * D-Link DIR-300
 * Linksys WRT54G
-oder andere, sich nicht automatisch konfigurierende Knoten bestimmt.
+oder andere, sich nicht automatisch konfigurierende Knoten bestimmt. Hiermit
+werden einfachste Einstellungen dauerhaft gesichert.
+
 Optionen:
-  on                Mesh einschalten
-  n2n               Mesh und n2n-Gateway einschalten
-  off               "
+  on                statische Konfiguration für Knoten in Reichweite einer 
+                    bestehenden Freifunk-Wolke einschalten (eindeutige IPv6 ...)
+
+  n2n               +n2n-Gateway zu anderen Knoten in der gleichen Freifunk-
+                    Zelle, sie agieren dann als Internet-Gateways für die Nutzer
+                    dieses Knotens, dessen Speicher für NAT nicht ausreicht.
+                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    !!!  Diese Option sollte nur in den äußersten Notfällen  !!!
+                    !!!  aktiviert werden, da sie großen Traffic bei anderen !!!
+                    !!!  Freifunkern verursacht. Sprich mit ihnen darüber    !!!
+                    !!!  __bevor__ Du dies auf diesem Knoten aktivierst.     !!!
+                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    Deaktiviere diese Option mit on, sobald sich in Deiner Nähe
+                    eine Freifunk-Wolke mit Internetzugang aufgebaut hat.
+
+  off               statische Konfiguration deaktivieren"
   exit 0
 else
   fehler
