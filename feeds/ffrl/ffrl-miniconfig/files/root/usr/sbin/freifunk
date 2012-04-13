@@ -253,7 +253,12 @@ done
 hostnameconfig(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
   uci set system.@system[0].hostname=${casearg}
-  uci commit system.@system[0].hostname
+  uci set system.@system[0].zonename=Europe/Berlin
+  uci set system.@system[0].timezone=CET-1CEST,M3.5.0,M10.5.0/3
+  uci set system.ntp.server=
+  uci add_list system.ntp.server=ntp1.ptb.de
+  uci add_list system.ntp.server=ntp2.ptb.de
+  uci commit system
 elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
   uci get system.@system[0].hostname
   exit 0
@@ -353,7 +358,7 @@ set_meshn2n_off(){
 
 del_mesh_if(){
 if [ "$(uci get network.mesh 2> /dev/null)" == "interface" ]; then
-uci del network.mesh=interface 2> /dev/zero
+uci del network.mesh 2> /dev/zero
 uci commit network
 fi
 }
