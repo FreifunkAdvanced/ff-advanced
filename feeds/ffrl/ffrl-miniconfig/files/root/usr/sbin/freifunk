@@ -342,7 +342,7 @@ fi
 set_meshn2n_on(){
 if [ -e /etc/init.d/ffrl-n2n ]; then
   /etc/init.d/ffrl-n2n enable
-  /etc/init.d/ffrl-n2n start
+  /etc/init.d/ffrl-n2n start &
 else
   echo "n2n ist nicht installiert"
   exit 1
