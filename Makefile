@@ -297,7 +297,7 @@ images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): open
 
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/packages $@/
-	rsync --exclude="*3g*" --include="*wrt54g*" --include="*-rootfs.tar.gz" --exclude="*" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
+	rsync --exclude="*3g*" --include="*wrt54g*" --include="*-rootfs.tar.gz" --include="openwrt-brcm47xx-squashfs.trx" --exclude="*" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	#cd $@/ && rm md5sums || true
 	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
