@@ -126,6 +126,10 @@ uci set wireless.@wifi-iface[0].ssid="$(uci get ff.${com}.batssid)"
 uci set wireless.@wifi-iface[0].bssid="$(uci get ff.${com}.bssid)"
 #uci show wireless.@wifi-iface[0]
 
+
+# Linksys WRT54G kann nur eine Wi-Fi-Schnittstelle anbieten, deshalb keine APs
+if [ "$systemtype" != "Broadcom BCM47XX" ]; then
+
 # Accesspoint SSID
 [[ "$(uci get wireless.@wifi-iface[1] 2>/dev/null)" == "wifi-iface" ]] || \
 	uci add wireless wifi-iface >/dev/null 2>&1
@@ -155,9 +159,10 @@ uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 		uci set wireless.@wifi-iface[2].ssid="${ssid2}"
 		#uci show wireless.@wifi-iface[2]
 	fi
+fi
 
 	# Auswahl der richtigen B.A.T.M.A.N.-Schnittstelle
-	if [ "${wifitype}" == "atheros" ]; then
+	if [ "${wifitype}" == "atheros" ] || [ "$systemtype" == "Broadcom BCM47XX" ]; then
 		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0" ]] \
 		&& uci set network.wlan=interface \
 		&& uci set network.wlan.ifname=${wifiif}0 \
@@ -510,6 +515,8 @@ if [ "$systemtype" == "Atheros AR2317" ]; then
   wifiif="ath"
   wifitype="atheros"
   wificountry="276"
+
+# Linksys WRT54G
 # TP-LINK und andere
 else
   wifiif="wlan"
