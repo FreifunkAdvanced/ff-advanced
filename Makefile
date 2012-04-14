@@ -165,6 +165,7 @@ openwrt/trunk/.repo_access:
 
 settings_update: newSVN = $(shell svn info svn://svn.openwrt.org/openwrt/trunk/ 2> /dev/null | grep "Rev:" | sed -e "s/.*: //g" || exit 1)
 settings_update: oldSVN = $(shell LANG=C svn info openwrt/trunk/ 2> /dev/null | grep "Rev:" | sed -e "s/.*: //g" || exit 1)
+settings_update: SVNREVISION = $(newSVN)
 settings_update:
 	if [ "$(newSVN)" == "" ] || [ "$(oldSVN)" == "" ];then echo "  SVN 	  nicht erreichbar"; exit 1; fi
 	@echo '  MOD 	  settings.mk ($(oldSVN) -> $(newSVN))'
