@@ -73,6 +73,8 @@ settings.mk:
 	@echo "Copy & edit settings.mk.example for your purposes."
 	[ -e settings.mk ] || exit 1
 
+devimage: images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION)
+
 mcimage: images/$(DATE)_$(VERSION)/miniconfig-ar71xx-trunk-r$(SVNREVISION)
 
 dir300image: images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION)
@@ -261,6 +263,26 @@ image/%:
 	@echo '"make image/$$(repo)/openwrt-$$(platform)-$$(model)" is deprecated'
 	@echo 'please use the new make syntax:'
 	head -n24 doc/build-HOWTO
+
+# create a pure OpenWrt image to test the .config and for package integration
+images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): REPO="trunk"
+images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): PLAT="ar71xx"
+images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): MODEL="devel"
+images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
+	@echo '  BUILD   Development OpenWrt trunk for ar71xx'
+#	cp -p config/devel.config openwrt/trunk/.config
+#	-rm -r openwrt/trunk/files
+#	mkdir -p openwrt/trunk/files/etc/
+#	$(create_firmware_file)
+#	$(brand_firmware)
+#	echo '! development image' >> openwrt/$(REPO)/files/etc/banner
+#	echo '  ------------------------------------------------------------------------------' >> openwrt/$(REPO)/files/etc/banner
+#	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+	mkdir -p $@
+#	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
+	mv -r openwrt/$(REPO)/bin/$(PLAT)/* $@/
+#	cd $@/ && rm md5sums
+#	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
 # DIR-300 build target
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): REPO="trunk"
