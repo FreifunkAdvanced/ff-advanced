@@ -17,7 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version(){
-echo "Freifunk Version 0.0.20120413"
+echo "Freifunk Version 0.0.20120415"
 
 cat << EOF
 Copyright © 2012 Philipp Psurek <phip@vmail.me>
@@ -29,24 +29,30 @@ EOF
 
 usage(){
 cat << EOF
-Aufruf: freifunk <Befehl> [<Argument>]
+Aufruf: freifunk <Befehl> [<Argument> [Argumentoptionen]]
         freifunk <Option>
 
 Befehle:
   set               setzt ein Argument
-  list              listet die verfügbaren 
+  list              listet die verfügbaren Argumentoptionen 
+  get               zeigt die relevanten UCI-Einstellungen
 
 Argumente:
   com <code>        Freifunkzelle
+  hostname <name>   Knotenname
   latlong           Knotenkoordinaten
-  static on|n2n|off erweitert die minimale Kompatibilität für statische Knoten
   miniconfig on|off schaltet die Konfiguration über den Webbrowser an oder aus
+
+Weitere Argumente für nicht FSM-gesteuerte Freifunk-Knoten:
+  static on|...|off erweitert die minimale Kompatibilität für statische Knoten
+  ap            off schaltet den Accesspoint des Knotens ab.
 
 Optionen:
   -h, --help        Hilfe
   -v, --version     Version
 
 EOF
+
 list_com
 
 cat << EOF
@@ -55,55 +61,12 @@ Freifunk manipuliert nur die gängigsten UCI-Befehle und ist kein Ersatz für UC
 EOF
 }
 
-get_case(){
-all_case
-}
-
-set_case(){
-all_case
-}
-
-list_case(){
-all_case
-}
-
-all_case(){
-case "$comcase" in
-  com)
-    comconfig
-    exit 0
-    ;;
-  hostname)
-    hostnameconfig
-    exit 0
-    ;;
-  latlong)
-    latlongconfig
-    exit 0
-    ;;
-  static)
-    static
-    exit 0
-    ;;
-  miniconfig)
-    miniconfig
-    exit 0
-    ;;
-  *)
-    fehler
-    ;;
-esac
-}
-
-comconfig(){
-if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
-
-# Generierung der Konfigurationsdateien
-[ -e /etc/config/cloud ] || touch /etc/config/cloud
-
-com=$casearg
+# ------------------------------------------------------------------------------
+# Funktionen & Kram & Funkzellen & IEEE 802.11
+# ------------------------------------------------------------------------------
 
 # Kanaleinstellung und Senderleistung
+set_radio_if(){
 uci set wireless.radio0=wifi-device
 uci set wireless.radio0.type=${wifitype}
 uci set wireless.radio0.channel=$(uci get ff.${com}.channel)
@@ -114,8 +77,10 @@ uci set wireless.radio0.txpower=20
 uci set wireless.radio0.country=${wificountry}
 uci set wireless.radio0.disabled=0
 #uci show wireless.radio0
+}
 
 # B.A.T.M.A.N.-adv Schnittstelle
+set_batman_if(){
 uci set wireless.@wifi-iface[0]=wifi-iface
 uci set wireless.@wifi-iface[0].device=radio0
 uci set wireless.@wifi-iface[0].network=
@@ -125,12 +90,10 @@ uci set wireless.@wifi-iface[0].encryption=none
 uci set wireless.@wifi-iface[0].ssid="$(uci get ff.${com}.batssid)"
 uci set wireless.@wifi-iface[0].bssid="$(uci get ff.${com}.bssid)"
 #uci show wireless.@wifi-iface[0]
-
-
-# Linksys WRT54G kann nur eine Wi-Fi-Schnittstelle anbieten, deshalb keine APs
-if [ "$systemtype" != "Broadcom BCM47XX" ]; then
+}
 
 # Accesspoint SSID
+set_SSIDs(){
 [[ "$(uci get wireless.@wifi-iface[1] 2>/dev/null)" == "wifi-iface" ]] || \
 	uci add wireless wifi-iface >/dev/null 2>&1
 uci set wireless.@wifi-iface[1]=wifi-iface
@@ -141,60 +104,64 @@ uci set wireless.@wifi-iface[1].encryption=none
 uci set wireless.@wifi-iface[1].wmm=0
 uci set wireless.@wifi-iface[1].ssid=www.freifunk-rheinland.net
 #uci show wireless.@wifi-iface[1]
+}
 
-	# Weitere SSIDs
-	ssid2="$(uci get ff.${com}.ssid2 2>/dev/null)"
-	if [[ "${ssid2}" == "" ]]; then
-		uci delete wireless.@wifi-iface[2] 2> /dev/null
-	else
-		[[ "$(uci get wireless.@wifi-iface[2] 2>/dev/null)" == "wifi-iface" ]] || \
-			uci add wireless wifi-iface >/dev/null 2>&1
-
-		uci set wireless.@wifi-iface[2]=wifi-iface
-		uci set wireless.@wifi-iface[2].device=radio0
-		uci set wireless.@wifi-iface[2].network=mesh
-		uci set wireless.@wifi-iface[2].mode=ap
-		uci set wireless.@wifi-iface[2].encryption=none
-		uci set wireless.@wifi-iface[2].wmm=0
-		uci set wireless.@wifi-iface[2].ssid="${ssid2}"
-		#uci show wireless.@wifi-iface[2]
-	fi
+# Weitere SSIDs
+set_moreSSIDs(){
+ssid2="$(uci get ff.${com}.ssid2 2>/dev/null)"
+if [[ "${ssid2}" == "" ]]; then
+  uci delete wireless.@wifi-iface[2] 2> /dev/null
+else
+  [[ "$(uci get wireless.@wifi-iface[2] 2>/dev/null)" == "wifi-iface" ]] || \
+    uci add wireless wifi-iface >/dev/null 2>&1
+    uci set wireless.@wifi-iface[2]=wifi-iface
+  uci set wireless.@wifi-iface[2].device=radio0
+  uci set wireless.@wifi-iface[2].network=mesh
+  uci set wireless.@wifi-iface[2].mode=ap
+  uci set wireless.@wifi-iface[2].encryption=none
+  uci set wireless.@wifi-iface[2].wmm=0
+  uci set wireless.@wifi-iface[2].ssid="${ssid2}"
+  #uci show wireless.@wifi-iface[2]
 fi
+}
 
-	# Auswahl der richtigen B.A.T.M.A.N.-Schnittstelle
-	if [ "${wifitype}" == "atheros" ] || [ "$systemtype" == "Broadcom BCM47XX" ]; then
-		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0" ]] \
-		&& uci set network.wlan=interface \
-		&& uci set network.wlan.ifname=${wifiif}0 \
-		&& uci set network.wlan.mtu=1528 \
-		&& uci commit network.wlan
+# Auswahl der richtigen B.A.T.M.A.N.-Schnittstelle
+set_batman_network_if(){
+if [ "${wifitype}" == "atheros" ] || [ "$systemtype" == "Broadcom BCM47XX" ]; then
+  [[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0" ]] \
+    && uci set network.wlan=interface \
+    && uci set network.wlan.ifname=${wifiif}0 \
+    && uci set network.wlan.mtu=1528 \
+    && uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0" ]] \
-		&& uci set batman-adv.bat0.interfaces=${wifiif}0 \
-		&& uci commit batman-adv.bat0.interfaces
-	elif [[ "${ssid2}" == "" ]]; then
-		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-1" ]] \
-		&& uci set network.wlan=interface \
-		&& uci set network.wlan.ifname=${wifiif}0-1 \
-		&& uci set network.wlan.mtu=1528 \
-		&& uci commit network.wlan
+  [[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0" ]] \
+    && uci set batman-adv.bat0.interfaces=${wifiif}0 \
+    && uci commit batman-adv.bat0.interfaces
+elif [[ "${ssid2}" == "" ]]; then
+  [[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-1" ]] \
+    && uci set network.wlan=interface \
+    && uci set network.wlan.ifname=${wifiif}0-1 \
+    && uci set network.wlan.mtu=1528 \
+    && uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0-1" ]] \
-		&& uci set batman-adv.bat0.interfaces=${wifiif}0-1 \
-		&& uci commit batman-adv.bat0.interfaces
-	else
-		[[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-2" ]] \
-		&& uci set network.wlan=interface \
-		&& uci set network.wlan.ifname=${wifiif}0-2 \
-		&& uci set network.wlan.mtu=1528 \
-		&& uci commit network.wlan
+  [[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0-1" ]] \
+    && uci set batman-adv.bat0.interfaces=${wifiif}0-1 \
+    && uci commit batman-adv.bat0.interfaces
+else
+  [[ "$(uci get network.wlan.ifname 2> /dev/null)" != "${wifiif}0-2" ]] \
+    && uci set network.wlan=interface \
+    && uci set network.wlan.ifname=${wifiif}0-2 \
+    && uci set network.wlan.mtu=1528 \
+    && uci commit network.wlan
 
-		[[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0-2" ]] \
-		&& uci set batman-adv.bat0.interfaces=${wifiif}0-2 \
-		&& uci commit batman-adv.bat0.interfaces
-	fi
+  [[ "$(uci get batman-adv.bat0.interfaces 2> /dev/null)" != "${wifiif}0-2" ]] \
+    && uci set batman-adv.bat0.interfaces=${wifiif}0-2 \
+    && uci commit batman-adv.bat0.interfaces
+fi
+}
 
-# cloud
+# Einstellungen der n2n-Cloud
+set_n2n_cloud(){
 uci set cloud.cur=cloud
 uci set cloud.cur.net_robinson=21.0.0.0/8
 uci set cloud.cur.net_fake=22.0.0.0/8
@@ -208,17 +175,60 @@ while uci delete n2n.@edge[-1] 2> /dev/null ; do true; done
 n2namount=$(uci get ff.$(uci get ff.${com}.n2n).amount)
 i=1
 while [  $i -le $n2namount ]; do
-	let j=i-1
-	uci add n2n edge 2>&1 > /dev/null
-	uci set n2n.@edge[${j}].ipaddr=1.2.3.4
-	uci set n2n.@edge[${j}].supernode=$(uci get ff.$(uci get ff.${com}.n2n).n2n${i})
-	uci set n2n.@edge[${j}].port=$(uci get ff.$(uci get ff.${com}.n2n).port${i})
-	uci set n2n.@edge[${j}].community=$(uci get ff.${com}.com)${i}
-	uci set n2n.@edge[${j}].key=$(uci get ff.${com}.com)${i}
-	uci set n2n.@edge[${j}].devname=n2n${i}
-	#uci set n2n.@edge[${j}].route=""
-	let i=i+1
+  let j=i-1
+  uci add n2n edge 2>&1 > /dev/null
+  uci set n2n.@edge[${j}].ipaddr=1.2.3.4
+  uci set n2n.@edge[${j}].supernode=$(uci get ff.$(uci get ff.${com}.n2n).n2n${i})
+  uci set n2n.@edge[${j}].port=$(uci get ff.$(uci get ff.${com}.n2n).port${i})
+  uci set n2n.@edge[${j}].community=$(uci get ff.${com}.com)${i}
+  uci set n2n.@edge[${j}].key=$(uci get ff.${com}.com)${i}
+  uci set n2n.@edge[${j}].devname=n2n${i}
+  #uci set n2n.@edge[${j}].route=""
+  let i=i+1
 done
+}
+
+# Freifunkzellen aus /etc/config/ff auslesen
+list_com(){
+echo "Freifunkzellen:"
+for com in $(uci get ff.com.com); do
+  c=$(echo ${com} | wc -c)
+  fill=$(for i in $(seq $((7-$c))); do echo -n ' '; done)
+  echo "  ${com} ${fill}           $(uci get ff.${com}.name)"
+done
+}
+
+# Prüfen, ob der Router durch FSM konfiguriert wird
+check_static(){
+if [ -d /etc/fsm ]; then
+echo "Dieser knoten wird durch eine Zustandsmaschine automatisch \
+konfiguriert. Die manuelle Konfiguration wird tapfer verweigert."
+exit 1
+fi
+}
+
+# -------------------------------
+# --- freifunk ... com <code> ---
+# -------------------------------
+comconfig(){
+# ... set ...
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+com=$casearg
+
+# Generierung der Konfigurationsdateien
+[ -e /etc/config/cloud ] || touch /etc/config/cloud
+
+set_radio_if          # Kanaleinstellung und Senderleistung
+set_batman_if         # B.A.T.M.A.N.-adv Schnittstelle
+
+# Linksys WRT54G kann nur eine Wi-Fi-Schnittstelle anbieten, deshalb keine APs
+if [ "$systemtype" != "Broadcom BCM47XX" ]; then
+  set_SSID            # Accesspoint SSIDs
+  set_moreSSIDs       # Weitere SSIDs
+fi
+
+set_batman_network_if # Auswahl der richtigen B.A.T.M.A.N.-Schnittstelle
+set_n2n_cloud         # cloud
 
 # uci commit ;-)
 uci commit cloud
@@ -231,12 +241,15 @@ if [ ! -d /etc/fsm ]; then
 /etc/init.d/n2n stop
 fi
 
+# ... get ...
 elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
   uci show wireless
   uci show batman-adv
   uci show network.wlan
   uci show cloud.cur
   uci show n2n
+
+# ... list ...
 elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
   list_com
 else
@@ -244,17 +257,9 @@ else
 fi
 }
 
-list_com(){
-echo "Freifunkzellen:"
-# Freifunkzellen aus /etc/config/ff auslesen
-for com in $(uci get ff.com.com); do
-  c=$(echo ${com} | wc -c)
-  fill=$(for i in $(seq $((7-$c))); do echo -n ' '; done)
-  echo "  ${com} ${fill}           $(uci get ff.${com}.name)"
-done
-}
-
-
+# ---------------------------------
+# --- freifunk ... hostname ... ---
+# ---------------------------------
 hostnameconfig(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
   uci set system.@system[0].hostname=${casearg}
@@ -274,34 +279,35 @@ else
 fi
 }
 
+# --------------------------------
+# --- freifunk ... latlong ... ---
+# --------------------------------
 latlongconfig(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
-	if [[ "$(uci get node.info 2> /dev/null)" == "info" ]]; then
-		uci set node.info.latlong=${casearg}
-	else
-		[[ -e /etc/config/node ]] || touch /etc/config/node
-		uci set node.info=info
-		uci set node.info.latlong=${casearg}
-	fi
-	uci commit node
+  if [[ "$(uci get node.info 2> /dev/null)" == "info" ]]; then
+    uci set node.info.latlong=${casearg}
+  else
+    [[ -e /etc/config/node ]] || touch /etc/config/node
+    uci set node.info=info
+    uci set node.info.latlong=${casearg}
+  fi
+  uci commit node
 elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
-	uci get node.info.latlong
+  uci get node.info.latlong
 elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
-	echo Nichts zum Auflisten.
+  echo Nichts zum Auflisten.
 else
   fehler
 fi
 }
 
+# -------------------------------
+# --- freifunk ... static ... ---
+# -------------------------------
 # Tweeks für Statische Knoten
 static(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
-
-if [ -d /etc/fsm ]; then
-  echo "Dieser knoten wird durch eine Zustandsmaschine automatisch konfiguriert. Die manuelle Konfiguration wird tapfer verweigert."
-exit 1
-fi
-
+check_static
 
 # Einstellungen für die Mesh-Brücke
 set_meship6_on(){
@@ -422,6 +428,45 @@ else
 fi
 }
 
+
+# -------------------------------
+# --- freifunk ... ap ... ---
+# -------------------------------
+# AP-Deaktivierung für Statische Knoten
+AP_conf(){
+if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
+  check_static
+  case "$casearg" in
+    off)
+      uci delete wireless.@wifi-iface[2]
+      uci delete wireless.@wifi-iface[1]
+      uci commit wireless
+      exit 0
+      ;;
+    *)
+      fehler
+      ;;
+  esac
+  exit 0
+elif [ "$casearg" == "" ] && [ "$command" == "get" ]; then
+  uci get wireless
+  exit 0
+elif [ "$casearg" == "" ] && [ "$command" == "list" ]; then
+  echo "
+Diese Einstellung ist für statische Knoten wie 
+* D-Link DIR-300
+oder andere, sich nicht automatisch konfigurierende Knoten mit instabilen \
+Accesspoint bestimmt. Hiermit wird ihr Accesspoint deaktiviert. Die \
+Aktivierung erfolgt über die erneute Zuweisung einer Freifunkzelle.
+
+Optionen:
+  off                Accesspoint ausschalten"
+  exit 0
+else
+  fehler
+fi
+}
+
 # ;-)
 vorlage(){
 if [ "$casearg" != "" ] && [ "$command" == "set" ]; then
@@ -505,6 +550,60 @@ fehler(){
 echo "freifunk: unbekannte Eingabe:" $command $comcase $casearg >&2
 exit 1
 }
+
+# ------------------------------------------------------------------------------
+# Eingabeverarbeitung
+# ------------------------------------------------------------------------------
+
+# Befehle
+get_case(){
+all_case
+}
+
+set_case(){
+all_case
+}
+
+list_case(){
+all_case
+}
+
+# Argumente
+all_case(){
+case "$comcase" in
+  com)
+    comconfig
+    exit 0
+    ;;
+  hostname)
+    hostnameconfig
+    exit 0
+    ;;
+  latlong)
+    latlongconfig
+    exit 0
+    ;;
+  static)
+    static
+    exit 0
+    ;;
+  ap)
+    AP_conf
+    exit 0
+    ;;
+  miniconfig)
+    miniconfig
+    exit 0
+    ;;
+  *)
+    fehler
+    ;;
+esac
+}
+
+# ------------------------------------------------------------------------------
+# Skriptablauf
+# ------------------------------------------------------------------------------
 
 # Plattformerkennung
 systemtype=$(cat /proc/cpuinfo | grep "system type" | sed -e "s/^.*: //g")
