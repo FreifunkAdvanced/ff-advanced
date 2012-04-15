@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=ffrl-miniconfig
-PKG_VERSION:=0.0.20120413
+PKG_VERSION:=0.0.20120415
 PKG_RELEASE:=1
 #PKG_REV:=
 
