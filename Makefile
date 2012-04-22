@@ -179,7 +179,7 @@ update: update-backfire update-trunk
 update-backfire: openwrt/backfire/.update
 
 .NOTPARALLEL:
-update-trunk: settings_update
+# update-trunk: settings_update
 update-trunk: openwrt/trunk/.update
 
 .NOTPARALLEL:
@@ -270,17 +270,17 @@ images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): PLAT="ar71xx"
 images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): MODEL="devel"
 images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   Development OpenWrt trunk for ar71xx'
-#	cp -p config/devel.config openwrt/trunk/.config
-#	-rm -r openwrt/trunk/files
+	cp -p config/devel.config openwrt/trunk/.config
+	-rm -r openwrt/trunk/files 2> /dev/null || true
 #	mkdir -p openwrt/trunk/files/etc/
 #	$(create_firmware_file)
 #	$(brand_firmware)
 #	echo '! development image' >> openwrt/$(REPO)/files/etc/banner
 #	echo '  ------------------------------------------------------------------------------' >> openwrt/$(REPO)/files/etc/banner
-#	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $@
 #	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
-	mv -r openwrt/$(REPO)/bin/$(PLAT)/* $@/
+	mv openwrt/$(REPO)/bin/$(PLAT)/* $@/
 #	cd $@/ && rm md5sums
 #	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
@@ -291,7 +291,7 @@ images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): MODEL
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for D-Link DIR-300'
 	cp -p config/dir300.config openwrt/trunk/.config
-	-rm -r openwrt/trunk/files
+	-rm -r openwrt/trunk/files 2> /dev/null || true
 	mkdir -p openwrt/trunk/files/etc/
 	$(create_firmware_file)
 	$(brand_firmware)
@@ -310,7 +310,7 @@ images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): MODE
 images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for Linksys WRT54G'
 	cp -p config/wrt54g.config openwrt/trunk/.config
-	-rm -r openwrt/trunk/files
+	-rm -r openwrt/trunk/files 2> /dev/null || true
 	mkdir -p openwrt/trunk/files/etc/
 	$(create_firmware_file)
 	$(brand_firmware)

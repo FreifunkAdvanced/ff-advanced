@@ -31,7 +31,8 @@ Config targets:
   config-[<repository>[-<platform>[-<community>]]]
 			- Create certain OpenWrt .config files
 Update targets:
-  update[-<repository>] - update settings.mk and fetch the newest OpenWrt
+  settings_update       - update settings.mk 
+  update[-<repository>] - fetch OpenWrt
 
 Fetching targets:
   fetch                 - Get all external repositories
