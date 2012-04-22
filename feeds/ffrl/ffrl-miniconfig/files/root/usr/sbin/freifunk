@@ -65,6 +65,26 @@ EOF
 # Funktionen & Kram & Funkzellen & IEEE 802.11
 # ------------------------------------------------------------------------------
 
+# Plattformerkennung
+get_systemtype(){
+systemtype=$(cat /proc/cpuinfo | grep "system type" | sed -e "s/^.*: //g")
+
+# andere Wireless-Schnittstellen - andere Sitten:
+# D-Link DIR-300
+if [ "$systemtype" == "Atheros AR2317" ]; then
+  wifiif="ath"
+  wifitype="atheros"
+  wificountry="276"
+
+# Linksys WRT54G
+# TP-LINK und andere
+else
+  wifiif="wlan"
+  wifitype="mac80211"
+  wificountry="DE"
+fi
+}
+
 # Kanaleinstellung und Senderleistung
 set_radio_if(){
 uci set wireless.radio0=wifi-device
@@ -172,6 +192,7 @@ uci set cloud.cur.net_ip6ula=$(uci get ff.${com}.ip6ula)
 while uci delete n2n.@edge[-1] 2> /dev/null ; do true; done
 
 # neue n2ns anlegen
+[ -e /etc/config/n2n ] || touch /etc/config/n2n
 n2namount=$(uci get ff.$(uci get ff.${com}.n2n).amount)
 i=1
 while [  $i -le $n2namount ]; do
@@ -218,12 +239,13 @@ com=$casearg
 # Generierung der Konfigurationsdateien
 [ -e /etc/config/cloud ] || touch /etc/config/cloud
 
+[ "$systemtype" == "" ] && get_systemtype
 set_radio_if          # Kanaleinstellung und Senderleistung
 set_batman_if         # B.A.T.M.A.N.-adv Schnittstelle
 
 # Linksys WRT54G kann nur eine Wi-Fi-Schnittstelle anbieten, deshalb keine APs
 if [ "$systemtype" != "Broadcom BCM47XX" ]; then
-  set_SSID            # Accesspoint SSIDs
+  set_SSIDs           # Accesspoint SSIDs
   set_moreSSIDs       # Weitere SSIDs
 fi
 
@@ -236,7 +258,7 @@ uci commit n2n
 uci commit wireless
 
 # n2n bei manuell konfigurierten Knoten deaktivieren
-if [ ! -d /etc/fsm ]; then
+if [ ! -d /etc/fsm ] && [ -e /etc/init.d/n2n ]; then
 /etc/init.d/n2n disable
 /etc/init.d/n2n stop
 fi
@@ -355,7 +377,7 @@ if [ -e /etc/init.d/ffrl-n2n ]; then
   /etc/init.d/ffrl-n2n enable
   /etc/init.d/ffrl-n2n start &
 else
-  echo "n2n ist nicht installiert"
+  echo "ffrl-n2n ist nicht installiert"
   exit 1
 fi
 }
@@ -604,24 +626,6 @@ esac
 # ------------------------------------------------------------------------------
 # Skriptablauf
 # ------------------------------------------------------------------------------
-
-# Plattformerkennung
-systemtype=$(cat /proc/cpuinfo | grep "system type" | sed -e "s/^.*: //g")
-
-# andere Wireless-Schnittstellen - andere Sitten:
-# D-Link DIR-300
-if [ "$systemtype" == "Atheros AR2317" ]; then
-  wifiif="ath"
-  wifitype="atheros"
-  wificountry="276"
-
-# Linksys WRT54G
-# TP-LINK und andere
-else
-  wifiif="wlan"
-  wifitype="mac80211"
-  wificountry="DE"
-fi
 
 # Eingabeverarbeitung
 if [ "$1" != "" ]; then
