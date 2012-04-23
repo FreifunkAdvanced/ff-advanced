@@ -3,15 +3,6 @@ chain_prefix=splash_db_
 chain_id_file=/tmp/splash_chain_id
 tbl=/tmp/p2ptbl/splash
 
-lockSplash () {
-    exec 666<$chain_id_file
-    flock -x 666
-}
-
-unlockSplash () {
-    exec 666<&-
-}
-
 have_splash_iptable () {
     state=${1:-$(fsm get inetable)}
     [ "$state" == "queen" ]

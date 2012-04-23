@@ -1,8 +1,11 @@
 #!/bin/sh -e
 . /etc/splash.sh
 
+# acquire lock
+exec 666<$chain_id_file
+flock -x 666
+
 # check for current inetable state, allowing a command line override
-lockSplash
 if have_splash_iptable $1; then
     # remove old entries from splash p2ptbl
     p2ptbl filter $tbl \
