@@ -17,6 +17,21 @@ show () {
     cut -f1,3- "$1"
 }
 
+filter () {
+    tbl="$1"
+    shift 1
+    cut -f1,2  "$tbl" \
+	| while read key version; do
+	    echo -e "$key\t$(($version+$RANDOM))"
+        done > "$tbl".ver
+    cut -f1,3- "$tbl" \
+	| "$@" \
+	| join -t$'\t' "$tbl".ver  - \
+	> "$tbl"~
+    mv "$tbl"~ "$tbl"
+    rm "$tbl".ver
+}
+
 update () {
     [ -n "$2" -a -n "$3" ] || printArgs
     oldversion=$(grep "^$2"$'\t' "$1" | cut -f2)
@@ -86,6 +101,7 @@ $0 init   table
 $0 get    table key
 $0 show   table
 $0 update table key value [interface]
+$0 filter table program [args]
 $0 merge  table foreign-table
 $0 gossip table target-size interface"
     exit 1
@@ -116,6 +132,12 @@ case "$1" in
     show)
 	lockTable -s "$2"
 	show "$2"
+	;;
+    filter)
+	tbl="$2"
+	shift 2
+	lockTable -x "$tbl"
+	filter "$tbl" "$@"
 	;;
     update)
 	lockTable -s "$2"
