@@ -40,12 +40,13 @@ disable_httpd () {
 }
 
 # change the interfaces the service httpd is listening on;
-# automatically adds linklocal IPv6 addresses of br-mesh and br-lan
+# automatically adds link-local IPv6 addresses of br-mesh and br-lan and the lan-ip
 change_service_httpd_listen () {
     uci delete uhttp.service.listen_http &>/dev/null || true
     for i in $1 \
 	[$(ifconfig br-mesh | egrep -o 'fe80[:0-9a-f]*')%br-mesh]:80 \
-	[$(ifconfig br-lan  | egrep -o 'fe80[:0-9a-f]*')%br-lan]:80; do
+	[$(ifconfig br-lan  | egrep -o 'fe80[:0-9a-f]*')%br-lan]:80 \
+	$(uci get network.lan.ipaddr); do
 	uci add_list uhttpd.service.listen_http=$i
     done
 }
