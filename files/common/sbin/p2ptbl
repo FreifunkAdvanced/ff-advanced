@@ -1,6 +1,4 @@
-#!/bin/sh
-
-set -e
+#!/bin/sh -e
 
 init () {
     [ -n "$1" ] || printArgs
@@ -48,6 +46,8 @@ update () {
 }
 
 merge () {
+    # we use sort instead of merge here to be robust in case the rows
+    # are not sorted
     sort "$1" "$2" \
 	| {
 	oldkey=""
