@@ -28,5 +28,6 @@ disable_httpd redirection
 rm /tmp/redirection_target
 change_service_httpd_listen
 /etc/init.d/uhttpd restart
-/etc/init.d/n2n disable
+
+# stop N2N
 /etc/init.d/n2n stop
