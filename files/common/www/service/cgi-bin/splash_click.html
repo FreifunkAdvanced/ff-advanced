@@ -4,7 +4,7 @@
 
 # decode request params
 URL="http://$(sed 's/target_url=//g' | urldecode || true)"
-USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \	 | awk 'BEGIN { FS = " " } ; { print $4 }')
+USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp | awk 'BEGIN { FS = " " } ; { print $4 }')
 [ -n "$USER_MAC" ]
 
 # check if user is already splashed; splash otherwise; refresh the
