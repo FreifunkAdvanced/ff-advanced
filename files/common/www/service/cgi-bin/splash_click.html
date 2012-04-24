@@ -1,39 +1,20 @@
 #!/bin/sh -e
-
-. $IPKG_INSTROOT/etc/functions.sh
 . /etc/splash.sh
 . /www/service/cgi-bin/common.sh
 
 # decode request params
 URL="http://$(sed 's/target_url=//g' | urldecode || true)"
-#URL="http://sotun.de/"
-USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \
-	 | awk 'BEGIN { FS = " " } ; { print $4 }')
+USER_MAC=$(grep ^$REMOTE_HOST </proc/net/arp \	 | awk 'BEGIN { FS = " " } ; { print $4 }')
 [ -n "$USER_MAC" ]
 
-# check if user is already splashed; splash otherwise
-lockSplash
-ISSPLASHED=0
-config_load splash_users
-is_mac() {
-   config_get mac "$1" mac
-   if [ "$mac" == "$USER_MAC" ]; then
-   	ISSPLASHED=1
-   fi
-}
-config_foreach is_mac user
-if [ $ISSPLASHED -eq 0 ]; then
-    # user is now free to go
-    chain=$chain_prefix$chain_id
-    if have_internet; then
-	iptables -t nat -I $chain 1 -m mac --mac-source $USER_MAC -j ACCEPT
+# check if user is already splashed; splash otherwise; refresh the
+# p2ptbl entry in any case (renews the timer)
+if [ -z "$(p2ptbl get $tbl "$USER_MAC")" ]; then
+    if have_splash_iptable; then
+	add_splash_iptable "$USER_MAC"
     fi
-
-    uci -q add splash_users user >/dev/null
-    uci -q set splash_users.@user[-1].mac=$USER_MAC
-    uci -q set splash_users.@user[-1].time=`date +%s`
 fi
-unlockSplash
+add_splash_p2ptbl "$USER_MAC"
 
 # send response (encode / to not confuse sed)
 
