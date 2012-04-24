@@ -83,3 +83,4 @@ iptables -t nat -F prerouting_inet_unsplashed
 iptables -t nat -A prerouting_inet_unsplashed -p tcp            -j DNAT --to $gwip:81
 iptables -t nat -A prerouting_inet_unsplashed -p udp --dport 53 -j DNAT --to $gwip:53
 # TODO: discard any other UDP traffic
+

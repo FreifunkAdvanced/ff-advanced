@@ -1,0 +1,6 @@
+* distribution issues
+  race condition between first IP packet and the p2ptbl update message
+  that has to cause an iptable effect
+* p2ptbl schema
+  1. MAC (in capital letters)
+  2. expiry time (seconds since UNIX epoch)
