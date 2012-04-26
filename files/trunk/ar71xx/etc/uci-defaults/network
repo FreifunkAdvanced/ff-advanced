@@ -13,67 +13,59 @@ touch /etc/config/network
 
 ucidef_set_interface_loopback
 
-#Create the wlan network (to set the MTU)
-ffdef_set_interface_wlan "wlan0-1"
+#Set the standard wifi interface to be a batman port
+ffdef_set_batman_port "wlan" "wlan0-1" 
 
-#Create the lan network without interfaces
-ucidef_set_interface_lan ""
 
 board=$(ar71xx_board_name)
 
 case "$board" in
 all0258n)
-	ffdef_set_interface_mesh "eth0 eth1"
+	ucidef_set_interface_lan "eth0 eth1"
 	;;
 
 db120)
-	ucidef_set_interface_wan "eth0"
-	ffdef_set_interface_mesh "eth1"
+	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
 	;;
 
 dir-825-b1|\
 tew-673gru)
-	ucidef_set_interface_wan "eth1"
-	ffdef_set_interface_mesh "eth0.1"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ucidef_add_switch "rtl8366s" "1" "1"
 	ucidef_add_switch_vlan "rtl8366s" "1" "0 1 2 3 5t"
 	;;
 
 nbg460n_550n_550nh)
-	ucidef_set_interface_wan "eth1"
-	ffdef_set_interface_mesh "eth0"
+	ucidef_set_interfaces_lan_wan "eth0" "eth1"
 	ucidef_add_switch "rtl8366s" "1" "1"
 	ucidef_add_switch_vlan "rtl8366s" "0" "0 1 2 3 5"
 	;;
 
 rb-433 |\
 rb-433u)
-	ucidef_set_interface_wan "eth0"
-	ffdef_set_interface_mesh "eth1"
+	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "1 2 5"
 	;;
 
 rb-450)
-	ucidef_set_interface_wan "eth0"
-	ffdef_set_interface_mesh "eth1"
+	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	ucidef_add_switch "eth1" "1" "1"
 	ucidef_add_switch_vlan "eth1" "1" "0 1 2 3 5"
 	;;
 
 rb-450g |\
 routerstation-pro)
-	ucidef_set_interface_wan "eth0"
-	ffdef_set_interface_mesh "eth1"
+	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
 	;;
 
 rb-493g)
-	ucidef_set_interface_wan "eth1.2"
-	ffdef_set_interface_mesh "eth0 eth1.1"
+	ucidef_set_interface_lan_wan "eth0" "eth1.2"
+	ffdef_set_interface_mesh "eth1.1"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
 	ucidef_add_switch "switch1" "1" "1"
@@ -84,48 +76,64 @@ rb-493g)
 wzr-hp-g300nh2 |\
 pb92 |\
 ap113)
-	ucidef_set_interface_wan "eth0.2"
-	ffdef_set_interface_mesh "eth0.1"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_batman_port "port4" "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0t 1 3 4 5"
+	ucidef_add_switch_vlan "eth0" "1" "0t 1 3"
 	ucidef_add_switch_vlan "eth0" "2" "0t 2"
+	ucidef_add_switch_vlan "eth0" "3" "0t 4"
+	ucidef_add_switch_vlan "eth0" "4" "0t 5"
 	;;
 
 tl-wr1043nd)
-	ucidef_set_interface_wan "eth0.2"
-	ffdef_set_interface_mesh "eth0.1"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_batman_port "port4" "eth0.4"
 	ucidef_add_switch "rtl8366rb" "1" "1"
-	ucidef_add_switch_vlan "rtl8366rb" "1" "1 2 3 4 5t"
+	ucidef_add_switch_vlan "rtl8366rb" "1" "1 2 5t"
 	ucidef_add_switch_vlan "rtl8366rb" "2" "0 5t"
+	ucidef_add_switch_vlan "rtl8366rb" "3" "3 5t"
+	ucidef_add_switch_vlan "rtl8366rb" "4" "4 5t"
 	;;
 
 tl-wr2543n)
-	ucidef_set_interface_wan "eth0.2"
-	ffdef_set_interface_mesh "eth0.1" 
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+	ffdef_set_interface_mesh "eth0.1 eth0.3" 
+	ffdef_add_batman_port "port4" "eth0.4"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "1 2 3 4 9t"
 	ucidef_add_switch_vlan "switch0" "2" "0 9t"
+	ucidef_add_switch_vlan "switch0" "3" "3 9t"
+	ucidef_add_switch_vlan "switch0" "4" "4 9t"
 	;;
 
 tl-wr841n-v1|\
 tl-wr941nd)
 	ucidef_set_interface_raw "eth" "eth0"
-	ucidef_set_interface_wan "wan"
-	ffdef_set_interface_mesh "lan1 lan2 lan3 lan4"
+	ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
+	ffdef_set_interface_mesh "lan3"
+	ffdef_add_batman_port "port4" "lan4"
 	;;
 
 wrt160nl)
-	ucidef_set_interface_wan "eth1"
-	ffdef_set_interface_mesh "eth0"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
+	ffdef_set_interface_mesh "eth0.2"
+	ffdef_add_batman_port "port4" "eth0.3"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0 1 2 3 4 5"
+	ucidef_add_switch_vlan "eth0" "1" "0 1 2 3 4t 5"
+	ucidef_add_switch_vlan "eth0" "2" "2 4t"
+	ucidef_add_switch_vlan "eth0" "3" "3 4t"
 	;;
 
 wzr-hp-g300nh)
-	ucidef_set_interface_wan "eth1"
-	ffdef_set_interface_mesh "eth0.1"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
+	ffdef_set_interface_mesh "eth0.2"
+	ffdef_add_batman_port "port4" "eth0.3"
 	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 5t"
+	ucidef_add_switch_vlan "switch0" "1" "0 1 5t"
+	ucidef_add_switch_vlan "switch0" "2" "2 5t"
+	ucidef_add_switch_vlan "switch0" "3" "3 5t"
 	;;
 
 aw-nr580 |\
@@ -138,7 +146,7 @@ tl-wa901nd |\
 tl-wa901nd-v2 |\
 tl-wr703n |\
 wp543)
-	ffdef_set_interface_mesh "eth0"
+	ffdef_set_interface_lan "eth0"
 	;;
 
 alfa-ap96 |\
@@ -149,8 +157,7 @@ pb42 |\
 pb44 |\
 routerstation|\
 wpe72)
-	ucidef_set_interface_wan "eth0"
-	ffdef_set_interface_mesh "eth1"
+	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	;;
 
 ap121 |\
@@ -172,18 +179,24 @@ whr-g301n |\
 whr-hp-g300n |\
 whr-hp-gn |\
 wzr-hp-ag300h)
-	ucidef_set_interface_wan "eth1"
-	ffdef_set_interface_mesh "eth0"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
+	ffdef_set_interface_mesh "eth0.2"
+	ffdef_add_batman_port "port4" "eth0.3"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0 1 2 3 4"
+	ucidef_add_switch_vlan "eth0" "1" "0t 1 2"
+	ucidef_add_switch_vlan "eth0" "2" "0t 3"
+	ucidef_add_switch_vlan "eth0" "3" "0t 4"
 	;;
 
 wzr-hp-g450h)
-	ucidef_set_interface_wan "eth0.2"
-	ffdef_set_interface_mesh "eth0.1"
+	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_batman_port "port4" "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0t 2 3 4 5"
+	ucidef_add_switch_vlan "eth0" "1" "0t 2 3"
 	ucidef_add_switch_vlan "eth0" "2" "0t 1"
+	ucidef_add_switch_vlan "eth0" "3" "0t 4"
+	ucidef_add_switch_vlan "eth0" "4" "0t 5"
 	;;
 
 *)
@@ -192,6 +205,7 @@ wzr-hp-g450h)
 	;;
 esac
 
+uci commit batman-adv
 uci commit network
 
 exit 0
