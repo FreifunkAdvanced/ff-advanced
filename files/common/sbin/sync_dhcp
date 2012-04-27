@@ -1,0 +1,21 @@
+#!/bin/sh -e
+
+dst=/tmp/dhcp.hostconfig
+
+add_tbl() {
+    p2ptbl show /tmp/p2ptbl/ccfg_$1 \
+	| tr '\t' ',' \
+	| cut -f 1,2,5 -d, \
+	| while IFS=, read mac name ip; do
+	    [ -z "$name$ip" ] && continue
+	    echo "$mac,set:only-$1${ip:+,$ip}${name:+,$name}"
+        done >> $dst~
+}
+
+rm -f $dst~
+add_tbl wifi
+add_tbl wire
+mv $dst~ $dst
+
+# trigger reload of dhcp-hosts-file
+killall -SIGHUP dnsmasq
