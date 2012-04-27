@@ -1,0 +1,49 @@
+update_cfgtbl() {
+    if [ "$cmode"   == $cmode_default ];   then cmode=;   fi
+    if [ "$csplash" == $csplash_default ]; then csplash=; fi
+    p2ptbl update  $tbl $mac "$cname,$cmode,$csplash,$cip"
+}
+
+# parse changes
+while read key val; do
+    case "$key" in 
+	client_access)
+	    case "$val" in
+		bridged|routed|isolated) cmode=$val;;
+		*) fail;;
+	    esac
+	    lazy 20 splash_sync
+	    ;;
+	client_name)
+	    [ -z "$(echo "$val" | tr -d '0-9a-z_')" ] \
+		|| fail 400 'Unerlaubte Zeichen verwendet'
+	    [ "$val" != "$cname" ] \
+		|| continue
+	    [ -z "$(p2ptbl show $tbl | cut -f2 | grep "^$val,")" ] \
+		|| fail 403 'Name bereits vergeben'
+	    cname=$val
+	    lazy 10 sync_dhcp
+	    ;;
+	# client_splash is send iff. it is checked; update_splash is
+	# send in every case
+	update_splash)
+	    update_splash=${update_splash-false}
+	    lazy 20 splash_sync
+	    ;;
+	client_splash)
+	    update_splash=true
+	    ;;
+	*)
+	    fail 400 "wtf is $key?"
+	    ;;
+    esac
+done <<EOF
+$(tr '=&' ' \n')
+EOF
+
+if [ -n "$update_splash" ]; then
+    csplash=$update_splash
+fi
+
+# update p2ptbl entry
+lazy 00 update_cfgtbl
