@@ -66,8 +66,12 @@ var formChangeHandler = function() {
 };
 var formSubmitHandler = function() {
     form = this;
+    $('[type="submit"].btn-success')
+	.removeClass('btn-success')
+	.addClass('disabled');
     btn = $(form).find('[type="submit"]');
     btn.addClass('disabled');
+    $(form).children('div.alert').remove();
     $.post(form.action, $(form).serialize())
 	.done(function(res) { 
 	    btn.addClass('btn-success')

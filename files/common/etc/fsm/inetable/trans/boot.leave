@@ -11,6 +11,10 @@ p2ptbl init  /tmp/p2ptbl/gwip
 p2ptbl merge /tmp/p2ptbl/gwip /tmp/gwip-init
 rm /tmp/gwip-init
 
+# init empty client config tables
+p2ptbl init /tmp/p2ptbl/ccfg_wire
+p2ptbl init /tmp/p2ptbl/ccfg_wifi
+
 # Generate ULA Ip6 addr for the node mesh interface and set it
 # All Nodes generate these addresses to have a reboot persistent address
 if [ "$(ifconfig br-mesh | grep 'Scope:Global')" == "" ]; then
