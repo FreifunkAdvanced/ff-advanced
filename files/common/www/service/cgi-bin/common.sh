@@ -23,7 +23,7 @@ EOF
 
 ## lazy execution of commands after the web response has been send
 lazy() {
-    pos=$1
+    local pos=$1
     shift
     lazy_cmd="$pos $*
 $lazy_cmd"
