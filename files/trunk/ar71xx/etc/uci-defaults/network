@@ -13,9 +13,8 @@ touch /etc/config/network
 
 ucidef_set_interface_loopback
 
-#Set the standard wifi interface to be a batman port
-ffdef_set_batman_port "wlan" "wlan0-1" 
-
+#Set adhoc wifi interface to raw mode with mtu 1528
+ffdef_set_interface_wlan "wlan0-1"
 
 board=$(ar71xx_board_name)
 
@@ -78,7 +77,8 @@ pb92 |\
 ap113)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
-	ffdef_add_batman_port "port4" "eth0.4"
+	ffdef_set_interface_raw "port4" "eth0.4"
+	ffdef_set_interface_batman "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
 	ucidef_add_switch_vlan "eth0" "1" "0t 1 3"
 	ucidef_add_switch_vlan "eth0" "2" "0t 2"
@@ -89,7 +89,8 @@ ap113)
 tl-wr1043nd)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
-	ffdef_add_batman_port "port4" "eth0.4"
+	ffdef_set_interface_raw "port4" "eth0.4"
+	ffdef_set_interface_batman "eth0.4"
 	ucidef_add_switch "rtl8366rb" "1" "1"
 	ucidef_add_switch_vlan "rtl8366rb" "1" "1 2 5t"
 	ucidef_add_switch_vlan "rtl8366rb" "2" "0 5t"
@@ -100,7 +101,8 @@ tl-wr1043nd)
 tl-wr2543n)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.1 eth0.3" 
-	ffdef_add_batman_port "port4" "eth0.4"
+	ffdef_set_interface_raw "port4" "eth0.4"
+	ffdef_set_interface_batman "eth0.4"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "1 2 3 4 9t"
 	ucidef_add_switch_vlan "switch0" "2" "0 9t"
@@ -113,13 +115,15 @@ tl-wr941nd)
 	ucidef_set_interface_raw "eth" "eth0"
 	ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
 	ffdef_set_interface_mesh "lan3"
-	ffdef_add_batman_port "port4" "lan4"
+	ffdef_set_interface_raw "port4" "lan4"
+	ffdef_set_interface_batman "lan4"
 	;;
 
 wrt160nl)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
-	ffdef_add_batman_port "port4" "eth0.3"
+	ffdef_set_interface_raw "port4" "eth0.3"
+	ffdef_set_interface_batman "eth0.3"
 	ucidef_add_switch "eth0" "1" "1"
 	ucidef_add_switch_vlan "eth0" "1" "0 1 2 3 4t 5"
 	ucidef_add_switch_vlan "eth0" "2" "2 4t"
@@ -129,7 +133,8 @@ wrt160nl)
 wzr-hp-g300nh)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
-	ffdef_add_batman_port "port4" "eth0.3"
+	ffdef_set_interface_raw "port4" "eth0.3"
+	ffdef_set_interface_batman "eth0.3"
 	ucidef_add_switch "switch0" "1" "1"
 	ucidef_add_switch_vlan "switch0" "1" "0 1 5t"
 	ucidef_add_switch_vlan "switch0" "2" "2 5t"
@@ -181,7 +186,8 @@ whr-hp-gn |\
 wzr-hp-ag300h)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
-	ffdef_add_batman_port "port4" "eth0.3"
+	ffdef_set_interface_raw "port4" "eth0.3"
+	ffdef_set_interface_batman "eth0.3"
 	ucidef_add_switch "eth0" "1" "1"
 	ucidef_add_switch_vlan "eth0" "1" "0t 1 2"
 	ucidef_add_switch_vlan "eth0" "2" "0t 3"
@@ -191,7 +197,8 @@ wzr-hp-ag300h)
 wzr-hp-g450h)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
-	ffdef_add_batman_port "port4" "eth0.4"
+	ffdef_set_interface_raw "port4" "eth0.4"
+	ffdef_set_interface_batman "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
 	ucidef_add_switch_vlan "eth0" "1" "0t 2 3"
 	ucidef_add_switch_vlan "eth0" "2" "0t 1"
@@ -200,8 +207,7 @@ wzr-hp-g450h)
 	;;
 
 *)
-	ucidef_set_interface_wan "eth1"
-	ffdef_set_interface_mesh "eth0"
+	ucidef_set_interface_lan_wan "eth0" "eth1"
 	;;
 esac
 
