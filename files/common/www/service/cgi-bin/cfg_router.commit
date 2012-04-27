@@ -70,7 +70,7 @@ while read key val; do
 			# the same lock to close race cond; ignore
 			# failure to lock (prefer to process the
 			# request instead (-:)
-			exec 666>>/tmp/lock/geolocate
+			exec 667>>/tmp/lock/geolocate
 			flock -n -x 667 || true
 		    else
 			lazy 00 update_geo true true false

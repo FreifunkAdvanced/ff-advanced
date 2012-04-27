@@ -1,0 +1,11 @@
+* p2ptbl schema
+  The value fields (2,...) are comma-separated (instead of tab)
+  because otherwise empty fields would confuse the p2ptbl (multiple
+  tabs collapsed to one during sh read)
+
+  1. MAC (in capital letters)
+  2. name :: dns compatible host name or empty (=none)
+  3. inet_mode :: bridged | routed | isolated or empty (=default,
+     depending on client medium)
+  4. splash disabled :: true | false or empty (=false)
+  5. static_ip :: static IPv4 or empty (=none)

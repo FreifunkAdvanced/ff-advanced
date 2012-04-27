@@ -72,36 +72,40 @@
 	<h3>Ger&auml;teeinstellungen <small>f&uuml;r <span class="data-client_name loading"></span>
 	(<span class="data-client_mac"></span>)</small></h3>
 	
-	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	<form class="well" action="cgi-bin/cfg_client.json" method="post">
 	  <h4>Name <small>wird benutzt um die MAC-Adresse zu verstecken</small></h4>
 	  <input type="text" name="client_name" class="data">
 	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
 	</form>
 
-	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	<form class="well" action="cgi-bin/cfg_client.json" method="post">
 	  <h4>Internetzugang</h4>
 	  <label class="checkbox inline">
+	    <input type="hidden" name="update_splash" value="">
 	    <input type="checkbox" name="client_splash" value="true" class="data">
 	    Splash dauerhaft deaktivieren
 	  </label>
 	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
 	</form>
 
-	<form class="well" action="cgi-bin/cfg_router.json" method="post">
+	<form class="well" action="cgi-bin/cfg_client.json" method="post">
 	  <h4>Zugang zum Freifunknetz</h4>
 	  <label class="radio">
-	    <input type="radio" name="client_access" class="data" value="bridged"> direkte Verbindung mit dem
-	    Freifunknetzwerk (bridging). Uneingeschr&auml;nkte
-	    Funktionalit&auml;t und Dienstfreigabe m&ouml;glich
+	    <input type="radio" name="client_access" class="data" value="bridged">
+	    direkte Verbindung mit dem Freifunknetzwerk (bridging):
+	    Uneingeschr&auml;nkte Funktionalit&auml;t und
+	    Dienstfreigabe m&ouml;glich.
 	  </label>
 	  <label class="radio">
-	    <input type="radio" name="client_access" class="data" value="routed"> geroutete Verbindung: Zugriff auf das
-	    Freifunknetz funktioniert so wie Internetzugriff. Eine
-	    Programme (Chat, diverse Computerspiele) funktionieren
-	    nicht. Dienste koennen nicht freigegeben werden
+	    <input type="radio" name="client_access" class="data" value="routed">
+	    geroutete Verbindung: Zugriff auf das Freifunknetz
+	    funktioniert so wie Internetzugriff. Einige Programme
+	    (Chat, diverse Computerspiele) funktionieren
+	    nicht. Dienste k&ouml;nnen nicht freigegeben werden.
 	  </label>
 	  <label class="radio">
-	    <input type="radio" name="client_access" class="data" value="isolated"> keine Verbindung
+	    <input type="radio" name="client_access" class="data" value="isolated">
+	    keine Verbindung
 	  </label>
 	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
 	</form>
@@ -192,9 +196,12 @@
 	      </label>
 	    </div>
 	    <div class="span6">
-	      <input type="text" name="router_pos_lon" class="data">
-	      <input type="text" name="router_pos_lat" class="data">
-	      <input type="text" name="router_pos_street" class="data">
+	      <div>Longitude<br />
+		<input type="text" name="router_pos_lon" class="data"></div>
+	      <div>Lattitude<br />
+		<input type="text" name="router_pos_lat" class="data"></div>
+	      <div>Ort<br />
+		<input type="text" name="router_pos_street" class="data"></div>
 	    </div>
 	  </div>
 	  <input type="submit" class="btn btn-mini disabled" value="Speichern">

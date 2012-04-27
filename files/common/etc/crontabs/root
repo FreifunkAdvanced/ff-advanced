@@ -1,5 +1,7 @@
-* * * * * /sbin/p2ptbl gossip /tmp/p2ptbl/gwip   500 br-mesh
-* * * * * /sbin/p2ptbl gossip /tmp/p2ptbl/update 500 br-mesh
+* * * * */10 /sbin/p2ptbl gossip /tmp/p2ptbl/ccfg_wifi 500 br-mesh
+* * * * *    /sbin/p2ptbl gossip /tmp/p2ptbl/gwip      500 br-mesh
+* * * * *    /sbin/p2ptbl gossip /tmp/p2ptbl/splash    500 br-mesh
+* * * * *    /sbin/p2ptbl gossip /tmp/p2ptbl/update    500 br-mesh
 * * * * * /sbin/fsm watch inetable
 * * * * * /sbin/fsm watch update
 * * * * * /sbin/splash_sync
