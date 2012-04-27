@@ -7,6 +7,7 @@ config mesh mesh
 	option qos false
 	option vpn false
 	option filter_wan true
+	option lan_client_mode routed
 
 config position position
        option public true
