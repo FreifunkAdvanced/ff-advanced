@@ -12,17 +12,16 @@ set network.mesh.auto='1'
 EOF
 }
 
-ffdef_add_batman_port {
+ffdef_add_batman_port() {
 	local interface=$1
 	local ifname=$2
-	local batinterfaces=$(uci get batman-adv.bat0.interfaces)
 	uci batch <<EOF
 set network.$interface='interface'
 set network.$interface.ifname='$ifname'
 set network.$interface.mtu='1528'
 set network.$interface.proto='none'
 set network.$interface.auto='1'
-set batman-adv.bat0.interfaces='$batinterfaces $ifname'
+add_list batman-adv.bat0.interfaces='$ifname'
 EOF
 }
 
