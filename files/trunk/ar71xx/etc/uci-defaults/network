@@ -96,7 +96,7 @@ tl-wr2543n)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3" 
 	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "1 2 3 4 9t"
+	ucidef_add_switch_vlan "switch0" "1" "1 2 9t"
 	ucidef_add_switch_vlan "switch0" "2" "0 9t"
 	ucidef_add_switch_vlan "switch0" "3" "3 4 9t"
 	;;
@@ -112,7 +112,7 @@ wrt160nl)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0 1 2 3 4t 5"
+	ucidef_add_switch_vlan "eth0" "1" "0 1 4t 5"
 	ucidef_add_switch_vlan "eth0" "2" "2 3 4t"
 	;;
 
