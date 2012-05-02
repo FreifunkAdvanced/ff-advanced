@@ -30,6 +30,36 @@ ifeq ($(NUMPROC),0)
         NUMPROC = 1
 endif
 
+# ------
+# define
+# ------
+
+define move_files
+cp -a files/common openwrt/$(REPO)/files
+[ -d files/$(REPO)/$(PLAT) ] && rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
+[ -d files/$(REPO)/$(PLAT)-$(MODEL) ] && rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
+endef
+
+define create_firmware_file
+#./name_firmware openwrt/$(REPO)
+echo $(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && \
+echo -n "-modified"`_$(REPO)-`[[ "$(REPO)" == "trunk" ]] && \
+echo $(SVNREVISION) || echo $(BACKFIREVERSION)` > openwrt/$(REPO)/files/etc/firmware
+endef
+
+define brand_firmware
+[[ -e config/misc/banner.$(MODEL) ]] && \
+sed config/misc/banner.$(MODEL) \
+-e "s/SVNRV/$(SVNREVISION)/g" \
+-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
+-e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
+-e "s/FFRLversion/$(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && echo -n "-modified"`_$(REPO)/g" \
+-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner
+
+[[ "$(REPO)" == "backfire" ]] && \
+sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
+endef
+
 # ------------------------------------
 # Miscellaneous targets and flag lists
 # ------------------------------------
@@ -46,8 +76,7 @@ settings.mk:
 mcimage: images/$(DATE)_$(VERSION)/miniconfig-ar71xx-trunk-r$(SVNREVISION)
 
 
-dir300image:
-	@echo "DIR-300 image not implemented yet. You have to move the files by yourself"
+dir300image: images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION)
 
 help:
 	cat doc/build-HOWTO
@@ -99,11 +128,14 @@ openwrt/backfire/.repo_access:
 	@echo '  SVN 	  OpenWrt Backfire $(BACKFIREVERSION)'
 	svn co -q svn://svn.openwrt.org/openwrt/tags/backfire_$(BACKFIREVERSION)/ $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	@echo '  UPDATE  OpenWrt Backfire $(BACKFIREVERSION) feeds'
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) in OpenWrt Backfire'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
+	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Backfire $(BACKFIREVERSION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $@
@@ -114,11 +146,14 @@ openwrt/trunk/.repo_access:
 	@echo '  SVN     OpenWrt Trunk r$(SVNREVISION)'
 	svn co -q -r $(SVNREVISION) svn://svn.openwrt.org/openwrt/trunk/ $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	@echo '  UPDATE  OpenWrt Trunk r$(SVNREVISION) feeds'
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
+	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $@
@@ -130,24 +165,29 @@ openwrt/trunk/.repo_access:
 settings_update: newSVN = $(shell svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g")
 settings_update: oldSVN = $(shell grep SVNREVISION settings.mk | sed -e "s/.*= //g")
 settings_update:
+	@echo '  MOD 	  settings.mk ($(oldSVN) -> $(newSVN))'
 	sed -i -e 's/$(oldSVN)/$(newSVN)/g' settings.mk
 
-update: settings_update update-backfire update-trunk
+update: update-backfire update-trunk
 
 update-backfire: openwrt/backfire/.update
 
-update-trunk: settings_update openwrt/trunk/.update
+update-trunk: settings_update
+update-trunk: openwrt/trunk/.update
 
 .NOTPARALLEL:
 openwrt/backfire/.update:
 	mkdir -p openwrt dl
 	@echo '  SVN 	  OpenWrt Backfire $(BACKFIREVERSION) (update)'
 	cd $(@D) && svn update -q
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	@echo '  UPDATE  OpenWrt Backfire $(BACKFIREVERSION) feeds'
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) (update)'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
+	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Backfire $(BACKFIREVERSION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $(@D).repo_access
@@ -157,11 +197,14 @@ openwrt/trunk/.update:
 	mkdir -p openwrt dl
 	@echo '  SVN     OpenWrt Trunk r$(SVNREVISION) (update)'
 	cd $(@D) && svn update -q -r $(SVNREVISION)
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	@echo '  UPDATE  OpenWrt Trunk r$(SVNREVISION) feeds'
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) (update)'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
+	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $(@D).repo_access
@@ -214,6 +257,25 @@ image/%:
 	@echo 'please use the new make syntax:'
 	head -n24 doc/build-HOWTO
 
+# DIR-300 build target
+images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): REPO="trunk"
+images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): PLAT="atheros"
+images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): MODEL="miniconfig"
+images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
+	@echo '  BUILD   OpenWrt trunk for D-Link DIR-300'
+	cp -p config/dir300.config openwrt/trunk/.config
+	-rm -r openwrt/trunk/files
+	mkdir -p openwrt/trunk/files/etc/
+	$(create_firmware_file)
+	$(brand_firmware)
+
+	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+
+	mkdir -p $@
+	rsync --exclude="*-squashfs.bin" --exclude="*.elf" --exclude="*-vmlinux.gz" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
+	cd $@/ && rm md5sums
+	cd $@/ && md5sum * > md5sums 2> /dev/null
+
 # format image/($repo)/openwrt-$(platform)-$(model)
 .SECONDEXPANSION:
 images/%: REPO=$(shell echo $(@F) | cut -f3 -d-)
@@ -230,25 +292,9 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	# not needed, make gets rid of old files by itself
 	#-rm -r openwrt/$(REPO)/bin/$(PLAT)
 
-	cp -a files/common openwrt/$(REPO)/files
-	[ -d files/$(REPO)/$(PLAT) ] && rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
-	[ -d files/$(REPO)/$(PLAT)-$(MODEL) ] && rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
-
-	#./name_firmware openwrt/$(REPO)
-	echo $(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && \
-	echo -n "-modified"`_$(REPO)-`[[ "$(REPO)" == "trunk" ]] && \
-	echo $(SVNREVISION) || echo $(BACKFIREVERSION)` > openwrt/$(REPO)/files/etc/firmware
-
-	[[ -e config/misc/banner.$(MODEL) ]] && \
-	sed config/misc/banner.$(MODEL) \
-	-e "s/SVNRV/$(SVNREVISION)/g" \
-	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
-	-e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
-	-e "s/FFRLversion/$(DATE)_$(VERSION)`[ -n "$$(git status --porcelain)" ] && echo -n "-modified"`_$(REPO)/g" \
-	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner
-
-	[[ "$(REPO)" == "backfire" ]] && \
-	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
+	$(move_files)
+	$(create_firmware_file)
+	$(brand_firmware)
 
 	# make oldconfig for OpenWrt
 	cd openwrt/$(REPO) && while true; do echo; done | $(MAKE) oldconfig >/dev/null
