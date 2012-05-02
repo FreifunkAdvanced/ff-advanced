@@ -4,7 +4,7 @@ Options: type "make -h" to see the options
 
 Image targets:
   mcimage               - Build the miniconfig image
-  dir300image           - Build an image for D-Link DIR-300
+  dir300image           - Build an image for D-Link DIR-300 (miniconfig)
   all                   - Build default images
   image                 - Build all possible images
   image-<repository>    - Build all images for certain repository
