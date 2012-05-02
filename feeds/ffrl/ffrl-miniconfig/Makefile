@@ -9,20 +9,21 @@ include $(TOPDIR)/rules.mk
 
 
 PKG_NAME:=ffrl-miniconfig
-PKG_VERSION:=0.0.20120415
+PKG_VERSION:=0.0.20120421
 PKG_RELEASE:=1
 #PKG_REV:=
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS := uci base-files
+#PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+#PKG_BUILD_DEPENDS := uci base-files
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ffrl-miniconfig
-  SECTION:=ffrl
+  SECTION:=net
   CATEGORY:=Network
+  SUBMENU:=Freifunk Rheinland
   TITLE:=Freifunk Rheinland - miniconfig
-  DEPENDS:=+base-files
+  DEPENDS:=+base-files +uci
   URL:=http://www.freifunk-rheinland.net
   DEFAULT:=n
   PKGARCH:=all
