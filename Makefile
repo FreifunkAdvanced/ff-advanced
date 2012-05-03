@@ -59,6 +59,10 @@ sed config/misc/banner.$(MODEL) \
 sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
 endef
 
+define oldconfig
+cd openwrt/$(REPO) && while true; do echo; done | $(MAKE) oldconfig >/dev/null
+endef
+
 # ------------------------------------
 # Miscellaneous targets and flag lists
 # ------------------------------------
@@ -290,9 +294,11 @@ images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): PLAT=
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): MODEL="miniconfig"
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for D-Link DIR-300'
-	cp -p config/dir300.config openwrt/trunk/.config
-	-rm -r openwrt/trunk/files 2> /dev/null || true
-	mkdir -p openwrt/trunk/files/etc/
+	#cp -p config/dir300.config openwrt/$(REPO)/.config
+	./genconfig dir300 > openwrt/$(REPO)/.config
+	oldconfig
+	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
+	mkdir -p openwrt/$(REPO)/files/etc/
 	$(create_firmware_file)
 	$(brand_firmware)
 
@@ -309,9 +315,11 @@ images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): PLAT
 images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): MODEL="miniconfig"
 images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for Linksys WRT54G'
-	cp -p config/wrt54g.config openwrt/trunk/.config
-	-rm -r openwrt/trunk/files 2> /dev/null || true
-	mkdir -p openwrt/trunk/files/etc/
+	#cp -p config/wrt54g.config openwrt/$(REPO)/.config
+	./genconfig wrt54g > openwrt/$(REPO)/.config
+	oldconfig
+	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
+	mkdir -p openwrt/$(REPO)/files/etc/
 	$(create_firmware_file)
 	$(brand_firmware)
 
@@ -334,7 +342,8 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 
 	@echo '  BUILD   OpenWrt $(REPO) for $(PLAT) in $(MODEL)'
 
-	cp $< openwrt/$(REPO)/.config
+	#cp $< openwrt/$(REPO)/.config
+	./genconfig tp > openwrt/$(REPO)/.config
 
 	-rm -r openwrt/$(REPO)/files
 	# not needed, make gets rid of old files by itself
@@ -345,7 +354,7 @@ images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
 	$(brand_firmware)
 
 	# make oldconfig for OpenWrt
-	cd openwrt/$(REPO) && while true; do echo; done | $(MAKE) oldconfig >/dev/null
+	oldconfig
 
 	# It’s all about this command :-) disable for dry run
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
