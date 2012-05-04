@@ -123,7 +123,7 @@ config/%.config:
 # Fetch targets
 # ------------------------------------
 
-fetch: fetch-backfire fetch-trunk
+fetch: fetch-trunk
 
 fetch-backfire: openwrt/backfire/.repo_access
 
@@ -294,18 +294,18 @@ images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): PLAT=
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): MODEL="miniconfig"
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for D-Link DIR-300'
-	#cp -p config/dir300.config openwrt/$(REPO)/.config
 	./genconfig dir300 > openwrt/$(REPO)/.config
 	oldconfig
 	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
 	mkdir -p openwrt/$(REPO)/files/etc/
 	$(create_firmware_file)
 	$(brand_firmware)
-
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
-
 	mkdir -p $@
-	rsync --exclude="*-squashfs.bin" --exclude="*.elf" --exclude="*-vmlinux.gz" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
+	rsync --exclude="*-squashfs.bin" \
+	      --exclude="*.elf" \
+	      --exclude="*-vmlinux.gz" -a \
+	      openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	cd $@/ && rm md5sums
 	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
@@ -315,51 +315,37 @@ images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): PLAT
 images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): MODEL="miniconfig"
 images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for Linksys WRT54G'
-	#cp -p config/wrt54g.config openwrt/$(REPO)/.config
 	./genconfig wrt54g > openwrt/$(REPO)/.config
 	oldconfig
 	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
 	mkdir -p openwrt/$(REPO)/files/etc/
 	$(create_firmware_file)
 	$(brand_firmware)
-
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
-
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/packages $@/
-	rsync --exclude="*3g*" --include="*wrt54g*" --include="*-rootfs.tar.gz" --include="openwrt-brcm47xx-squashfs.trx" --exclude="*" -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
-	#cd $@/ && rm md5sums || true
+	rsync --exclude="*3g*" \
+	      --include="*wrt54g*" \
+	      --include="*-rootfs.tar.gz" \
+	      --include="openwrt-brcm47xx-squashfs.trx" \
+	      --exclude="*" -a \
+	      openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
-
-# format image/($repo)/openwrt-$(platform)-$(model)
+# ar71xx build target
 .SECONDEXPANSION:
 images/%: REPO=$(shell echo $(@F) | cut -f3 -d-)
 images/%: PLAT=$(shell echo $(@F) | cut -f2 -d-)
 images/%: MODEL=$(shell echo $(@F) | cut -f1 -d-)
-images/%: config/$$(REPO)-$$(PLAT)-$$(MODEL).config \
-			 openwrt/$$(REPO)/.repo_access 
-
+images/%: openwrt/$$(REPO)/.repo_access 
 	@echo '  BUILD   OpenWrt $(REPO) for $(PLAT) in $(MODEL)'
-
-	#cp $< openwrt/$(REPO)/.config
-	./genconfig tp > openwrt/$(REPO)/.config
-
+	./genconfig $(PLAT) > openwrt/$(REPO)/.config
 	-rm -r openwrt/$(REPO)/files
-	# not needed, make gets rid of old files by itself
-	#-rm -r openwrt/$(REPO)/bin/$(PLAT)
-
 	$(move_files)
 	$(create_firmware_file)
 	$(brand_firmware)
-
-	# make oldconfig for OpenWrt
 	oldconfig
-
-	# It’s all about this command :-) disable for dry run
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
-
 	mkdir -p $@
-	#mv openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 
