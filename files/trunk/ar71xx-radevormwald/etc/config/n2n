@@ -1,0 +1,9 @@
+config edge
+	option ipaddr		'1.2.3.4'
+	option supernode	'fnordeingang.de'
+	option port		'31337'
+	option community	'ffrade1'
+	option key		'ffrade1'
+	option devname		'n2n1'
+	option route		''
+
