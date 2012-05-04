@@ -293,7 +293,7 @@ EOF
 }
 
 gen_config(){
-if [ "$case" = "tp" ] ; then
+if [ "$case" = "tp" ] || [ "$case" = "ar71xx" ]; then
 target_ar71xx
 default
 packages_firewall  | sed -e "s/=$/=y/g"
@@ -306,7 +306,7 @@ packages_webserver | sed -e "s/=$/=y/g"
 packages_util      | sed -e "s/=$/=m/g"
 packages_unknown   | sed -e "s/=$/=y/g"
 packages_ffrl      | sed -e "s/=$/=y/g"
-elif [ "$case" = "dir300" ]; then
+elif [ "$case" = "dir300" ] || [ "$case" = "atheros" ]; then
 target_atheros
 default
 packages_firewall  | sed -e "s/=$/=m/g"
@@ -319,7 +319,7 @@ packages_webserver | sed -e "s/=$/=m/g"
 packages_util      | sed -e "s/=$/=m/g"
 #packages_unknown   | sed -e "s/=$/=m/g"
 packages_ffrl      | sed -e "s/=$/=y/g"
-elif [ "$case" = "wrt54g" ]; then
+elif [ "$case" = "wrt54g" ] || [ "$case" = "brcm47xx" ]; then
 target_brcm47xx
 default
 packages_firewall  | sed -e "s/=$/=m/g"
