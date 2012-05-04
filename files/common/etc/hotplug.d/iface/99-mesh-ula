@@ -1,0 +1,10 @@
+    #!/bin/sh
+	. /etc/fsm/inetable/common.sh
+	
+	if [ "$INTERFACE" = "br-mesh" ] && [ "$ACTION" = "ifup" ] {
+		MacAddr=$(ifconfig eth0 | grep HWaddr | awk '{print $5}' | tr -d "\n" | tr ':' ' ' | awk '{print $1$2":"$3$4":"$5$6}')
+		ULAAddr=$(uci get cloud.cur.net_ip6ula | egrep -o 'f[c-d][:0-9a-f]*' | sed -e 's/:$//')
+		NodeSubnet="FFFF:"
+		NewIP6Addr="$ULAAddr$NodeSubnet$MacAddr"
+		mesh_add_ipv6 "$NewIP6Addr/64"
+	}
