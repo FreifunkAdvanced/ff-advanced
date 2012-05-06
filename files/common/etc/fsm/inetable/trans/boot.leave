@@ -1,4 +1,5 @@
 #!/bin/sh -e
+logger -t fsm boot.leave
 . ../common.sh
 
 # init gwid table by merging it with a hand-crafted table in which all
@@ -14,6 +15,16 @@ rm /tmp/gwip-init
 # init empty client config tables
 p2ptbl init /tmp/p2ptbl/ccfg_wire
 p2ptbl init /tmp/p2ptbl/ccfg_wifi
+
+# Set IP6 ULA
+if [ -x "$(ifconfig br-mesh | grep 'Scope:Global')" == "" ]; then
+	MacAddr=$(ifconfig eth0 | grep HWaddr | awk '{print $5}' | tr -d "\n" | tr ':' ' ' | awk '{print $1$2":"$3$4":"$5$6}')
+	ULAAddr=$(uci get cloud.cur.net_ip6ula | egrep -o 'f[c-d][:0-9a-f]*' | sed -e 's/:$//')
+	NodeSubnet="FFFF:"
+	NewIP6Addr="$ULAAddr$NodeSubnet$MacAddr"
+	mesh_add_ipv6 "$NewIP6Addr/64"
+	logger -t fsm "Set $NewIP6Addr/64"
+fi
 
 # start service httpd listening on ULA IP6 Address of the mesh interface.
 # start webadmin httpd listening on the LAN IP4 Address.
