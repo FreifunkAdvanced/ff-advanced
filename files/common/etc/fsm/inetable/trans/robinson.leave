@@ -1,7 +1,9 @@
 #!/bin/sh -e
+logger -t fsm robinson.leave
 . ../common.sh
 
 mesh_del_ipv4
+logger -t fsm "Removed IPv4"
 
 # stop DHCP server & fake DNS
 uci delete dhcp.mesh

@@ -1,4 +1,5 @@
 #!/bin/sh -e
+logger -t fsm queen.enter
 . ../common.sh
 
 gwiptbl=/tmp/p2ptbl/gwip
@@ -42,6 +43,7 @@ batctl gw server
 
 # set up gw IP
 mesh_add_ipv4 $gwip 255.255.0.0
+logger -t fsm "Set IPv4: $gwip"
 
 ## setup DHCP
 echo "

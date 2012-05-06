@@ -1,4 +1,5 @@
 #!/bin/sh -e
+logger -t fsm robinson.enter
 . ../common.sh
 
 # setup random ip
@@ -20,6 +21,7 @@ while ! arping -I br-mesh -D -c 5 -q $randip; do
 done
 
 mesh_add_ipv4 $randip 255.0.0.0
+logger -t fsm "Set IPv4: $randip"
 
 # setup dhcp, start fake DNS
 echo "
