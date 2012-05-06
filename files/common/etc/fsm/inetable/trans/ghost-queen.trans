@@ -1,5 +1,5 @@
 #!/bin/sh -e
-logger -t fsm boot.leave
+logger -t fsm ghost-queen.trans
 . ../common_queen.sh
 
 rm /tmp/ghost_since
