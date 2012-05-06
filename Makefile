@@ -295,7 +295,7 @@ images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): MODEL
 images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for D-Link DIR-300'
 	./genconfig dir300 > openwrt/$(REPO)/.config
-	oldconfig
+	$(oldconfig)
 	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
 	mkdir -p openwrt/$(REPO)/files/etc/
 	$(create_firmware_file)
@@ -316,7 +316,7 @@ images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): MODE
 images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   OpenWrt trunk for Linksys WRT54G'
 	./genconfig wrt54g > openwrt/$(REPO)/.config
-	oldconfig
+	$(oldconfig)
 	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
 	mkdir -p openwrt/$(REPO)/files/etc/
 	$(create_firmware_file)
@@ -344,7 +344,7 @@ images/%: openwrt/$$(REPO)/.repo_access
 	$(move_files)
 	$(create_firmware_file)
 	$(brand_firmware)
-	oldconfig
+	$(oldconfig)
 	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
