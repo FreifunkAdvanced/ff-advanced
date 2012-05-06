@@ -1,4 +1,5 @@
 #!/bin/sh -e
+logger -t fsm queen-ghost.trans
 . ../common_queen.sh
 
 # Stop n2n VPN
