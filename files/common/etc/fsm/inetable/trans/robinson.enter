@@ -5,10 +5,10 @@ logger -t fsm robinson.enter
 # setup random ip
 net=$(     uci get cloud.cur.net_robinson)
 net_fake=$(uci get cloud.cur.net_fake)
-prefix=$(ipcalc.sh $net | grep ^PREFIX | cut -f2 -d=)
+prefix=$(echo $net | cut -f2 -d/)
 
 gen_randip () {
-    local r=$RANDOM
+    local r=$((0x$(</dev/urandom tr -dc "0-9a-f"| head -c4)))
     randip=$(
 	ipcalc.sh $net $((($r % 2**(24 - $prefix) - 1) * 2**8 + 1)) 1 \
 	    | grep ^START | cut -f2 -d=
