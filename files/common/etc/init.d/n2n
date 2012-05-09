@@ -1,44 +1,77 @@
 #!/bin/sh /etc/rc.common
-# Copyright (C) 2008 OpenWrt.org
-[ -n "$IPKG_INSTROOT" ] && exit 0
+# Copyright (C) 2008-2011 OpenWrt.org
+#      Modified      2012 Freifunk Rheinland
+
 START=90
 
-config_cb() {
-	local cfg="$CONFIG_SECTION"
-	config_get configname "$cfg" TYPE
+start_instance() {
+	local cfg="$1"
 
-	case "$configname" in
-		edge)
-			config_get ipaddr "$cfg" ipaddr
-			config_get supernode "$cfg" supernode
-			config_get port "$cfg" port
-			config_get community "$cfg" community
-			config_get key "$cfg" key
-			config_get_bool route "$cfg" route 0
-			config_get devname "$cfg" devname
-			wlaniface=`uci get network.wlan.ifname`
-      			node_mac=`ifconfig $wlaniface | grep HWaddr | awk '{print $5}' | tr -d "\n" | cut -c6-`
-			[ "$route" = "1" ] && args='-r'
-			if [ "$ipaddr" != "" ]; then
-				mac_random=`echo $(head -30 /dev/urandom | tr -dc "0123456789" | head -c2)`
-				edge -f $args -a 169.254.0.1 -d $devname -c $community -k $key -m 12:${mac_random}${node_mac} -l ${supernode}:${port}
-				ifconfig $devname 0.0.0.0
-				batctl if add $devname
-			fi
+	config_get type "$cfg" TYPE
+
+	case "$type" in
+	  edge)
+		# Konfigurationseinstellungen holen
+		#config_get ipaddr "$cfg" 'ipaddr'
+		#[ -n "$ipaddr" ] || return 1
+		config_get supernode "$cfg" 'supernode'
+		config_get port "$cfg" 'port'
+		config_get community "$cfg" 'community'
+		config_get key "$cfg" 'key'
+		config_get_bool route "$cfg" 'route' '0'
+		[ "$route" = "1" ] && args='-r'
+		config_get devname "$cfg" devname
+
+		# eine MAC generieren
+		wlaniface=$(uci get network.wlan.ifname)
+		node_mac=$(ifconfig $wlaniface | grep HWaddr \
+			| awk '{print $5}' | tr -d "\n" | cut -c6-)
+		mac_random=$(</dev/urandom tr -dc "0-9a-f" | head -c2)
+
+		# ein n2n-Tunnel starten (fe als Prefix)
+		service_start /usr/sbin/edge -f $args -a 169.254.0.1 \
+			-d $devname -c $community -k $key \
+			-m fe:${mac_random}${node_mac} -l ${supernode}:${port}
+
+		# die IP beseitigen
+		ifconfig $devname 0.0.0.0
+
+		# B.A.T.M.A.N. Bescheid sagen
+		batctl if add $devname
 		;;
-		supernode)
-			config_get port "$cfg" port
-			if [ "$port" != "" ]; then
-				supernode -l $port &
-			fi
+# We don't need no supernode
+#	  supernode)
+#		config_get port "$cfg" port
+#		[ -n "$port" ] || return 1
+#		service_start /usr/sbin/supernode -l $port
+#		;;
+	esac
+}
+
+stop_instance() {
+	local cfg="$1"
+
+	config_get type "$cfg" TYPE
+
+	case "$type" in
+	  edge)
+		service_stop /usr/sbin/edge
 		;;
+# again: no supernode
+#	  supernode)
+#		service_stop /usr/sbin/supernode
+#		;;
 	esac
 }
 
 start() {
-	config_load n2n
+	config_load 'n2n'
+	config_foreach start_instance 'edge'
+#	config_foreach start_instance 'superndoe'
 }
+
 stop() {
-	killall -9 edge
-	killall supernode
+	config_load 'n2n'
+	config_foreach stop_instance 'edge'
+#	config_foreach stop_instance 'supernode'
 }
