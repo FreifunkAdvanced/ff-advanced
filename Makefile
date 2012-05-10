@@ -36,14 +36,18 @@ endif
 
 define move_files
 cp -a files/common openwrt/$(REPO)/files
-[ -d files/$(REPO)/$(PLAT) ] && rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
-[ -d files/$(REPO)/$(PLAT)-$(MODEL) ] && rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
+[ -d files/$(REPO)/$(PLAT) ] \
+	&& rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
+[ -d files/$(REPO)/$(PLAT)-$(MODEL) ] \
+	&& rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
 endef
 
 define create_firmware_file
 #./name_firmware openwrt/$(REPO)
-echo $(DATE)_$(VERSION)_$(REPO)-`[[ "$(REPO)" == "trunk" ]] && \
-echo $(SVNREVISION) || echo $(BACKFIREVERSION)` > openwrt/$(REPO)/files/etc/firmware
+echo $(DATE)_$$(echo $(VERSION) \
+	| sed -e "s/git-//g")_$(REPO)-`[[ "$(REPO)" == "trunk" ]] \
+	&& echo $(SVNREVISION) || echo $(BACKFIREVERSION)` \
+	> openwrt/$(REPO)/files/etc/firmware
 endef
 
 define brand_firmware
