@@ -39,7 +39,7 @@ update () {
     if [ -n "$4" ]; then
 	# broadcast update
 	gzip <"$tmpfile" >"$tmpfile.gz"
-	broadcaster $4 p2ptbl/$(basename "$1") - <"$tmpfile.gz"
+	hbbpc $4 p2ptbl/$(basename "$1") - <"$tmpfile.gz"
 	rm "$tmpfile.gz"
     fi
     rm "$tmpfile"
@@ -84,7 +84,7 @@ gossip() {
     while [ $lc -ge 1 ]; do
 	head -n$lc "$1.gossip" | gzip >"$1.gossip.gz"
 	if [ $tgts -ge $(wc -c <"$1.gossip.gz") ]; then
-	    broadcaster $if p2ptbl/$(basename "$1") - <"$1.gossip.gz"
+	    hbbpc $if p2ptbl/$(basename "$1") - <"$1.gossip.gz"
 	    rm "$1.gossip" "$1.gossip.gz"
 	    return;
 	fi
