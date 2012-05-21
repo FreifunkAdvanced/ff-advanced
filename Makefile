@@ -97,7 +97,7 @@ info:
 	@echo "	 Version: $(VERSION)"
 	@echo "	    Date: $(DATE)"
 	@echo ''
-	@echo "Freifunk Jena udp-broadcast"
+	@echo "Freifunk Jena hbbpd"
 	@echo "	 Version: $(FFJVERSION)"
 	@echo "	    Date: $(FFJDATE)"
 	@echo ''
@@ -143,7 +143,7 @@ openwrt/backfire/.repo_access:
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) in OpenWrt Backfire'
+	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) in OpenWrt Backfire'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
@@ -161,7 +161,7 @@ openwrt/trunk/.repo_access:
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) in OpenWrt Trunk'
+	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
@@ -199,7 +199,7 @@ openwrt/backfire/.update:
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) (update)'
+	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) (update)'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
@@ -216,7 +216,7 @@ openwrt/trunk/.update:
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Jena udp-broadcast $(FFJVERSION) (update)'
+	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) (update)'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1

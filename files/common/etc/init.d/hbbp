@@ -3,9 +3,9 @@ START=45
 
 start() {
 	cd /hbbp
-	listener br-mesh
+	hbbpd br-mesh
 }
 
 stop() {
-       killall listener
+       killall hbbpd
 }
