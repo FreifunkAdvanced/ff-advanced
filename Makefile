@@ -20,6 +20,8 @@ ifeq ($(OS),Linux)
         NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
 else ifeq ($(OS),Darwin)
         NUMPROC := $(shell sysctl hw.ncpu | awk '{print $$2}')
+else ifeq ($(OS),FreeBSD)
+		NUMPROC := $(shell sysctl hw.ncpu | awk '{print $$2}')
 endif
 
 # Always use # of processory plus 1
