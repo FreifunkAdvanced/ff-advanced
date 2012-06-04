@@ -29,7 +29,7 @@ start_instance() {
 		mac_random=$(</dev/urandom tr -dc "0-9a-f" | head -c2)
 
 		# ein n2n-Tunnel starten (fe als Prefix)
-		service_start /usr/sbin/edge -f $args -a 169.254.0.1 \
+		/usr/sbin/edge -f $args -a 169.254.0.1 \
 			-d $devname -c $community -k $key \
 			-m fe:${mac_random}${node_mac} -l ${supernode}:${port}
 
