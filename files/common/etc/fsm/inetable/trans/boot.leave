@@ -17,7 +17,7 @@ p2ptbl init /tmp/p2ptbl/ccfg_wire
 p2ptbl init /tmp/p2ptbl/ccfg_wifi
 
 # Set IP6 ULA
-if [ -x "$(ifconfig br-mesh | grep 'Scope:Global')" == "" ]; then
+if [ "$(ifconfig br-mesh | grep 'Scope:Global')" == "" ]; then
 	MacAddr=$(ifconfig eth0 | grep HWaddr | awk '{print $5}' | tr -d "\n" | tr ':' ' ' | awk '{print $1$2":"$3$4":"$5$6}')
 	ULAAddr=$(uci get cloud.cur.net_ip6ula | egrep -o 'f[c-d][:0-9a-f]*' | sed -e 's/:$//')
 	NodeSubnet="FFFF:"
