@@ -19,7 +19,8 @@ ffdef_set_interface_wlan "wlan0-1"
 board=$(ar71xx_board_name)
 
 case "$board" in
-all0258n)
+all0258n |\
+ja76pf2)
 	ucidef_set_interface_lan "eth0 eth1"
 	;;
 
@@ -62,6 +63,17 @@ routerstation-pro)
 	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
 	;;
 
+rb-750gl |\
+rb-751g |\
+wzr-hp-g450h)
+    ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+    ucidef_add_switch "switch0" "1" "1"
+    ucidef_add_switch_vlan "switch0" "1" "0t 2 3"
+    ucidef_add_switch_vlan "switch0" "2" "0t 1"
+	ucidef_add_switch_vlan "switch0" "3" "0t 4 5"
+	ffdef_set_interface_mesh "eth0.3"
+    ;;
+	
 rb-493g)
 	ucidef_set_interface_lan_wan "eth0" "eth1.2"
 	ffdef_set_interface_mesh "eth1.1"
