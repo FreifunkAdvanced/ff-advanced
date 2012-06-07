@@ -3,8 +3,5 @@
 echo -e 'Status: 200 OK\r
 Content-Type: application/json\r
 \r
-[{"id": "unique123", "uplink": true,  "pos": {"lat": 50.927222, "lon": 11.586111}, "name": "Papst", "owner": "Peter"},
- {"id": "unique124", "uplink": false, "pos": {"lat": 50.937222, "lon": 11.588111}},
- {"id": "unique125", "uplink": false, "pos": {"lat": 50.921222, "lon": 11.587111}, "name": "Wifihorst"},
- {"id": "unique126", "uplink": true,  "pos": {"lat": 50.925222, "lon": 11.580111}},
- {"id": "unique127", "uplink": false, "pos": {"lat": 50.930222, "lon": 11.582111}, "owner": "Hans Wurst"}]'
+[{"id": "unique123", "uplink": true,  "pos": {"lat": 51.228596, "lon": 6.735442}, "name": "Not working yet", "owner": "FF Rheinland"},
+ {"id": "unique124", "uplink": false, "pos": {"lat": 51.228596, "lon": 6.733442}}]'
