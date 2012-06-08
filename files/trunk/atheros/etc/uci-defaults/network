@@ -48,6 +48,8 @@ EOF
 set network.mesh=interface
 set network.mesh.ifname=bat0
 set network.mesh.type=bridge
+set network.mesh.proto=none
+set network.mesh.auto=1
 set network.adhoc=interface
 set network.adhoc.mtu=1528
 set network.adhoc.proto=none
