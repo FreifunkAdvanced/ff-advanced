@@ -13,8 +13,12 @@ touch /etc/config/network
 
 ucidef_set_interface_loopback
 
-#Set adhoc wifi interface to raw mode with mtu 1528
-ffdef_set_interface_wlan "wlan0-1"
+# Set adhoc wifi interface to raw mode with mtu 1528. 
+# The interface name will be taken from the wireless config
+# (e.g. add "option network adhoc" in the adhoc interface section
+# of the wireless config.)
+
+ffdef_set_interface_adhoc
 
 board=$(ar71xx_board_name)
 

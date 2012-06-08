@@ -7,6 +7,7 @@ config wifi-device  wifi0
 config wifi-iface
         option device   wifi0
         option mode     adhoc
+		option network	adhoc
         option ssid     batman.solingen.freifunk.net
         option bssid    02:40:00:43:43:43
         option hidden   0

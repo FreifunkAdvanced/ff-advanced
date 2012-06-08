@@ -14,6 +14,7 @@ config wifi-device radio0
 config wifi-iface
 	option device	radio0
 	option mode	adhoc
+	option network	adhoc
 	option ssid	FFRV-BATBONE
 	option bssid	02:CA:FF:EE:21:95
 	option hidden	0
