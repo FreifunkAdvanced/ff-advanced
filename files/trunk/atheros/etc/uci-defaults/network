@@ -48,9 +48,10 @@ EOF
 set network.mesh=interface
 set network.mesh.ifname=bat0
 set network.mesh.type=bridge
-set network.wlan=interface
-set network.wlan.ifname=athwifi0
-set network.wlan.mtu=1528
+set network.adhoc=interface
+set network.adhoc.mtu=1528
+set network.adhoc.proto=none
+set network.adhoc.auto=1
 EOF
 
 uci commit network
