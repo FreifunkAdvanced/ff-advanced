@@ -3,7 +3,6 @@ logger -t fsm queen.leave
 . ../common.sh
 . ../common_queen.sh
 
-
 # do not announce gateway anymore
 batctl gw client
 
@@ -33,6 +32,3 @@ disable_httpd redirection
 rm /tmp/redirection_target
 change_service_httpd_listen
 /etc/init.d/uhttpd restart
-
-# stop N2N
-/etc/init.d/n2n stop
