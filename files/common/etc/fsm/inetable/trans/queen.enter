@@ -5,10 +5,6 @@ logger -t fsm queen.enter
 gwiptbl=/tmp/p2ptbl/gwip
 NodeId="$(cat /etc/nodeid)"
 
-# Start n2n VPN and wait 60 seconds (for the next hbbp data)
-/etc/init.d/n2n restart
-sleep 150
-
 ## setup gateway IPv4
 # determine gw IP from p2ptable
 getoct () {
