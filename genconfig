@@ -196,11 +196,11 @@ packages_firewall(){
 cat << EOF
 CONFIG_PACKAGE_firewall=y
 CONFIG_PACKAGE_librt=y
-CONFIG_PACKAGE_ip6tables=m
+CONFIG_PACKAGE_ip6tables=y
 CONFIG_PACKAGE_kmod-ledtrig-netfilter=
 CONFIG_PACKAGE_kmod-lib-crc-ccitt=
 CONFIG_PACKAGE_kmod-lib-textsearch=
-CONFIG_PACKAGE_kmod-ip6tables=m
+CONFIG_PACKAGE_kmod-ip6tables=y
 CONFIG_PACKAGE_kmod-ipt-core=y
 CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
 CONFIG_PACKAGE_kmod-ipt-conntrack=y
