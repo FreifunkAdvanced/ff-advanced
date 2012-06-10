@@ -22,7 +22,7 @@ delete network.mesh.ipaddr
 delete network.mesh.netmask
 " | uci batch
     if [ "$(uci -q get network.mesh.ip6addr)" == "" ]; then
-	uci delete network.mesh.proto
+	uci set network.mesh.proto=none
     fi
 }
 
@@ -40,7 +40,7 @@ mesh_del_ipv6() {
 delete network.mesh.ip6addr
 " | uci batch
     if [ "$(uci -q get network.mesh.ipaddr)" == "" ]; then
-        uci delete network.mesh.proto
+        uci set network.mesh.proto=none
     fi
 }
 
