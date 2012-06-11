@@ -17,7 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version(){
-echo "genconfig Version 0.0.20120502"
+echo "genconfig Version 0.0.20120611"
 
 cat << EOF
 Copyright © 2012 Philipp Psurek <phip@vmail.me>
@@ -165,7 +165,6 @@ CONFIG_PACKAGE_kmod-bonding=m
 CONFIG_PACKAGE_kmod-ipv6=y
 CONFIG_PACKAGE_kmod-ppp=m
 CONFIG_PACKAGE_kmod-pppoe=m
-CONFIG_PACKAGE_kmod-tun=y
 
 CONFIG_PACKAGE_ppp=m
 CONFIG_PACKAGE_ppp-mod-pppoe=m
@@ -173,6 +172,7 @@ CONFIG_PACKAGE_ppp-mod-pppoe=m
 CONFIG_PACKAGE_wpad-mini=y
 
 CONFIG_PACKAGE_libuci=y
+
 CONFIG_PACKAGE_libubox=y
 CONFIG_PACKAGE_libubus=y
 CONFIG_PACKAGE_netifd=y
@@ -194,54 +194,55 @@ EOF
 
 packages_firewall(){
 cat << EOF
-CONFIG_PACKAGE_firewall=y
-CONFIG_PACKAGE_librt=y
-CONFIG_PACKAGE_ip6tables=y
+CONFIG_PACKAGE_firewall=
+CONFIG_PACKAGE_librt=
+CONFIG_PACKAGE_ip6tables=
 CONFIG_PACKAGE_kmod-ledtrig-netfilter=
 CONFIG_PACKAGE_kmod-lib-crc-ccitt=
 CONFIG_PACKAGE_kmod-lib-textsearch=
-CONFIG_PACKAGE_kmod-ip6tables=y
-CONFIG_PACKAGE_kmod-ipt-core=y
-CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
-CONFIG_PACKAGE_kmod-ipt-conntrack=y
-CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
-CONFIG_PACKAGE_kmod-ipt-filter=y
-CONFIG_PACKAGE_kmod-ipt-ipp2p=y
-CONFIG_PACKAGE_kmod-ipt-nat=y
-CONFIG_PACKAGE_kmod-ipt-nat-extra=y
-CONFIG_PACKAGE_kmod-ipt-nathelper=y
+CONFIG_PACKAGE_kmod-ip6tables=
+CONFIG_PACKAGE_kmod-ipt-core=
+CONFIG_PACKAGE_kmod-ipt-compat-xtables=
+CONFIG_PACKAGE_kmod-ipt-conntrack=
+CONFIG_PACKAGE_kmod-ipt-conntrack-extra=
+CONFIG_PACKAGE_kmod-ipt-filter=
+CONFIG_PACKAGE_kmod-ipt-ipp2p=
+CONFIG_PACKAGE_kmod-ipt-nat=
+CONFIG_PACKAGE_kmod-ipt-nat-extra=
+CONFIG_PACKAGE_kmod-ipt-nathelper=
 
-CONFIG_PACKAGE_iptables=y
-CONFIG_PACKAGE_iptables-mod-conntrack-extra=y
-CONFIG_PACKAGE_iptables-mod-filter=y
-CONFIG_PACKAGE_iptables-mod-ipp2p=y
-CONFIG_PACKAGE_iptables-mod-nat-extra=y
-CONFIG_PACKAGE_l7-protocols=y
+CONFIG_PACKAGE_iptables=
+CONFIG_PACKAGE_iptables-mod-conntrack-extra=
+CONFIG_PACKAGE_iptables-mod-filter=
+CONFIG_PACKAGE_iptables-mod-ipp2p=
+CONFIG_PACKAGE_iptables-mod-nat-extra=
+CONFIG_PACKAGE_l7-protocols=
 
-CONFIG_PACKAGE_libip4tc=y
-CONFIG_PACKAGE_libip6tc=y
-CONFIG_PACKAGE_libxtables=y
+CONFIG_PACKAGE_libip4tc=
+CONFIG_PACKAGE_libip6tc=
+CONFIG_PACKAGE_libxtables=
 EOF
 }
 
 packages_dhcp(){
 cat << EOF
-CONFIG_PACKAGE_dnsmasq=y
-CONFIG_PACKAGE_wide-dhcpv6-server=y
-CONFIG_PACKAGE_radvd=y
+CONFIG_PACKAGE_dnsmasq=
+CONFIG_PACKAGE_wide-dhcpv6-server=
+CONFIG_PACKAGE_radvd=
 EOF
 }
 
 
 packages_n2n(){
 cat << EOF
-CONFIG_PACKAGE_n2n=y
+CONFIG_PACKAGE_n2n=
 EOF
 }
 
+# wird OpenVPN aktiviert, dann mit weiteren Optionen (=y)
 packages_openvpn(){
 cat << EOF
-CONFIG_PACKAGE_openvpn=y
+CONFIG_PACKAGE_openvpn=
 CONFIG_OPENVPN_DISABLE_EUREPHIA=y
 CONFIG_OPENVPN_DISABLE_MANAGEMENT=y
 CONFIG_OPENVPN_ENABLE_PASSWORD_SAVE=y
@@ -249,14 +250,16 @@ CONFIG_OPENVPN_ENABLE_PASSWORD_SAVE=y
 EOF
 }
 
+# nur für mod941er, 1043er, 2543er, 3420er und andere mit USB
 packages_usb(){
 cat << EOF
-CONFIG_PACKAGE_kmod-ledtrig-usbdev=y
-CONFIG_PACKAGE_kmod-usb-ohci=y
-CONFIG_PACKAGE_kmod-usb2=y
+CONFIG_PACKAGE_kmod-ledtrig-usbdev=
+CONFIG_PACKAGE_kmod-usb-ohci=
+CONFIG_PACKAGE_kmod-usb2=
 EOF
 }
 
+# für den 1043er RTL-Switch, im Augenblick deaktiviert
 packages_switch(){
 cat << EOF
 CONFIG_PACKAGE_kmod-libphy=
@@ -268,22 +271,29 @@ EOF
 
 packages_webserver(){
 cat << EOF
-CONFIG_PACKAGE_uhttpd=y
+CONFIG_PACKAGE_uhttpd=
 EOF
 }
 
+# benötigte Hilfsprogramme
+packages_used_util(){
+cat << EOF
+CONFIG_PACKAGE_iputils-ping6=
+EOF
+}
+
+# zusätzliche Hilfsprogramme
 packages_util(){
 cat << EOF
-CONFIG_PACKAGE_iputils-ping=m
-CONFIG_PACKAGE_iputils-ping6=y
-CONFIG_PACKAGE_iputils-tracepath=m
-CONFIG_PACKAGE_iputils-tracepath6=m
-CONFIG_PACKAGE_iputils-traceroute6=m
+CONFIG_PACKAGE_iputils-ping=
+CONFIG_PACKAGE_iputils-tracepath=
+CONFIG_PACKAGE_iputils-tracepath6=
+CONFIG_PACKAGE_iputils-traceroute6=
 
-CONFIG_PACKAGE_nano=m
+CONFIG_PACKAGE_nano=
 
-CONFIG_PACKAGE_iperf=m
-CONFIG_PACKAGE_iperf-mt=m
+CONFIG_PACKAGE_iperf=
+CONFIG_PACKAGE_iperf-mt=
 EOF
 }
 
@@ -295,12 +305,21 @@ CONFIG_PACKAGE_kmod-input-polldev=
 EOF
 }
 
+# Wichtige Pakete, von der Firmware gefordert
+# hbbp - UDP-Broadcast für 
+# nacl - salt for hbbp - package is br0ken by upstream
+# kmod-nfnetlink - Kernel modules support for a netlink-based userspace interface
 packages_ffrl(){
 cat << EOF
-CONFIG_PACKAGE_hbbp=y
-CONFIG_PACKAGE_nacl=y
-CONFIG_PACKAGE_kmod-nfnetlink=y
-# CONFIG_PACKAGE_ffrl-fsm is not set
+CONFIG_PACKAGE_hbbp=
+CONFIG_PACKAGE_nacl=
+CONFIG_PACKAGE_kmod-nfnetlink=
+EOF
+}
+
+# FF-Rheinland Pakete und Helfer (als Module zum Austesten)
+packages_ffrl_util(){
+cat << EOF
 CONFIG_PACKAGE_ffrl-miniconfig=
 EOF
 }
@@ -316,9 +335,11 @@ packages_openvpn   | sed -e "s/=$/=y/g"
 packages_usb       | sed -e "s/=$/=y/g"
 packages_switch    | sed -e "s/=$/=m/g"
 packages_webserver | sed -e "s/=$/=y/g"
+packages_used_util | sed -e "s/=$/=y/g"
 packages_util      | sed -e "s/=$/=m/g"
 packages_unknown   | sed -e "s/=$/=y/g"
 packages_ffrl      | sed -e "s/=$/=y/g"
+packages_ffrl_util | sed -e "s/=$/=m/g"
 elif [ "$case" = "dir300" ] || [ "$case" = "atheros" ]; then
 target_atheros
 default
@@ -329,9 +350,11 @@ packages_openvpn   | sed -e "s/=$/=m/g"
 #packages_usb       | sed -e "s/=$/=m/g"
 #packages_switch    | sed -e "s/=$/=m/g"
 packages_webserver | sed -e "s/=$/=m/g"
+packages_used_util | sed -e "s/=$/=y/g"
 packages_util      | sed -e "s/=$/=m/g"
 #packages_unknown   | sed -e "s/=$/=m/g"
 packages_ffrl      | sed -e "s/=$/=y/g"
+packages_ffrl_util | sed -e "s/=$/=y/g"
 elif [ "$case" = "wrt54g" ] || [ "$case" = "brcm47xx" ]; then
 target_brcm47xx
 default
@@ -342,9 +365,11 @@ packages_openvpn   | sed -e "s/=$/=m/g"
 #packages_usb       | sed -e "s/=$/=m/g"
 #packages_switch    | sed -e "s/=$/=m/g"
 packages_webserver | sed -e "s/=$/=m/g"
+packages_used_util | sed -e "s/=$/=y/g"
 packages_util      | sed -e "s/=$/=m/g"
 #packages_unknown   | sed -e "s/=$/=m/g"
 packages_ffrl      | sed -e "s/=$/=y/g"
+packages_ffrl_util | sed -e "s/=$/=y/g"
 else
   echo "Ungültige Eingabe"
   exit 1
@@ -355,19 +380,11 @@ fi
 if [ "$1" != "" ]; then
   case=$1
   case "$case" in
-  --help)
+  --help|-h)
     usage
     exit 0
     ;;
-  -h)
-    usage
-    exit 0
-    ;;
-  --version)
-    version
-    exit 0
-    ;;
-  -v)
+  --version|-v)
     version
     exit 0
     ;;
