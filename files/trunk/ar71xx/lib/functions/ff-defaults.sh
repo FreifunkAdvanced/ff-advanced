@@ -2,11 +2,15 @@
 # By DocFox -> lcb01@jabber.ccc.de
 
 ffdef_set_interface_adhoc() {
+	local ifname=$1
 	uci batch <<EOF
 set network.adhoc='interface'
-set network.adhoc.mtu='1528'
 set network.adhoc.proto='none'
 set network.adhoc.auto='1'
+add network device
+set network.@device[-1].name='$ifname'
+set network.@device[-1].mtu='1528'
+set network.@device[-1].type='ethernet'
 EOF
 }
 
