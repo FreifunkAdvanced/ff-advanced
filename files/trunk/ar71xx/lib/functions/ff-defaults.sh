@@ -28,5 +28,6 @@ set network.mesh.ifname='bat0'
 set network.mesh.type='bridge'
 set network.mesh.proto='none'
 set network.mesh.auto='1'
+EOF
 }
 
