@@ -2,3 +2,5 @@ images/**/*
 openwrt/**/*
 dl/*
 settings.mk
+dl
+openwrt
