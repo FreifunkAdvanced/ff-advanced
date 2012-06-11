@@ -4,6 +4,11 @@
 PState=/var/fsm/$2
 PDef=/etc/fsm/$2
 
+random_sleep() {
+# sleeping for 0-55 sec might avoid race conditions
+sleep $(</dev/urandom tr -dc "0-5"| head -c2)
+}
+
 watch () {
     SO=$(cat $PState)
     SN=$(callOne $PDef/watch $SO "xxx" \
@@ -94,6 +99,7 @@ case "$1" in
 	cat $PState
 	;;
     watch)
+	random_sleep
 	lockState $PState
 	watch
 	;;
