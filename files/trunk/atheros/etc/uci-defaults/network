@@ -51,9 +51,12 @@ set network.mesh.type=bridge
 set network.mesh.proto=none
 set network.mesh.auto=1
 set network.adhoc=interface
-set network.adhoc.mtu=1528
 set network.adhoc.proto=none
 set network.adhoc.auto=1
+add network device
+set network.@device[-1].name=athwifi0
+set network.@device[-1].mtu=1528
+set network.@device[-1].type=ethernet
 EOF
 
 uci commit network
