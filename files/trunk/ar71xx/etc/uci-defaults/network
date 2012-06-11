@@ -17,6 +17,10 @@ ucidef_set_interface_loopback
 
 ffdef_set_interface_adhoc wlan0-1
 
+# Add default mesh network 
+
+ffdef_add_interface_mesh
+
 board=$(ar71xx_board_name)
 
 case "$board" in
