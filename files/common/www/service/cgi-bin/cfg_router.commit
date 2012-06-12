@@ -31,6 +31,27 @@ update_node_db() {
     true # TODO
 }
 
+is_wired() {
+    if [ -z "$is_wired_cached_result" ]; then
+	[ -n "$REMOTE_HOST" ]
+	local iface=$(grep ^$REMOTE_HOST </proc/net/arp \
+	    | awk 'BEGIN { FS = " " } ; { print $6 }')
+	if [ "$iface" == br-lan ]; then
+	    is_wired_cached_result=true
+	else
+	    is_wired_cached_result=false
+	fi
+    fi
+    $is_wired_cached_result
+}
+
+update_ssh_password() {
+	is_wired || fail 400 'Keine Berechtigung!'
+	local password = $1
+	echo "$password
+$password" | passwd 2>&1
+}
+
 use_router_pos=false
 # the POST input is given to this loop via HEREDOC to allow
 # manipulating variables in the current scope (especially for lazy
@@ -51,6 +72,12 @@ while read key val; do
 	router_password)
 	    fail 403 'Diese Funktion ist noch nicht fertig'
 	    ;;
+	router_ssh_password)
+		[ "$val" == "$(echo "$val" | tr -dc 'a-zA-Z0-9_')" ] \
+		|| fail 400 'Unerlaubte Zeichen verwendet'
+		password=$val
+		lazy 10 update_ssh_password $password
+		;;
 	router_geo)
 	    router_geo="$val"
 	    case "$router_geo" in
