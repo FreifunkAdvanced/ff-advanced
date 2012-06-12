@@ -65,7 +65,7 @@ change_service_httpd_listen () {
     uci delete uhttp.service.listen_http &>/dev/null || true
     for i in $1 \
 	[$(ifconfig br-mesh | egrep -o 'f[c-d][:0-9a-f]*')]:80 \
-	$(uci get network.lan.ipaddr); do	
+	$(uci get network.lan.ipaddr):80; do	
 	uci add_list uhttpd.service.listen_http=$i
     done
 }
