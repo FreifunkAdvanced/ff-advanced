@@ -14,14 +14,14 @@ MAKEFLAGS	+= -s --no-print-directory
 # OpenWrt version
 # check the current SVN revision with
 # svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g"
-SVNREVISION	= 31576
+SVNREVISION	= 32418
 
 # OpenWrt Backfire version
 BACKFIREVERSION	= 10.03.1
 
 # Freifunk Jena  udp-broadcast
-FFJVERSION	= git-dcce1a8
-FFJDATE		= 2011-12-05
+FFJVERSION	= git-cf16b21
+FFJDATE		= 2012-04-27
 
 # Supported OpenWrt branch
 REPOSITORY = trunk
@@ -30,5 +30,5 @@ REPOSITORY = trunk
 PLATFORM = ar71xx
 
 # Supported communitis (for zeroconfig images)
-COMMUNITY = duesseldorf krefeld neuss radevormwald solingen wuppertal
+COMMUNITY = duesseldorf duisburg krefeld neuss radevormwald solingen wuppertal
 
