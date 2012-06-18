@@ -17,7 +17,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version(){
-echo "genconfig Version 0.0.20120611"
+echo "genconfig Version 0.0.20120618"
 
 cat << EOF
 Copyright © 2012 Philipp Psurek <phip@vmail.me>
@@ -186,16 +186,11 @@ echo "CONFIG_PACKAGE_kmod-ledtrig-netfilter="
 # TODO Bedarf überprüfen - kein Bedarf
 #echo "CONFIG_PACKAGE_kmod-lib-crc-ccitt="
 
-# TODO freifunk-p2pblock Dateien raus aus $FILESDIR ...
-cat << EOF
-CONFIG_PACKAGE_iptables-mod-conntrack-extra=
-CONFIG_PACKAGE_iptables-mod-filter=
-CONFIG_PACKAGE_iptables-mod-ipp2p=
-CONFIG_PACKAGE_iptables-mod-nat-extra=
-CONFIG_PACKAGE_l7-protocols=
-EOF
-# ... und OpenWrt-eigenes Paket nutzen, da keine Unterschiede TODO
-#echo "CONFIG_PACKAGE_freifunk-p2pblock="
+# TODO Bedarf überprüfen
+echo "CONFIG_PACKAGE_iptables-mod-nat-extra="
+
+# Freifunk P2P-Blocker
+echo "CONFIG_PACKAGE_freifunk-p2pblock="
 }
 
 # DHCP und radv
@@ -312,7 +307,7 @@ packages_dhcp      | sed -e "s/=$/=y/g"
 packages_n2n       | sed -e "s/=$/=y/g"
 packages_openvpn   | sed -e "s/=$/=y/g"
 #packages_usb      | sed -e "s/=$/=y/g" # USB wird bei Bedarf vom Buildroot selbst eingebaut
-#packages_switch   | sed -e "s/=$/=m/g" # Switch wird vom Buildroot selbst geregelt
+packages_switch   | sed -e "s/=$/=m/g" # Switch wird vom Buildroot selbst geregelt
 packages_webserver | sed -e "s/=$/=y/g"
 packages_used_util | sed -e "s/=$/=y/g"
 packages_util      | sed -e "s/=$/=m/g"
