@@ -307,7 +307,7 @@ packages_dhcp      | sed -e "s/=$/=y/g"
 packages_n2n       | sed -e "s/=$/=y/g"
 packages_openvpn   | sed -e "s/=$/=y/g"
 #packages_usb      | sed -e "s/=$/=y/g" # USB wird bei Bedarf vom Buildroot selbst eingebaut
-packages_switch   | sed -e "s/=$/=m/g" # Switch wird vom Buildroot selbst geregelt
+#packages_switch   | sed -e "s/=$/=m/g" # Switch wird vom Buildroot selbst geregelt
 packages_webserver | sed -e "s/=$/=y/g"
 packages_used_util | sed -e "s/=$/=y/g"
 packages_util      | sed -e "s/=$/=m/g"
