@@ -59,7 +59,7 @@ use_router_pos=false
 while read key val; do
     case "$key" in 
 	router_name)
-	    [ "$val" == "$(echo "$val" | tr -dc 'a-zA-Z0-9_')" ] \
+	    [ "$val" == "$(echo "$val" | tr -dc 'a-zA-Z0-9-')" ] \
 		|| fail 400 'Unerlaubte Zeichen verwendet'
 	    router_name=$val
 	    lazy 10 update_hostname $router_name
