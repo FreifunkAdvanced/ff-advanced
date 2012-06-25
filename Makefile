@@ -45,7 +45,6 @@ cp -a files/common openwrt/$(REPO)/files
 endef
 
 define create_firmware_file
-#./name_firmware openwrt/$(REPO)
 echo $(DATE)_$$(echo $(VERSION) \
 	| sed -e "s/git-//g")_$(REPO)-`[[ "$(REPO)" == "trunk" ]] \
 	&& echo $(SVNREVISION) || echo $(BACKFIREVERSION)` \
