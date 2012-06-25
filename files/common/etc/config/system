@@ -3,7 +3,7 @@ config system
 	option 'zonename' 'Europe/Berlin'
 	option 'timezone' 'CET-1CEST,M3.5.0,M10.5.0/3'
 
-config 'timeserver'
+config 'timeserver' 'ntp'
 	list 'server' 'ntp1.ptb.de'
 	list 'server' 'ntp2.ptb.de'
 
