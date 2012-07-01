@@ -17,7 +17,8 @@ iw dev $device scan >$tmp.scan
 	| sed 's/BSS /\n/g' \
 	| tail -n +2 \
 	| cut -d' ' -f1,4,7- \
-	| sed 's/^\([^ ]*\) \([^ ]*\) \(.*\) $/{"mac_address":"\1", "signal_strength":"\2", "ssid":"\3"}/' \
+	| sed -e 's/^\(.*\)\s$/\1/' \
+	| sed 's/^\([^ ]*\) \([^ ]*\) \(.*\)$/{"mac_address":"\1", "signal_strength":"\2", "ssid":"\3"}/' \
 	| tr "\n" , \
 	| sed 's/,$//'
     echo ']}'
