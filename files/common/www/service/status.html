@@ -47,7 +47,7 @@ $.getJSON('cgi-bin/online.json', function(haveInternet) {
     var nodeMap = $('#nodemap');
     if (haveInternet) {
 	nodeMap.height(nodeMap.width() * 1.5);
-	var loadMap = $.ajax({url: "http://www.feinsterfug.de/ffj/webif/OpenLayers.js", dataType: "script", cached: true});
+	var loadMap = $.ajax({url: "http://openlayers.org/api/OpenLayers.js", dataType: "script", cached: true});
     }else{
 	nodeMap.append("<div class=alert>Ohne Internetzugang funktioniert die Kartendarstellung in dieser Wolke nicht.</div>");
 	var loadMap = $.Deferred().reject();
