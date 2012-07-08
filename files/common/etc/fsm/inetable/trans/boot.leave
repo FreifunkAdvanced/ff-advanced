@@ -5,25 +5,14 @@ logger -t fsm boot.leave
 # init gwid table by merging it with a hand-crafted table in which all
 # available IPs are stored as free with version zero. This guarantees
 # that any update on any node will have a higher version.
-for i in $(seq 0 254); do
-    echo -e "$i\t0\tfree"
-done > /tmp/gwip-init
-p2ptbl init  /tmp/p2ptbl/gwip
-p2ptbl merge /tmp/p2ptbl/gwip /tmp/gwip-init
-rm /tmp/gwip-init
-
-# init empty client config tables
-p2ptbl init /tmp/p2ptbl/ccfg_wire
-p2ptbl init /tmp/p2ptbl/ccfg_wifi
-
-# Set IP6 ULA
-if [ "$(ifconfig br-mesh | grep 'Scope:Global')" == "" ]; then
-	MacAddr=$(ifconfig eth0 | grep HWaddr | awk '{print $5}' | tr -d "\n" | tr ':' ' ' | awk '{print $1$2":"$3$4":"$5$6}')
-	ULAAddr=$(uci get cloud.cur.net_ip6ula | egrep -o 'f[c-d][:0-9a-f]*' | sed -e 's/:$//')
-	NodeSubnet="FFFF:"
-	NewIP6Addr="$ULAAddr$NodeSubnet$MacAddr"
-	mesh_add_ipv6 "$NewIP6Addr/64"
-	logger -t fsm "Set $NewIP6Addr/64"
+# This only is the case when there has been no new 
+# table version received in the boot cycle.
+if [ "$(du /tmp/p2ptbl/gwip | awk '{print $1}')" == "0" ]; then
+	for i in $(seq 0 254); do
+		echo -e "$i\t0\tfree"
+	done > /tmp/gwip-init
+	p2ptbl merge /tmp/p2ptbl/gwip /tmp/gwip-init
+	rm /tmp/gwip-init
 fi
 
 # start service httpd listening on ULA IP6 Address of the mesh interface.

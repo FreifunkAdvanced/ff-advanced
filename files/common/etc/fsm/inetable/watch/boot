@@ -1,0 +1,21 @@
+#!/bin/sh -e
+. ../common.sh
+
+if [ "$(du /tmp/p2ptbl/gwip | awk '{print $1}')" != "0" ] || [ "$(cat /tmp/boot_runs)" >= "5" ]; then
+	if test_connectivity internet; then
+		logger -t fsm "Node is online"
+		echo queen
+	elif cloud_is_online; then
+		logger -t fsm "Cloud is online"
+		echo drone
+	else
+		logger -t fsm "Cloud is offline"
+		echo robinson
+	fi
+else
+	boot_runs="$(cat /tmp/boot_runs)"
+	boot_runs_new=`expr $boot_runs + 1`
+	echo $boot_runs_new > /tmp/boot_runs
+	logger -t fsm "Waiting for network data"
+	echo boot
+fi
