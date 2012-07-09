@@ -8,6 +8,21 @@ echo -e \
 "Cache-Control: no-cache, max-age=0, no-store, must-revalidate\r
 Pragma: no-cache\r
 Expires: -1\r
-Status: 302 Temporary Redirect\r
+Status: 307 Temporary Redirect\r
 Location: $url\r
 \r"
+
+cat <<EOT
+<?xml version="1.0" encoding="UTF-8"?>
+<WISPAccessGatewayParam xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.wballiance.net/wispr_2_0.xsd">
+	<Redirect>
+		<MessageType>100</MessageType>
+		<ResponseCode>0</ResponseCode>
+		<AccessProcedure>1.0</AccessProcedure>
+		<AccessLocation>12</AccessLocation>
+		<LocationName>$SERVER_ADDR</LocationName>
+		<LoginURL>$url</LoginURL>
+		<AbortLoginURL>http://$SERVER_ADDR/</AbortLoginURL>
+	</Redirect>
+</WISPAccessGatewayParam>
+EOT
