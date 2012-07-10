@@ -164,6 +164,15 @@ CONFIG_PACKAGE_coreutils-join=y"
 # Sperren von p2p-Tabellen
 echo "CONFIG_PACKAGE_flock=y"
 
+# Image Generator für vereinfachtes Bauen und gemeinsamen Paketsatz
+echo "CONFIG_IB=y"
+
+# SDK zur Paketintegration
+#echo "CONFIG_SDK=y"
+
+# Toolchain (benötigt ua. für den Image Generator für au1000)
+#echo "CONFIG_MAKE_TOOLCHAIN=y"
+
 # aus Kompatibilitätsgründen, kann weg, wenn $RANDOM nicht mehr benötigt
 echo "CONFIG_BUSYBOX_CONFIG_ASH_RANDOM_SUPPORT=y"
 
