@@ -14,7 +14,7 @@ MAKEFLAGS	+= -s --no-print-directory
 # OpenWrt version
 # check the current SVN revision with
 # svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g"
-SVNREVISION	= 32418
+SVNREVISION	= 32690
 
 # OpenWrt Backfire version
 BACKFIREVERSION	= 10.03.1
