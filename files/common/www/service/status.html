@@ -82,7 +82,7 @@ $.getJSON('cgi-bin/online.json', function(haveInternet) {
 		nodeLayer.addFeatures(new OpenLayers.Feature.Vector(
 		    new OpenLayers.Geometry.Point(node.pos.lon, node.pos.lat).transform(t0,t1),
 		    {node: node},
-		    {externalGraphic: 'wifi.png', 
+		    {externalGraphic: 'img/wifi.png', 
 		     graphicWidth:   32, graphicHeight: 37,
 		     graphicXOffset: -16, graphicYOffset: -36}));
 	});
