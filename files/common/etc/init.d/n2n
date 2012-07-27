@@ -36,9 +36,8 @@ start_instance() {
 		# die IP beseitigen
 		ifconfig $devname 0.0.0.0
 
-		# hbbpd auf dem interface starten
-		cd /hbbp
-        hbbpd $devname
+		# B.A.T.M.A.N. Bescheid sagen
+		batctl if add $devname
 		;;
 # We don't need no supernode
 #	  supernode)
@@ -53,12 +52,9 @@ stop_instance() {
 	local cfg="$1"
 
 	config_get type "$cfg" TYPE
-	config_get devname "$cfg" devname
-	
+
 	case "$type" in
 	  edge)
-	    pid=$(pgrep -f "hbbpd $devname")
-        kill -9 $pid
 		service_stop /usr/sbin/edge
 		;;
 # again: no supernode
