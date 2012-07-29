@@ -1,62 +1,52 @@
-Roadmap
+FFRL Roadmap
 
-v0.1
--> Erste Alpha, welche die Basis Funktionalität unterstützt
--> B.A.T.N.A.N.-ADV Mesh (finished)
--> AP-Mode Interface für User (finished)
--> Mesh-Interface für Batman (finished)
-  -> Mesh.nterface with hidden SSID (finished)
--> Gateway Mode:
-		- DHCP Server (finished)
-		- Batman Gateway Mode (finished)
-		- Batman Gateway Bandwidth
--> Client Mode  (finished)
--> Manuelles Konfigruationsscript  (partially finished)
--> LED-Config (bascis are finished)
--> Zum Testen in der Saalstr
+Current Milestone: V0.1
 
-v0.2
--> Splash Screen (finished)
--> n2n (finished)
--> n2n watchdog (erledigt)
--> autoip bugfix
--> batman-adv settings
+Pre 0.1 siehe FFJ Roadmap V 0.2 / 0.3
 
-v0.3
--> Openvpn
--> Splash:
-   -> Whitelisting/Blacklisting
-   -> Layout (finished)
-   -> Webinterface (Status)
-   -> Cable Bridge / Lan-Port / Switch
-   -> Non-Uplink-DHCP
-   -> Non-Uplink-Splash "No Internet available"
-v0.4
--> Vnet-Support
-  -> possibility to configure each port as:
-       - batman mesh interface (cablebridge for batman layer 2 traffic only)
-       - default-lan interface (non batman)
-       - service port (static public ip via dhcp)
-       - batman mesh-bridge
+V0.1
+-> Web Interface 
+    -> Status Page für Internet/Netzstatus
+    -> Map (In verbindung mit Live Map auf der Freifunk Seite)
+    -> Distrubuted Splash (Implementiert durch FFJ)
+    -> Settings Page 
+-> Netzwerk Implementationen
+    -> Bridge Loop Avoidance (Fertig sofern sich nicht wieder was ändert)
+    -> OpenVPN Link zum FFRL Server für das Intercity VPN und Ip6 sowie AuslandsVPN
+    -> Mesh Uplink Ports - Statisch Konfiguriert (Durch uci-defaults/network bei Boottime erstellt, Port 3 +4 )
+-> FSM
+    -> Default state ist nun init
+    -> Neuer State: Init
+        -> Erstellt leere p2ptable files (Implementiert)
+        -> SplashText Generierung aus Configfile (Nach /tmp damit der Flash geschont wird)
+    -> Statefile änderung: Boot.enter 
+        -> Konfiguriert ULA Ip6 Adresse (Implementiert)
+    -> Neue Statefile: Boot.leave 
+        -> Falls keine gwip daten aus der cloud verfügbar sind, wir eine leere tabelle generiert (Implementiert)
+        -> Startet Webinterface
+    -> Neues Watchscript: Init.leave (Implementiert)
+        -> Veranlasst wechsel von Init zu Boot (Implementiert)
+    -> Neues Watchscript: boot 
+        -> Checkt ob die Tabellen verändert wurden (Implementiert)
+           -> falls ja -> Connectivity test mit anschließendem Wechsel. (Implementiert)
+           -> andernfalls wird ein counter erhöht, bei 5 durchläufen wird ein Connectivity test mit anschließendem Wechsel veranlasst (Implementiert)
+-> Redirection Script
+    -> Nutzung von Statuscode 307 anstatt 302 (Implementiert)
+    -> Senden der Wireless Internet Service Provider XML (Implementiert)
+-> Pakete / Software
+    -> n2n als Paket?
+-> p2ptable
+    -> Distributed Splashtable (Implmentiert durch FFJ,  benötigt weitere tests)
 
-v0.5
--> Openvpn Autoconfig Openvpn
--> local node-db (plaintext)
+V0.2
+-> Batman-Adv
+    -> Neue Version hinzufügen sobald das neue Fragmentation-System fertig ist. 
+-> Web Interface
+    -> Switch / Vlan Konfiguration
+    -> Konfiguration der Wifisettings
+-> SSH
+    -> Kein default password mehr -> SSH ist dicht und muss über den Lan Port und der Settingspage gesetzt werden
 
-v0.6
--> Config-Webinterface
--> Status/Diagnostics-WebIf
 
-
-Post v1.0
--> global node-db for www.freifunk-jena.de
--> openvpn auto cert solution (telephone based)
--> emergency update system
--> remote update via netcat
--> IPv6
--> Admininterface
--> Karte
--> Auto-IP
--> dnsmasq reload
--> Livestats
--> dezentraler DNS
+V0.3
+-> Integrierung der FSM mit netifd (Neue funktionen etc)
