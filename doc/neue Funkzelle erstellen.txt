@@ -1,0 +1,69 @@
+Anleitung zur Anpassung für eine neue Funkzelle
+===============================================
+
+Konvention: Pfadangaben und Dateien ohne Pfadangabe beziehen sich immer relativ zum Projektverzeichnis.
+So bezieht sich der Dateiname FOO auf die Datei FOO im Projektverzeichnis selbst und doc/FOO auf die Datei 
+FOO im Unterverzeichnis doc des Projektverzeichnisses.
+Einträge in spitzen Klammern sind mit entsprechendem Inhalt zu ersetzen.
+Notfalls nachsehen, wie die anderen Funkzellen ihre Daten konfiguriert haben und analog vorgehen.
+
+1) Unter files/trunk legt man ein Verzeichnis <Architektur>-<Funkzelle> an, z.B. ar71xx-musterstadt.
+
+2) Darin erstellt man das Verzeichnis etc/config und legt folgende Dateien an:
+* cloud:
+---------->8----------
+config cloud cur
+        option net_robinson '21.0.0.0/8'
+        option net_fake '22.0.0.0/8'
+        option net_mesh <IP-Bereich der Funkzelle: http://wiki.freifunk.net/IP-Netze>
+        option net_ip6ula 'fda0:747e:ab29:ffac::/64'
+---------->8----------
+* n2n:
+---------->8----------
+config edge
+        option ipaddr '1.2.3.4'
+        option supernode 'fnordeingang.de'
+        option port '31337'
+        option community 'ff<Funkzellenkürzel>1'
+        option key 'ff<Funkzellenkürzel>1'
+        option devname 'n2n1'
+        option route ''
+---------->8----------
+* wireless:
+---------->8----------
+config wifi-device radio0
+        option type     mac80211
+        option channel  <WLAN-Kanal (1-13) der Funkzelle>
+        option phy      phy0
+        option txpower  20
+        option country  DE
+#       option hwmode   11ng
+#       option htmode   HT20
+#       list ht_capab   SHORT-GI-40
+#       list ht_capab   TX-STBC
+#       list ht_capab   RX-STBC1
+#       list ht_capab   DSSS_CCK-40
+config wifi-iface
+        option device radio0
+        option mode adhoc
+        option network adhoc
+        option ssid FF<Funkzellenkürzel>-BATBONE
+        option bssid <die BSSID der Funkzelle>
+        option hidden 0
+        option encryption none
+config wifi-iface
+        option device 'radio0'
+        option network 'mesh'
+        option mode 'ap'
+        option ssid 'www.freifunk-rheinland.net'
+        option encryption 'none'
+        option wmm '0'
+---------->8----------
+Zusätzliche Konfigurationsdateien für funkzellenspezifische Dienste etc. kommen ebenfalls hier rein, sofern vorhanden.
+
+3) Dann legt man in config/misc/ noch ein Banner an, das beim SSH-Login auf dem Router angezeigt wird.
+Dazu kann man das Standardbanner oder das einer anderen Community kopieren und unter dem Dateinamen banner.<Funkzelle> speichern.
+Die große ASCII-Schrift lässt sich bspw. auf http://asciiset.com/figletserver.html erzeugen (mit der Font "rectangles").
+Ansonsten nach "ASCII Banner Generator" im Web suchen.
+
+4) Zuletzt kann man in der settings.mk.example die COMMUNITY-Zeile noch um den Community-Namen ergänzen und ist fertig.
