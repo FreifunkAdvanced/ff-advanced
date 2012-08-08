@@ -10,6 +10,10 @@ Bei Interesse forke das Haupt-Repository in dein eigenes Repository und wenn
 du fertig bist, mache einen Pull Request um die Änderungen in das Haupt-Repo
 einfließen zu lassen.
 
+Wenn du mehrere features/bugs bearbeiten willst, erstelle bitte jeweils einen
+eigenen branch und damit eigene Pull Requests. Dies hilft uns beim bearbeiten
+und organisieren der Pull Requests.
+
 ### Bugs sammeln
 Du hast ein Fehler gefunden? Bitte schaue in den [Issue-Tracker](https://github.com/fNordeingang/ffrheinland-buildroot/issues)
 und vergewissere dich, dass das Problem noch nicht gemeldet wurde. Falls es
