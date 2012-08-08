@@ -1,7 +1,7 @@
 #!/bin/sh -e
 . ../common.sh
 
-if [ "$(du /tmp/p2ptbl/gwip | awk '{print $1}')" != "0" ] || [ "$(cat /tmp/boot_runs)" >= "5" ]; then
+if [ -s /tmp/p2ptbl/gwip ] || [ "$(cat /tmp/boot_runs)" -ge 5 ]; then
 	if test_connectivity internet; then
 		logger -t fsm "Node is online"
 		echo queen
