@@ -1,9 +1,8 @@
-ffrheinland-buildroot
-=====================
+# ffrheinland-buildroot
 
-## Mithelfen ##
+## Mithelfen
 
-### Entwickeln ###
+### Entwickeln
 Wir suchen immer Freiwillige. Eine Liste von Aufgaben die noch ausstehen
 oder in Bearbeitung sind findest du im [Issue-Tracker auf Github](https://github.com/fNordeingang/ffrheinland-buildroot/issues)
 
@@ -11,7 +10,7 @@ Bei Interesse forke das Haupt-Repository in dein eigenes Repository und wenn
 du fertig bist, mache einen Pull Request um die Änderungen in das Haupt-Repo
 einfließen zu lassen.
 
-### Bugs sammeln ###
+### Bugs sammeln
 Du hast ein Fehler gefunden? Bitte schaue in den [Issue-Tracker](https://github.com/fNordeingang/ffrheinland-buildroot/issues)
 und vergewissere dich, dass das Problem noch nicht gemeldet wurde. Falls es
 schon gemeldet wurde, kannst du dich gerne an der Diskussion beteiligen und
