@@ -18,3 +18,4 @@ Informationen zum Erstellen einer neuen Funkzelle und diverses.
 
 Bei Detailfragen am besten an die Dev Mailingliste wenden, siehe
 https://mailman.freifunk-rheinland.net/cgi-bin/mailman/listinfo
+
