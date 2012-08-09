@@ -48,8 +48,8 @@ openwrt_prepare
 read_packages
 
 type=arch
-#for arch in ar71xx
-for arch in ar71xx atheros brcm47xx
+for arch in ar71xx
+#for arch in ar71xx atheros brcm47xx
 do
   openwrt_prepare
   read_packages
