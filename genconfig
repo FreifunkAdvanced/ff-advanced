@@ -305,7 +305,7 @@ EOF
 # FF-Rheinland Pakete und Helfer (als Module zum Austesten)
 packages_ffrl_util(){
 cat << EOF
-CONFIG_PACKAGE_ffrl-miniconfig=
+CONFIG_PACKAGE_ffrl-nodeconfig=
 EOF
 }
 
