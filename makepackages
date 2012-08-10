@@ -22,25 +22,44 @@ makepackage(){
   cd ${rootdir}/openwrt/trunk && make package/feeds/${feed}/${package}/compile
 }
 
-read_packages(){
-  cd ${rootdir}
-  grep -v -e "^#" -e "^$" config/packages/${type} \
-    | while read package feed; do
-      makepackage
-      move_package
+install_packages(){
+  for feed in ffrlgit ffrl
+  do
+    cd ${rootdir}/openwrt/trunk && ./scripts/feeds update ${feed}
+    for type in all arch
+    do
+      grep -v -e "^#" -e "^$" ${rootdir}/config/packages/${type} \
+        | while read package feed; do
+          cd ${rootdir}/openwrt/trunk
+          [ ! -e ${rootdir}/openwrt/trunk/package/feeds/${feed} ] \
+            && ./scripts/feeds install -p ${feed} ${package}
+        done
     done
+  done
+}
+
+read_packages(){
+  grep -v -e "^#" -e "^$" ${rootdir}/config/packages/${type} \
+  | while read package feed; do
+    makepackage
+    move_package
+  done
 }
 
 openwrt_prepare(){
+  cd ${rootdir}
   ./genconfig ${arch} > openwrt/trunk/.config
   cd ${rootdir}/openwrt/trunk && while true; do echo; done \
-    | make oldconfig >/dev/null
+   | make oldconfig >/dev/null
 }
 
 move_package(){
-[[ ! -e packages ]] && mkdir packages
-mv ${rootdir}/openwrt/trunk/bin/${arch}/packages/${package}* packages
+[[ ! -d ${rootdir}/packages ]] && mkdir -p ${rootdir}/packages
+mv ${rootdir}/openwrt/trunk/bin/${arch}/packages/${package}* ${rootdir}/packages/
 }
+
+arch=ar71xx
+install_packages
 
 arch=ar71xx
 type=all
