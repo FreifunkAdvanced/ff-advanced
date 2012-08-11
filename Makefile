@@ -124,6 +124,11 @@ fetch: fetch-trunk
 
 fetch-trunk: openwrt/trunk/.repo_access
 
+# TODO: bis Pakete aus dem Buildroot herausgelöst wurden existieren zwei Paket-
+#       Quellen:
+#       - ffrlgit: git://github.com/ffrl/ffrl-feed.git
+#       - ffrl: Verzeichnisse im Buildroot - laut Upstream (Jan/Jena) nicht
+#               Standardkonform
 .NOTPARALLEL:
 openwrt/trunk/.repo_access:
 	mkdir -p openwrt dl
@@ -135,9 +140,8 @@ openwrt/trunk/.repo_access:
 	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Trunk'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Jena hbbpd in OpenWrt Trunk'
-#	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
-	cd $(@D) && ./scripts/feeds install -p ffrlgit hbbp > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland Git repo in OpenWrt Trunk'
+	cd $(@D) && ./scripts/feeds install -a -p ffrlgit > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
