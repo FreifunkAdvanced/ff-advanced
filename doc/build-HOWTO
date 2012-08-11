@@ -26,6 +26,9 @@ Image targets:
         solingen        - Freifunk Solingen
         wuppertal       - Freifunk Wuppertal
 
+Package targets:
+  pack                  - compile all supported FFRL-Packages
+
 Config targets:
   config-all		- Create all .config files for OpenWrt
   config-[<repository>[-<platform>[-<community>]]]

@@ -5,3 +5,4 @@ dl/*
 settings.mk
 dl
 openwrt
+packages/*
