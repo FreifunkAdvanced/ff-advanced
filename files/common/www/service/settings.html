@@ -10,9 +10,6 @@
 <div class="navbar"><div class="navbar-inner"><div class="container-fluid">
 <a class="brand" href="/">Freifunk Rheinland </a>
 <div class="nav-collapse"><ul class="nav">
-<li><a href="/services.html"><i class="icon-home   icon-white"></i> Lokale Dienste</a></li>
-<li><a href="/internet.html"><i class="icon-road   icon-white"></i> Internet</a></li>
-<li><a href="/status.html"><i   class="icon-signal icon-white"></i> Netzstatus</a></li>
 <li class="active"><a href="/settings.html"><i class="icon-cog    icon-white"></i> Einstellungen</a></li>
 </ul></div>
 </div></div></div>
@@ -23,8 +20,6 @@
   screen is too narrow !-->
     <ul class="nav nav-tabs">
       <li class="active"><a href="#overview" data-toggle="tab">&Uuml;bersicht</a></li>
-      <li><a href="#device" data-toggle="tab">Mein Ger&auml;t</a></li>
-      <li><a href="#lan" data-toggle="tab">Ger&auml;te im LAN</a></li>
       <li><a href="#node" data-toggle="tab">Router</a></li>
     </ul>
 
@@ -68,100 +63,13 @@
 	</div>
       </div>
 
-      <div class="tab-pane" id="device">
-	<h3>Ger&auml;teeinstellungen <small>f&uuml;r <span class="data-client_name loading"></span>
-	(<span class="data-client_mac"></span>)</small></h3>
-	
-	<form class="well" action="cgi-bin/cfg_client.json" method="post">
-	  <h4>Name <small>wird benutzt um die MAC-Adresse zu verstecken</small></h4>
-	  <input type="text" name="client_name" class="data">
-	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
-	</form>
-
-	<form class="well" action="cgi-bin/cfg_client.json" method="post">
-	  <h4>Internetzugang</h4>
-	  <label class="checkbox inline">
-	    <input type="hidden" name="update_splash" value="">
-	    <input type="checkbox" name="client_splash" value="true" class="data">
-	    Splash dauerhaft deaktivieren
-	  </label>
-	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
-	</form>
-
-	<form class="well" action="cgi-bin/cfg_client.json" method="post">
-	  <h4>Zugang zum Freifunknetz</h4>
-	  <label class="radio">
-	    <input type="radio" name="client_access" class="data" value="bridged">
-	    direkte Verbindung mit dem Freifunknetzwerk (bridging):
-	    Uneingeschr&auml;nkte Funktionalit&auml;t und
-	    Dienstfreigabe m&ouml;glich.
-	  </label>
-	  <label class="radio">
-	    <input type="radio" name="client_access" class="data" value="routed">
-	    geroutete Verbindung: Zugriff auf das Freifunknetz
-	    funktioniert so wie Internetzugriff. Einige Programme
-	    (Chat, diverse Computerspiele) funktionieren
-	    nicht. Dienste k&ouml;nnen nicht freigegeben werden.
-	  </label>
-	  <label class="radio">
-	    <input type="radio" name="client_access" class="data" value="isolated">
-	    keine Verbindung
-	  </label>
-	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
-	</form>
-      </div>
-
-      <div class="tab-pane" id="lan">
-	<h3>Ger&auml;teeinstellungen f&uuml;r andere Ger&auml;te im LAN</h3>
-
-	<p>Liste aller Gerate, Option neue hinzuzufuegen (per IP), per
-	Click auf ein Device kommt der gleiche Dialog wie fuer das
-	eigene Device</p>
-      </div>
-
-      <div class="tab-pane" id="node">
+   <div class="tab-pane" id="node">
 	<h3>Routereinstellungen <small>f&uuml;r <span class="data-router_name loading"></span></h3>
 
 	<form class="well" action="cgi-bin/cfg_router.json" method="post">
 	  <h4>Name</h4>
 	  <input type="text" name="router_name" class="data">
 	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
-	</form>
-
-	<form class="well" action="cgi-bin/cfg_router.json" method="post">
-	  <h4>Passwort</h4>
-	  <input type="text" name="router_password" class="data">
-	  <input type="submit" class="btn btn-mini disabled" value="Speichern">
-
-	  <div class="row-fluid">
-	    <div class="span6">
-	      <p>Ist ein Passwort gesetzt, dann muss dieses f&uuml;r
-		alle Einstellung angegeben werden, die den Router oder
-		andere Ger&auml;te im Kabelnetzwerk
-		betreffen. Einstellungen, die nur den eigenen Rechner
-		betreffen kann jeder Nutzer weiterhin ohne Passwort
-		vornehmen.</p>
-
-	      <p>Normalerweise sollte man kein Passwort setzen: die
-	        betroffenen Einstellung d&uuml;rfen auch ohne Passwort
-	        nur von Nutzern ge&auml;ndert werden, die per Kabel an
-	        den Router angeschlossen sind. Und die haben i.d.R
-	        bereits physische Gewalt &uuml;ber den Router und das
-	        Netzwerk.</p>
-	    </div>
-
-	    <div class="span6">
-	      <p><b>Kein wichtiges Passwort verwenden!</b>  Das hier
-		angegebene Passwort wird unsicher gespeichert,
-		&uuml;ber das Netzwerk &uuml;bertragen und im Klartext
-		angezeigt.</p>
-
-	      <p>Wurde das Passwort vergessen, dann muss der
-		Router <a href="foo">in den Auslieferungszustand
-		zur&uuml;ckgesetzt</a> werden. Das ist nicht tragisch
-		:-)</p>
-	    </div>
-	  </div>
 	</form>
 
 	<form class="well" action="cgi-bin/cfg_router.json" method="post">
