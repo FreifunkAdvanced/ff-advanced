@@ -30,5 +30,5 @@ REPOSITORY = trunk
 PLATFORM = ar71xx
 
 # Supported communitis (for zeroconfig images)
-COMMUNITY = aachen duesseldorf duisburg krefeld neuss radevormwald solingen wuppertal
+COMMUNITY = aachen duesseldorf duisburg krefeld neuss radevormwald solingen wermelskirchen wuppertal
 
