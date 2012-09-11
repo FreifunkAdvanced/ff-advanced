@@ -10,7 +10,7 @@ config edge
 config edge
         option ipaddr '1.2.3.4'
         option supernode '137.226.143.11'
-        option port '31337'
+        option port '51337'
         option community 'ffac2'
         option key 'ffac2'
         option devname 'n2n2'
