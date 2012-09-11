@@ -6,3 +6,12 @@ config edge
         option key 'ffac1'
         option devname 'n2n1'
         option route ''
+
+config edge
+        option ipaddr '1.2.3.4'
+        option supernode '137.226.143.11'
+        option port '31337'
+        option community 'ffac2'
+        option key 'ffac2'
+        option devname 'n2n2'
+        option route ''
