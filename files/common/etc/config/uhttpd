@@ -6,6 +6,7 @@
 # service instance
 config disabled service
 	option home		/www/service
+	option listen_http 	80
 	# Reject requests from RFC1918 IP addresses
 	# directed to the servers public IP(s).
 	# This is a DNS rebinding countermeasure.
@@ -37,6 +38,7 @@ config disabled service
 # redirection instance
 config disabled redirection
 	option home		/www/redirection
+	option listen_http 	81
 	option error_page 	/redirect
 	option index_page	redirect
 	option cgi_prefix	/

@@ -10,10 +10,9 @@ uci delete dhcp.mesh
 uci delete dhcp.fakedns
 /etc/init.d/dnsmasq restart
 
-# stop redirection httpd, remove robinson IP from service httpd
+# stop redirection httpd
 disable_httpd redirection
 rm /tmp/redirection_target
-change_service_httpd_listen
 /etc/init.d/uhttpd restart
 
 # stop redirecting all inet traffic to local httpd/nameserver
