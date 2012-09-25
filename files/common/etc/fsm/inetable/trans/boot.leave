@@ -7,7 +7,8 @@ logger -t fsm boot.leave
 # that any update on any node will have a higher version.
 # This only is the case when there has been no new 
 # table version received in the boot cycle.
-if [ -s /tmp/p2ptbl/gwip ]; then
+# Note: This is only the case if the gwip table is empty!
+if [ ! -s /tmp/p2ptbl/gwip ]; then
 	for i in $(seq 0 254); do
 		echo -e "$i\t0\tfree"
 	done > /tmp/gwip-init
