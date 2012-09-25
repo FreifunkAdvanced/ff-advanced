@@ -18,5 +18,4 @@ fi
 # start service httpd listening on ULA IP6 Address of the mesh interface.
 # start webadmin httpd listening on the LAN IP4 Address.
 enable_httpd service
-change_service_httpd_listen
 /etc/init.d/uhttpd restart
