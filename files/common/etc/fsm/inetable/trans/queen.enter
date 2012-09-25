@@ -66,11 +66,9 @@ pool mesh {
 /etc/init.d/dhcp6s restart
 
 ## set splash
-# start redirection httpd (for splash), add GW IP to the addrs service
-# httpd listens on
+# start redirection httpd (for splash)
 echo "http://$gwip/cgi-bin/splash.html? /sbin/urlencode" > /tmp/redirection_target
-enable_httpd redirection    $gwip:81
-change_service_httpd_listen $gwip:80
+enable_httpd redirection
 /etc/init.d/uhttpd restart
 
 # fill splash table

@@ -39,10 +39,9 @@ set dhcp.fakedns.name='#'
 # disable batman-adv-mangling with DHCP packets
 batctl gw off
 
-# start redirection httpd, add robinson IP to service httpd
+# start redirection httpd
 echo "http://$randip/robinson.html" > /tmp/redirection_target
-enable_httpd redirection    $randip:81
-change_service_httpd_listen $randip:80
+enable_httpd redirection
 /etc/init.d/uhttpd restart
 
 # redirect all tcp traffic to local httpd, all dns traffic to local NS

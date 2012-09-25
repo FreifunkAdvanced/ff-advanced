@@ -31,22 +31,7 @@ update_node_db() {
     true # TODO
 }
 
-is_wired() {
-    if [ -z "$is_wired_cached_result" ]; then
-	[ -n "$REMOTE_HOST" ]
-	local iface=$(grep ^$REMOTE_HOST </proc/net/arp \
-	    | awk 'BEGIN { FS = " " } ; { print $6 }')
-	if [ "$iface" == br-lan ]; then
-	    is_wired_cached_result=true
-	else
-	    is_wired_cached_result=false
-	fi
-    fi
-    $is_wired_cached_result
-}
-
 update_ssh_password() {
-	is_wired || fail 400 'Keine Berechtigung!'
 	local password = $1
 	echo "$password
 $password" | passwd 2>&1
