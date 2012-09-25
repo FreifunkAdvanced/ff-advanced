@@ -46,26 +46,10 @@ delete network.mesh.ip6addr
 
 # enable/disable uhttpd instance in uci config; the parameters are
 # 1. instance name
-# 2. addresses to listen on (white-space delimted list)
 enable_httpd () {
     uci set uhttpd.$1=uhttpd
-    for i in $2; do
-	uci add_list uhttpd.$1.listen_http=$i
-    done
 }
 
 disable_httpd () {
     uci set uhttpd.$1=disabled
-    uci delete uhttp.$1.listen_http &>/dev/null || true
-}
-
-# change the interfaces the service httpd is listening on;
-# automatically adds the ULA IPv6 address of br-mesh
-change_service_httpd_listen () {
-    uci delete uhttp.service.listen_http &>/dev/null || true
-    for i in $1 \
-	[$(ifconfig br-mesh | egrep -o 'f[c-d][:0-9a-f]*')]:80 \
-	$(uci get network.lan.ipaddr):80; do	
-	uci add_list uhttpd.service.listen_http=$i
-    done
 }
