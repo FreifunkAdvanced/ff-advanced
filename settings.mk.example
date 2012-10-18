@@ -16,9 +16,6 @@ MAKEFLAGS	+= -s --no-print-directory
 # svn info svn://svn.openwrt.org/openwrt/trunk/ | grep "Rev:" | sed -e "s/.*: //g"
 SVNREVISION	= 32690
 
-# OpenWrt Backfire version
-BACKFIREVERSION	= 10.03.1
-
 # Freifunk Jena  udp-broadcast
 FFJVERSION	= git-cf16b21
 FFJDATE		= 2012-04-27
