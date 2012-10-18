@@ -1,0 +1,5 @@
+config cloud cur
+       option net_robinson	'21.0.0.0/8'
+       option net_fake		'22.0.0.0/8'
+       option net_mesh		'10.41.0.0/16'
+       option net_ip6ula        'fda0:747e:ab29:babe::/64'

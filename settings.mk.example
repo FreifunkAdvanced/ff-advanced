@@ -6,7 +6,7 @@ NAME =
 MAIL = 
 
 # Put your your default make targets in correct order
-DEFAULTIMAGES	= image-trunk-ar71xx
+DEFAULTIMAGES	= image-attitude_adjustment-ar71xx
 
 # disable for screen flooding, enable for quiet run
 MAKEFLAGS	+= -s --no-print-directory
@@ -21,7 +21,7 @@ FFJVERSION	= git-cf16b21
 FFJDATE		= 2012-04-27
 
 # Supported OpenWrt branch
-REPOSITORY = trunk
+REPOSITORY = attitude_adjustment trunk
 
 # Supported platform
 PLATFORM = ar71xx
