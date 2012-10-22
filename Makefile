@@ -47,7 +47,7 @@ endef
 define create_firmware_file
 echo $(DATE)_$$(echo $(VERSION) \
 	| sed -e "s/git-//g")_$(REPO)-`[[ "$(REPO)" == "trunk" ]] \
-	&& echo $(SVNREVISION) || echo $(BACKFIREVERSION)` \
+	&& echo $(SVNREVISION) || echo "stable"` \
 	> openwrt/$(REPO)/files/etc/firmware
 endef
 
@@ -124,6 +124,8 @@ fetch: fetch-trunk
 
 fetch-trunk: openwrt/trunk/.repo_access
 
+fetch-attitude_adjustment: openwrt/attitude_adjustment/.repo_access
+
 # TODO: bis Pakete aus dem Buildroot herausgelöst wurden existieren zwei Paket-
 #       Quellen:
 #       - ffrlgit: git://github.com/ffrl/ffrl-feed.git
@@ -148,6 +150,26 @@ openwrt/trunk/.repo_access:
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $@
 
+.NOTPARALLEL:
+openwrt/attitude_adjustment/.repo_access:
+	mkdir -p openwrt dl
+	@echo '  SVN     OpenWrt Attitude Adjustment'
+	svn co -q svn://svn.openwrt.org/openwrt/branches/attitude_adjustment $(@D)
+	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
+	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Attitude Adjustment'
+	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
+	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland Git repo in OpenWrt Attitude Adjustment'
+	cd $(@D) && ./scripts/feeds install -a -p ffrlgit > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Attitude Adjustment'
+	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
+	@echo '  LINK    OpenWrt Attitude Adjustment packages'
+	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	touch $@
+	
+	
 # ------------------------------------
 # Update targets
 # ------------------------------------
@@ -161,9 +183,9 @@ settings_update:
 	sed -i -e 's/SVNREVISION	=.*/SVNREVISION	= $(newSVN)/g' settings.mk
 
 .NOTPARALLEL:
-update: update-trunk
+update: update-attitude_adjustment update-trunk
 
-update-backfire: openwrt/backfire/.update
+update-attitude_adjustment: openwrt/attitude_adjustment/.update
 
 .NOTPARALLEL:
 # update-trunk: settings_update
@@ -186,6 +208,23 @@ openwrt/trunk/.update:
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	touch $(@D).repo_access
 
+.NOTPARALLEL:
+openwrt/trunk/.update:
+	mkdir -p openwrt dl
+	@echo '  SVN     OpenWrt Attitude Adjustment (update)'
+	cd $(@D) && svn update -q
+	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
+	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
+	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) (update)'
+	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Attitude Adjustment'
+	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
+	@echo '  LINK    OpenWrt Attitude Adjustment packages'
+	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	touch $(@D).repo_access	
+	
 # ------------------------------------
 # Clean targets
 # ------------------------------------
@@ -193,11 +232,16 @@ openwrt/trunk/.update:
 clean: 
 	-rm -r config/*.config image/*
 
-mrpropper: mrpropper-trunk
+mrpropper: mrpropper-attitude_adjustment mrpropper-trunk
 
 mrpropper-trunk:
 	cd openwrt/trunk && $(MAKE) clean
 
+mrpropper-attitude_adjustment:
+	cd openwrt/attitude_adjustment && $(MAKE) clean
+
+	
+	
 # ------------------------------------
 # Package targets
 # ------------------------------------
@@ -230,7 +274,7 @@ image-%:
 		done; \
 	else \
 	[[ "$(REPO)" == "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(MODEL)-$(PLAT)-$(REPO)-r$(SVNREVISION) || true; \
-	[[ "$(REPO)" != "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(MODEL)-$(PLAT)-$(REPO)-$(BACKFIREVERSION) || true; \
+	[[ "$(REPO)" != "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(MODEL)-$(PLAT)-$(REPO) || true; \
 	fi
 
 image/%:
