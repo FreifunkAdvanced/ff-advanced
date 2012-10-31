@@ -1,28 +1,38 @@
 #!/bin/sh -e
+. $IPKG_INSTROOT/etc/functions.sh
 . /etc/splash.sh
 
-# acquire lock
-exec 666<$chain_id_file
-flock -x 666
+x=0
+current_time=$(date +%s)
+splash_check() {
+   config_get mac "$1" mac
+   config_get time "$1" time
+   let time_check=$time+$timeout
+   if [ $time_check -gt  $current_time ]; then
+	# user is splashed
+       iptables -t nat -I $chain -m mac --mac-source $mac -j ACCEPT
+   else
+	# user is no longer splashed / must click again
+       uci delete splash_users.@user[$x]
+   fi
+   let x=$x+1
+}
 
 # check for current inetable state, allowing a command line override
-if have_splash_iptable $1; then
-    # remove old entries from splash p2ptbl
-    p2ptbl filter $tbl \
-	awk '{ if ($2 > '$(date +%s)') print $0 }'
-
-    # create new iptables chain from splash p2ptbl and replace the old
-    # chain with the new one; this ensures that a user stays splashed
-    # during the runtime of this script
+lockSplash
+state=${1:-$(fsm get inetable)}
+if [ "$state" == "queen" ]; then
+    # functional gateway: copy splash db to a new iptables chain and
+    # replace the old chain with the new one; this ensures that a user
+    # stays splashed during the runtime of this script
     chain_id=$(($chain_id + 1))
     chain=$chain_prefix$chain_id
-    iptables -t nat -N $chain
-    iptables -t nat -I prerouting_inet_splashed -j $chain
     echo $chain_id > $chain_id_file
-    p2ptbl show $tbl \
-	| while read mac rest; do
-	    add_splash_iptable "$mac"
-        done
+    iptables -t nat -N $chain
+
+    config_load splash_users
+    config_foreach splash_check user
+    iptables -t nat -I prerouting_inet_splashed -j $chain
     while iptables -t nat -D prerouting_inet_splashed 2 &>/dev/null; do :; done
 else
     # no working gw -> remove reference to iptable copy of splash db
