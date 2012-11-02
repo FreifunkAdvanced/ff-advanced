@@ -40,7 +40,7 @@ set dhcp.fakedns.name='#'
 batctl gw off
 
 # start redirection httpd
-echo "http://$randip/robinson.html" > /tmp/redirection_target
+echo "http://$randip/cgi-bin/splash.html" > /tmp/redirection_target
 enable_httpd redirection
 /etc/init.d/uhttpd restart
 
