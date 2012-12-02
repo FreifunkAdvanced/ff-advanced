@@ -1,6 +1,0 @@
-#!/bin/sh -e
-. ../common.sh
-
-(echo "I would have called: sysupgrade $FwDst"
-    date
-    echo) > /tmp/updatophilie

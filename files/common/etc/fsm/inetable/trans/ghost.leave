@@ -1,5 +1,0 @@
-#!/bin/sh -e
-logger -t fsm ghost.leave
-rm /tmp/ghost_since
-
-./queen.leave "$1"

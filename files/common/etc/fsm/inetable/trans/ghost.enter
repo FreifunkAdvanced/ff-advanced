@@ -1,3 +1,0 @@
-#!/bin/sh -e
-logger -t fsm ghost.enter
-date +%s > /tmp/ghost_since
