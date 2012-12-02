@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-echo -e 'Status: 200 OK\r
-Content-Type: application/json\r
-\r
-[{"id": "unique123", "uplink": true,  "pos": {"lat": 51.228596, "lon": 6.735442}, "name": "Not working yet", "owner": "FF Rheinland"},
- {"id": "unique124", "uplink": false, "pos": {"lat": 51.228596, "lon": 6.733442}}]'

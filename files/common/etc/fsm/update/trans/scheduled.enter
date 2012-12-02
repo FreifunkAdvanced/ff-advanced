@@ -1,9 +1,0 @@
-#!/bin/sh -e
-. ../common.sh
-
-AckTime=$TargetTime
-CurState=$2
-GS_update
-
-# TODO: may be increase gossip frequency to allow faster updates
-# despite packet loss and queue overflows in hbbpd

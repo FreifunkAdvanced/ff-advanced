@@ -56,4 +56,7 @@ config rule
 # include a file with users custom iptables rules
 config include                           
         option path /etc/firewall.user
-                                    
+
+# include ffrl firewall settings                                    
+config include
+       option path /etc/firewall.ffrl

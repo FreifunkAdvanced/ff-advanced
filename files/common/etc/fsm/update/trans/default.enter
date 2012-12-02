@@ -1,5 +1,0 @@
-#!/bin/sh -e
-. ../common.sh
-
-CurState=$2
-GS_update

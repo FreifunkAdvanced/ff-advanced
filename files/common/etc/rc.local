@@ -1,4 +1,0 @@
-# the system init finished. By default this file does nothing.
-ifconfig br-mesh down
-ifconfig br-mesh up  
-exit 0   
