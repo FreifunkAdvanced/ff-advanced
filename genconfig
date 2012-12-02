@@ -299,6 +299,15 @@ cat << EOF
 CONFIG_PACKAGE_hbbp=
 CONFIG_PACKAGE_nacl=
 CONFIG_PACKAGE_kmod-nfnetlink=
+CONFIG_PACKAGE_ffrl-fsm=y
+CONFIG_PACKAGE_ffrl-fsm-inetable=y
+CONFIG_PACKAGE_ffrl-fsm-update=y
+CONFIG_PACKAGE_ffrl-n2n-watchdog=y
+CONFIG_PACKAGE_ffrl-nodeid=y
+CONFIG_PACKAGE_ffrl-p2ptbl=y
+CONFIG_PACKAGE_ffrl-shuf=y
+CONFIG_PACKAGE_ffrl-urlencoder=y
+CONFIG_PACKAGE_ffrl-webservice=y
 EOF
 }
 
