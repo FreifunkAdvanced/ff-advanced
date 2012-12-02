@@ -308,8 +308,8 @@ CONFIG_PACKAGE_ffrl-p2ptbl=y
 CONFIG_PACKAGE_ffrl-shuf=y
 CONFIG_PACKAGE_ffrl-urlencoder=y
 CONFIG_PACKAGE_ffrl-webservice=y
-CONFIG_PACKAGE_ffrl-distnodeinfo=m
-CONFIG_PACKAGE_ffrl-nodeconfig=m
+#CONFIG_PACKAGE_ffrl-distnodeinfo=m
+#CONFIG_PACKAGE_ffrl-nodeconfig=m
 CONFIG_PACKAGE_ffrl-key-lcb=m
 CONFIG_PACKAGE_ffrl-key-phip=m
 EOF
