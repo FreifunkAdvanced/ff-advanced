@@ -58,5 +58,5 @@ config include
         option path /etc/firewall.user
 
 # include ffrl firewall settings                                    
-		config include
+config include
        option path /etc/firewall.ffrl
