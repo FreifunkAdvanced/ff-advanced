@@ -1,3 +1,0 @@
-#!/bin/sh
-logger -t fsm default.enter
-batctl gw client
