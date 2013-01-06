@@ -278,6 +278,7 @@ CONFIG_PACKAGE_nano=
 
 CONFIG_PACKAGE_iperf=
 CONFIG_PACKAGE_iperf-mt=
+CONFIG_PACKAGE_wireless-tools=m
 EOF
 }
 
