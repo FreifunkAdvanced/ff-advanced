@@ -209,7 +209,7 @@ openwrt/trunk/.update:
 	touch $(@D).repo_access
 
 .NOTPARALLEL:
-openwrt/trunk/.update:
+openwrt/attitude_adjustment/.update:
 	mkdir -p openwrt dl
 	@echo '  SVN     OpenWrt Attitude Adjustment (update)'
 	cd $(@D) && svn update -q

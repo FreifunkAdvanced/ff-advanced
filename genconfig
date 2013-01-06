@@ -293,7 +293,7 @@ EOF
 
 # Wichtige Pakete, von der Firmware gefordert
 # hbbp - UDP-Broadcast für 
-# nacl - salt for hbbp - package is br0ken by upstream
+# nacl - salt for hbbp
 # kmod-nfnetlink - Kernel modules support for a netlink-based userspace interface
 packages_ffrl(){
 cat << EOF
