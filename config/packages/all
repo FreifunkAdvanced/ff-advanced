@@ -1,2 +1,12 @@
-ffrl-nodeconfig	ffrlgit
-
+ffrl-fsm	ffrlgit
+ffrl-fsm-inetable	ffrlgit
+ffrl-fsm-update	ffrlgit
+ffrl-key-lcb	ffrlgit
+ffrl-key-phip	ffrlgit
+ffrl-n2n-watchdog	ffrlgit
+ffrl-nodeid	ffrlgit
+ffrl-p2ptbl	ffrlgit
+ffrl-shuf	ffrlgit
+ffrl-urlencoder	ffrlgit
+ffrl-webservice	ffrlgit
+hbbp	ffrlgit

@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # makepackages - stupid script for lazy people which compiles certain packages
-# Copyright (C) 2012  Philipp Psurek <phip@vmail.me>
+# Original Copyright (C) 2012  Philipp Psurek <phip@vmail.me>
+# Modified by Cyrus (Lcb01@Lcb01.de)
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -17,60 +18,110 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 rootdir=$(pwd)
+feeds="ffrlgit ffrl"
+targets="ar71xx"
+config="all"
 
-makepackage(){
-  cd ${rootdir}/openwrt/trunk && make package/feeds/${feed}/${package}/compile
+make_package(){
+	local package=$1
+	local feed=$2
+	echo "Make package $package from feed $feed"
+  cd ${rootdir}/openwrt/attitude_adjustment && make package/feeds/${feed}/${package}/compile
 }
 
-install_packages(){
-  for feed in ffrlgit ffrl
+install_feeds(){
+  for feed in $feeds
   do
-    cd ${rootdir}/openwrt/trunk && ./scripts/feeds update ${feed}
-    for type in all arch
+    cd ${rootdir}/openwrt/attitude_adjustment && ./scripts/feeds update ${feed}
+    for type in $config
     do
-      grep -v -e "^#" -e "^$" ${rootdir}/config/packages/${type} \
+      grep -v -e "^#" -e "^$" ${rootdir}/config/packages/${config} \
         | while read package feed; do
-          cd ${rootdir}/openwrt/trunk
-          [ ! -e ${rootdir}/openwrt/trunk/package/feeds/${feed} ] \
+          cd ${rootdir}/openwrt/attitude_adjustment
+          [ ! -e ${rootdir}/openwrt/attitude_adjustment/package/feeds/${feed} ] \
             && ./scripts/feeds install -p ${feed} ${package}
         done
     done
   done
 }
 
-read_packages(){
-  grep -v -e "^#" -e "^$" ${rootdir}/config/packages/${type} \
+build_packages(){
+  local arch=$1
+  echo "Building config file(s) $config for arch $arch"
+  grep -v -e "^#" -e "^$" ${rootdir}/config/packages/${config} \
   | while read package feed; do
-    makepackage
-    move_package
+    make_package $package $feed
+	move_package $package $arch
   done
 }
 
-openwrt_prepare(){
-  cd ${rootdir}
-  ./genconfig ${arch} > openwrt/trunk/.config
-  cd ${rootdir}/openwrt/trunk && while true; do echo; done \
-   | make oldconfig >/dev/null
+generate_config(){
+	local arch=$1
+	cd ${rootdir}
+	./genconfig ${arch} > openwrt/attitude_adjustment/.config
+	cd ${rootdir}/openwrt/attitude_adjustment && while true; do echo; done \
+	| make oldconfig >/dev/null
 }
 
 move_package(){
-[[ ! -d ${rootdir}/packages ]] && mkdir -p ${rootdir}/packages
-mv ${rootdir}/openwrt/trunk/bin/${arch}/packages/${package}* ${rootdir}/packages/
+	local package=$1
+	local arch=$2
+	echo "Move package $package for arch $arch"
+	[[ ! -d ${rootdir}/packages/${arch} ]] && mkdir -p ${rootdir}/packages/${arch}
+	rm -f ${rootdir}/packages/${arch}/${package}*
+	mv ${rootdir}/openwrt/attitude_adjustment/bin/${arch}/packages/${package}* ${rootdir}/packages/${arch}/
 }
 
-arch=ar71xx
-install_packages
+index_packages(){
+	local arch=$1
+	rm -f ${rootdir}/packages/${arch}/md5sums ${rootdir}/packages/${arch}/packages ${rootdir}/packages/${arch}/packages.gz
+	md5sum	${rootdir}/packages/${arch}/* > ${rootdir}/packages/${arch}/md5sums
+	${rootdir}/openwrt/attitude_adjustment/scripts/ipkg-make-index.sh ${rootdir}/packages/${arch} > ${rootdir}/packages/${arch}/packages 
+	cat ${rootdir}/packages/${arch}/packages | gzip > ${rootdir}/packages/${arch}/packages.gz
+}
 
-arch=ar71xx
-type=all
-openwrt_prepare
-read_packages
+fail() {
+    echo "$1" 1>&2
+    exit 1
+}
 
-type=arch
-for arch in ar71xx
-#for arch in ar71xx atheros brcm47xx
-do
-  openwrt_prepare
-  read_packages
-done
+printArgs () {
+    fail "Usage:
+makepackage
+build [config] : build packages
+               If no config is supplied the 'all' 
+               config will be used
+build_index : build package index & md5sums
+
+install_packages [config] : install packages from feeds
+"
+}
+
+[ $# -lt 1 ] && printArgs
+[ ! -e ${rootdir}/openwrt/attitude_adjustment/package/feeds/ffrlgit ] && install_feeds
+
+case "$1" in
+    build)
+	[ $# -gt 1 ] && config=$2
+	for arch in $targets
+	do
+		generate_config $arch
+		build_packages $arch
+		index_packages $arch
+	done
+	;;
+	build_index)
+	[ $# -gt 1 ] && config=$2
+	for arch in $targets
+		do
+			index_packages $arch
+		done
+	;;
+	install_packages)
+	[ $# -gt 1 ] && config=$2
+	install_feeds $config
+	;;
+    *)
+	printArgs
+esac
 
