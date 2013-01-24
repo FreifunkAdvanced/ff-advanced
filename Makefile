@@ -247,7 +247,7 @@ mrpropper-attitude_adjustment:
 # ------------------------------------
 
 pack:
-	./makepackages
+	./makepackages build
 
 # ------------------------------------
 # Build targets
