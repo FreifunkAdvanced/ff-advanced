@@ -76,8 +76,8 @@ index_packages(){
 	local arch=$1
 	rm -f ${rootdir}/packages/${arch}/md5sums ${rootdir}/packages/${arch}/packages ${rootdir}/packages/${arch}/packages.gz
 	md5sum	${rootdir}/packages/${arch}/* > ${rootdir}/packages/${arch}/md5sums
-	${rootdir}/openwrt/attitude_adjustment/scripts/ipkg-make-index.sh ${rootdir}/packages/${arch} > ${rootdir}/packages/${arch}/packages 
-	cat ${rootdir}/packages/${arch}/packages | gzip > ${rootdir}/packages/${arch}/packages.gz
+	${rootdir}/openwrt/attitude_adjustment/scripts/ipkg-make-index.sh ${rootdir}/packages/${arch} > ${rootdir}/packages/${arch}/Packages 
+	cat ${rootdir}/packages/${arch}/Packages | gzip > ${rootdir}/packages/${arch}/Packages.gz
 }
 
 fail() {
