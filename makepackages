@@ -73,11 +73,14 @@ move_package(){
 }
 
 index_packages(){
-	local arch=$1
-	rm -f ${rootdir}/packages/${arch}/md5sums ${rootdir}/packages/${arch}/packages ${rootdir}/packages/${arch}/packages.gz
-	md5sum	${rootdir}/packages/${arch}/* > ${rootdir}/packages/${arch}/md5sums
-	${rootdir}/openwrt/attitude_adjustment/scripts/ipkg-make-index.sh ${rootdir}/packages/${arch} > ${rootdir}/packages/${arch}/Packages 
-	cat ${rootdir}/packages/${arch}/Packages | gzip > ${rootdir}/packages/${arch}/Packages.gz
+        local arch=$1
+        local pkg_dir=${rootdir}/packages/${arch}/
+        cd $pkg_dir
+        rm -f md5sums Packages Packages.gz
+        md5sum  * > md5sums
+        ${rootdir}/openwrt/attitude_adjustment/scripts/ipkg-make-index.sh . > Packages
+        cat Packages | gzip > Packages.gz
+        cd ${rootdir}
 }
 
 fail() {
