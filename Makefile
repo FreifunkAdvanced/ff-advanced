@@ -369,6 +369,6 @@ images/%: openwrt/$$(REPO)/.repo_access
 		  openwrt/$(REPO)/bin/$(PLAT)/packages/ packages/$(PLAT)/
 	rm -f packages/$(PLAT)/*
 	md5sum	packages/$(PLAT)/* > packages/$(PLAT)/md5sums
-	openwrt/$(REPO)/scripts/ipkg-make-index.sh packages/$(PLAT) > packages/$(PLAT)/packages 
-	cat packages/$(PLAT)/packages | gzip > packages/$(PLAT)/packages.gz
+	openwrt/$(REPO)/scripts/ipkg-make-index.sh packages/$(PLAT) > packages/$(PLAT)/Packages 
+	cat packages/$(PLAT)/Packages | gzip > packages/$(PLAT)/Packages.gz
 
