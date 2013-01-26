@@ -359,7 +359,7 @@ images/%: openwrt/$$(REPO)/.repo_access
 	$(create_firmware_file)
 	$(brand_firmware)
 	$(oldconfig)
-	#cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	mkdir -p packages/$(PLAT)
