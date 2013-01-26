@@ -359,16 +359,16 @@ images/%: openwrt/$$(REPO)/.repo_access
 	$(create_firmware_file)
 	$(brand_firmware)
 	$(oldconfig)
-	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
+	#cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
 	mkdir -p $@
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	mkdir -p packages/$(PLAT)
+	rm -f packages/$(PLAT)/*
 	rsync --include="ffrl*" \
 	      --include="hbbp*" \
 	      --exclude="*" -a \
 		  openwrt/$(REPO)/bin/$(PLAT)/packages/ packages/$(PLAT)/
-	rm -f packages/$(PLAT)/*
 	md5sum	packages/$(PLAT)/* > packages/$(PLAT)/md5sums
-	openwrt/$(REPO)/scripts/ipkg-make-index.sh packages/$(PLAT) > packages/$(PLAT)/Packages 
+	cd packages/$(PLAT) && ../../openwrt/$(REPO)/scripts/ipkg-make-index.sh . > Packages 
 	cat packages/$(PLAT)/Packages | gzip > packages/$(PLAT)/Packages.gz
 
