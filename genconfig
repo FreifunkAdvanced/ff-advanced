@@ -188,7 +188,7 @@ packages_firewall(){
 # Firewall
 echo "CONFIG_PACKAGE_firewall="
 echo "CONFIG_PACKAGE_iptables="
-echo "CONFIG_PACKAGE_ip6tables="
+echo "CONFIG_PACKAGE_ip6tables=m"
 
 # TODO Bedarf überprüfen
 echo "CONFIG_PACKAGE_librt="
