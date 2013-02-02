@@ -1,13 +1,20 @@
 config interface
 	option interface	'mesh'
 	option AdvSendAdvert	1
-	option AdvManagedFlag	1
-	option AdvOtherConfigFlag 1
-	# Nodes dont announce a ip6 default route
-	option AdvDefaultLifetime 0
+	option AdvManagedFlag	0
+	option AdvOtherConfigFlag 0
 	list client		''
 	option ignore		0
 
+config prefix
+	option interface	'br-mesh'
+	# If not specified, a non-link-local prefix of the interface is used
+	list prefix		''
+	option AdvOnLink	1
+	option AdvAutonomous	1
+	option AdvRouterAddr	0
+	option ignore		0
+	
 config interface
 	option interface	'lan'
 	option AdvSendAdvert	1
