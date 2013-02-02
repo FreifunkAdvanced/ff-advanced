@@ -210,7 +210,6 @@ echo "CONFIG_PACKAGE_freifunk-p2pblock="
 packages_dhcp(){
 cat << EOF
 CONFIG_PACKAGE_dnsmasq=
-CONFIG_PACKAGE_wide-dhcpv6-server=
 CONFIG_PACKAGE_radvd=
 EOF
 }
