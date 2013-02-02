@@ -32,6 +32,7 @@ make_package(){
 install_feeds(){
   for feed in $feeds
   do
+	cat ${rootdir}/openwrt/attitude_adjustment/feeds.conf.default ${rootdir}/feeds.conf > ${rootdir}/openwrt/attitude_adjustment/feeds.conf
     cd ${rootdir}/openwrt/attitude_adjustment && ./scripts/feeds update ${feed}
     for type in $config
     do
