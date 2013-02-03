@@ -7,7 +7,7 @@ config interface
 	option ignore		0
 
 config prefix
-	option interface	'br-mesh'
+	option interface	'mesh'
 	# If not specified, a non-link-local prefix of the interface is used
 	list prefix		''
 	option AdvOnLink	1
