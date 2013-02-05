@@ -1,4 +1,4 @@
-# ffrheinland-buildroot
+# Freifunk Advanced Buildroot
 
 ## Mithelfen
 
