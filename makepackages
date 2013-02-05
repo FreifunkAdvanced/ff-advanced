@@ -18,7 +18,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 rootdir=$(pwd)
-feeds="ffrlgit ffrl"
+feeds="ffadvgit ffadv"
 targets="ar71xx"
 config="all"
 

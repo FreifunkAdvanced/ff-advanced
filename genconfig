@@ -300,18 +300,18 @@ EOF
 # kmod-nfnetlink - Kernel modules support for a netlink-based userspace interface
 packages_ffrl(){
 cat << EOF
-CONFIG_PACKAGE_hbbp=
+CONFIG_PACKAGE_ffadv-hbbp=
 CONFIG_PACKAGE_nacl=
 CONFIG_PACKAGE_kmod-nfnetlink=
-CONFIG_PACKAGE_ffrl-fsm=
-CONFIG_PACKAGE_ffrl-fsm-inetable=
-CONFIG_PACKAGE_ffrl-fsm-update=
-CONFIG_PACKAGE_ffrl-n2n-watchdog=
-CONFIG_PACKAGE_ffrl-nodeid=
-CONFIG_PACKAGE_ffrl-p2ptbl=
-CONFIG_PACKAGE_ffrl-shuf=
-CONFIG_PACKAGE_ffrl-urlencoder=
-CONFIG_PACKAGE_ffrl-webservice=
+CONFIG_PACKAGE_ffadv-fsm=
+CONFIG_PACKAGE_ffadv-fsm-inetable=
+CONFIG_PACKAGE_ffadv-fsm-update=
+CONFIG_PACKAGE_ffadv-n2n-watchdog=
+CONFIG_PACKAGE_ffadv-nodeid=
+CONFIG_PACKAGE_ffadv-p2ptbl=
+CONFIG_PACKAGE_ffadv-shuf=
+CONFIG_PACKAGE_ffadv-urlencoder=
+CONFIG_PACKAGE_ffadv-webservice=
 EOF
 }
 
