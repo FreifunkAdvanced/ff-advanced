@@ -364,8 +364,7 @@ images/%: openwrt/$$(REPO)/.repo_access
 	rsync -a openwrt/$(REPO)/bin/$(PLAT)/ $@/
 	mkdir -p packages/$(PLAT)
 	rm -f packages/$(PLAT)/*
-	rsync --include="ffrl*" \
-	      --include="hbbp*" \
+	rsync --include="ffadv*" \
 	      --exclude="*" -a \
 		  openwrt/$(REPO)/bin/$(PLAT)/packages/ packages/$(PLAT)/
 	md5sum	packages/$(PLAT)/* > packages/$(PLAT)/md5sums
