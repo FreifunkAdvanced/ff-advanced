@@ -321,6 +321,7 @@ cat << EOF
 CONFIG_PACKAGE_ffrl-nodeconfig=
 CONFIG_PACKAGE_ffrl-key-lcb=
 CONFIG_PACKAGE_ffrl-key-phip=
+CONFIG_PACKAGE_ffadv-key-egon0=
 EOF
 }
 
