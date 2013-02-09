@@ -102,7 +102,7 @@ install_packages [config] : install packages from feeds
 }
 
 [ $# -lt 1 ] && printArgs
-[ ! -e ${rootdir}/openwrt/attitude_adjustment/package/feeds/ffrlgit ] && install_feeds
+[ ! -e ${rootdir}/openwrt/attitude_adjustment/package/feeds/ffadvgit ] && install_feeds
 
 case "$1" in
     build)
