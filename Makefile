@@ -367,7 +367,7 @@ images/%: openwrt/$$(REPO)/.repo_access
 	rsync --include="ffadv*" \
 	      --exclude="*" -a \
 		  openwrt/$(REPO)/bin/$(PLAT)/packages/ packages/$(PLAT)/
-	md5sum	packages/$(PLAT)/* > packages/$(PLAT)/md5sums
+	cd packages/$(PLAT) && md5sum * > md5sums
 	cd packages/$(PLAT) && ../../openwrt/$(REPO)/scripts/ipkg-make-index.sh . > Packages 
 	cat packages/$(PLAT)/Packages | gzip > packages/$(PLAT)/Packages.gz
 
