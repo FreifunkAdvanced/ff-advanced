@@ -1,6 +1,6 @@
 config wifi-device radio0
         option type     mac80211
-        option channel  11
+        option channel  9
         option phy      phy0
         option txpower  20
         option country  DE
@@ -11,8 +11,8 @@ config wifi-iface
         option device   radio0
         option mode     adhoc
         option network	adhoc
-        option ssid     batman.neuss.freifunk.net
-        option bssid    B2:CA:FF:EE:BA:BE
+        option ssid     wifimesh-neuss
+        option bssid    92:CA:FF:EE:BA:BE
         option hidden   1
         option encryption none
 
@@ -20,6 +20,6 @@ config wifi-iface
         option device   radio0
         option network 	mesh
         option mode     ap
-        option ssid     www.freifunk-rheinland.net
+        option ssid     Freifunk-Rheinland
         option encryption none
         option wmm      0
