@@ -4,7 +4,7 @@
 
 ### Entwickeln
 Wir suchen immer Freiwillige. Eine Liste von Aufgaben die noch ausstehen
-oder in Bearbeitung sind findest du im [Issue-Tracker auf Github](https://github.com/fNordeingang/ffrheinland-buildroot/issues)
+oder in Bearbeitung sind findest du im [Issue-Tracker auf Github](https://github.com/FreifunkAdvanced/ff-advanced/issues)
 
 Bei Interesse forke das Haupt-Repository in dein eigenes Repository und wenn
 du fertig bist, mache einen Pull Request um die Änderungen in das Haupt-Repo
@@ -31,7 +31,7 @@ Bei Detailfragen am besten an die Dev Mailingliste wenden, siehe
 https://mailman.freifunk-rheinland.net/cgi-bin/mailman/listinfo
 
 ### Bugs sammeln
-Du hast ein Fehler gefunden? Bitte schaue in den [Issue-Tracker](https://github.com/fNordeingang/ffrheinland-buildroot/issues)
+Du hast ein Fehler gefunden? Bitte schaue in den [Issue-Tracker](https://github.com/FreifunkAdvanced/ff-advanced/issues)
 und vergewissere dich, dass das Problem noch nicht gemeldet wurde. Falls es
 schon gemeldet wurde, kannst du dich gerne an der Diskussion beteiligen und
 mit Details aushelfen.
