@@ -321,6 +321,7 @@ cat << EOF
 CONFIG_PACKAGE_ffadv-key-lcb=
 CONFIG_PACKAGE_ffadv-key-phip=
 CONFIG_PACKAGE_ffadv-key-egon0=
+CONFIG_PACKAGE_ffadv-key-dschmidtberg=
 EOF
 }
 
