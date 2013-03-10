@@ -7,7 +7,7 @@ FOO im Unterverzeichnis doc des Projektverzeichnisses.
 Einträge in spitzen Klammern sind mit entsprechendem Inhalt zu ersetzen.
 Notfalls nachsehen, wie die anderen Funkzellen ihre Daten konfiguriert haben und analog vorgehen.
 
-1) Unter files/trunk legt man ein Verzeichnis <Architektur>-<Funkzelle> an, z.B. ar71xx-musterstadt.
+1) Unter files/attitude_adjustment legt man ein Verzeichnis <Architektur>-<Funkzelle> an, z.B. ar71xx-musterstadt.
 
 2) Darin erstellt man das Verzeichnis etc/config und legt folgende Dateien an:
 * cloud:
