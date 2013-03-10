@@ -3,6 +3,7 @@ images/**/*
 openwrt/**/*
 dl/*
 settings.mk
+!settings.mk.example
 dl
 openwrt
 packages/*
