@@ -1,0 +1,17 @@
+config edge
+	option ipaddr		'1.2.3.4'
+	option supernode	'fnordeingang.de'
+	option port			'31337'
+	option community	'ffeng1'
+	option key			'ffeng1'
+	option devname		'n2n1'
+	option route		''
+config edge
+	option ipaddr	'1.2.3.4'
+	option supernode	'78.47.181.173'
+	option port			'31337'
+	option community	'ffeng2'
+	option key			'ffeng2'
+	option devname		'n2n2'
+	option route		''
+                                                        
