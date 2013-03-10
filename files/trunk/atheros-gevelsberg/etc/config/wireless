@@ -8,8 +8,8 @@ config wifi-iface
 	option device	wifi0
 	option mode		adhoc
 	option network	adhoc
-	option ssid		FFW-BATBONE
-	option bssid	02:CA:FF:EE:E1:BA
+	option ssid		FFENG-BATBONE
+	option bssid	02:CA:FF:05:82:85
 	option hidden	1
 	option encryption	none
 
@@ -17,5 +17,5 @@ config wifi-iface
 	option device	wifi0
 	option mode		ap
 	option network	mesh
-	option ssid		Freifunk-Wuppertal
+	option ssid		Freifunk-Gevelsberg
 	option encryption	none
