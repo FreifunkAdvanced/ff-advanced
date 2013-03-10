@@ -17,6 +17,6 @@ config wifi-iface
 	option device	wifi0
 	option mode		ap
 	option network	mesh
-	option ssid		www.freifunk-wuppertal.net
+	option ssid		Freifunk-Wuppertal
 	option encryption	none
 
