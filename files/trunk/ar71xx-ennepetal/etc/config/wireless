@@ -1,0 +1,21 @@
+config wifi-device  wifi0
+	option type     atheros
+	option channel	11
+	option country  276
+	option txpower  20
+
+config wifi-iface
+	option device	wifi0
+	option mode		adhoc
+	option network	adhoc
+	option ssid		FFEN-BATBONE
+	option bssid	02:CA:FF:05:82:84
+	option hidden	1
+	option encryption	none
+
+config wifi-iface
+	option device	wifi0
+	option mode		ap
+	option network	mesh
+	option ssid		Freifunk-Ennepetal
+	option encryption	none
