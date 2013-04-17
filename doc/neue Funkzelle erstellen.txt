@@ -7,7 +7,7 @@ FOO im Unterverzeichnis doc des Projektverzeichnisses.
 Einträge in spitzen Klammern sind mit entsprechendem Inhalt zu ersetzen.
 Notfalls nachsehen, wie die anderen Funkzellen ihre Daten konfiguriert haben und analog vorgehen.
 
-1) Unter files/attitude_adjustment legt man ein Verzeichnis <Architektur>-<Funkzelle> an, z.B. ar71xx-musterstadt.
+1) Unter files/attitude_adjustment und files/trunk legt man ein Verzeichnis <Architektur>-<Funkzelle> an, z.B. ar71xx-musterstadt.
 
 2) Darin erstellt man das Verzeichnis etc/config und legt folgende Dateien an:
 * cloud:
@@ -16,7 +16,7 @@ config cloud cur
         option net_robinson '21.0.0.0/8'
         option net_fake '22.0.0.0/8'
         option net_mesh <IP-Bereich der Funkzelle: http://wiki.freifunk.net/IP-Netze>
-        option net_ip6ula 'fda0:747e:ab29:ffac::/64'
+        option net_ip6ula '<IP6-ULA Bereich der FreifunkZelle>'
 ---------->8----------
 * n2n:
 ---------->8----------
@@ -33,22 +33,19 @@ config edge
 ---------->8----------
 config wifi-device radio0
         option type     mac80211
-        option channel  <WLAN-Kanal (1-13) der Funkzelle>
+        option channel  '<Kanal der Freifunkzelle>'
         option phy      phy0
         option txpower  20
         option country  DE
-#       option hwmode   11ng
-#       option htmode   HT20
-#       list ht_capab   SHORT-GI-40
-#       list ht_capab   TX-STBC
-#       list ht_capab   RX-STBC1
-#       list ht_capab   DSSS_CCK-40
+        option hwmode   11ng
+        option htmode   HT20
+
 config wifi-iface
         option device radio0
         option mode adhoc
         option network adhoc
         option ssid FF<Funkzellenkürzel>-BATBONE
-        option bssid <die BSSID der Funkzelle>
+        option bssid '<Kanal BSSID>' #Siehe: https://wiki.freifunk-rheinland.net/Netzwerk/Wireless_Channels
         option hidden 0
         option encryption none
 config wifi-iface
