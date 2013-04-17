@@ -244,6 +244,7 @@ ew-dorin-router)
 	;;
 esac
 
+[ -s /etc/defconfig/ffpreconfigure ] && ffdev_set_interface_mesh_settings
 uci commit batman-adv
 uci commit network
 

@@ -31,3 +31,18 @@ set network.mesh.auto='1'
 EOF
 }
 
+ffdev_set_interface_mesh_settings() {
+	. /etc/defconfig/ffpreconfigure
+	uci batch <<EOF
+set network.mesh.proto='fsm'
+set network.mesh.net_robinson='$net_robinson'
+set network.mesh.net_fake='$net_fake'
+set network.mesh.net_mesh='$net_mesh'
+set network.mesh.batman_iface='$batman_iface'
+set network.mesh.fsm_list='$fsm_list'
+set network.mesh.gossip_list='$gossip_list'
+set network.mesh.community_name='$community_name'
+EOF
+
+}
+

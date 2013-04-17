@@ -1,0 +1,8 @@
+net_robinson='21.0.0.0/8'
+net_fake='22.0.0.0/8'
+net_mesh='10.40.0.0/16'
+net_ip6ula='fda0:747e:ab29:cafe::/64'
+batman_iface='bat0'
+fsm_list='inetable'
+gossip_list='gwip'
+community_name='Freifunk Duesseldorf'
