@@ -4,7 +4,7 @@
 # 'uhttpd'; The rest of the config section is left as-is.
 
 # service instance
-config disabled service
+config uhttpd service
 	option home		/www/service
 	option listen_http 	80
 	# Reject requests from RFC1918 IP addresses
@@ -36,7 +36,7 @@ config disabled service
 	option tcp_keepalive	10
 
 # redirection instance
-config disabled redirection
+config uhttpd redirection
 	option home		/www/redirection
 	option listen_http 	81
 	option error_page 	/redirect
