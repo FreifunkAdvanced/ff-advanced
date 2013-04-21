@@ -167,6 +167,10 @@ openwrt/attitude_adjustment/.repo_access:
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Attitude Adjustment packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	@echo '  REMOVE  OpenWrt Attitude Adjustment kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds uninstall kmod-batman-adv > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds install -p openwrtrouting kmod-batman-adv > /dev/null 2&>1
 	touch $@
 	
 	
@@ -223,6 +227,10 @@ openwrt/attitude_adjustment/.update:
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Attitude Adjustment packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	@echo '  REMOVE  OpenWrt Attitude Adjustment kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds uninstall kmod-batman-adv > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds install -p openwrtrouting kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access	
 	
 # ------------------------------------
