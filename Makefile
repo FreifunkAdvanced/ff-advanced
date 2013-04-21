@@ -160,7 +160,7 @@ openwrt/attitude_adjustment/.repo_access:
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Attitude Adjustment'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
-	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
+	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland Git repo in OpenWrt Attitude Adjustment'
 	cd $(@D) && ./scripts/feeds install -a -p ffrlgit > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Attitude Adjustment'
@@ -220,7 +220,7 @@ openwrt/attitude_adjustment/.update:
 	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
-	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
+	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) (update)'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Attitude Adjustment'
