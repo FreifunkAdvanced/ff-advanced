@@ -5,7 +5,8 @@ ffdef_set_interface_adhoc() {
 	local ifname=$1
 	uci batch <<EOF
 set network.adhoc='interface'
-set network.adhoc.proto='none'
+set network.adhoc.proto='batadv'
+set network.adhoc.mesh='bat0'
 set network.adhoc.auto='1'
 add network device
 set network.@device[-1].name='$ifname'
