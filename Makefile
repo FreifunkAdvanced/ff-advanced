@@ -40,8 +40,8 @@ define move_files
 cp -a files/common openwrt/$(REPO)/files
 [ -d files/$(REPO)/$(PLAT) ] \
 	&& rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
-[ -d files/$(REPO)/$(PLAT)-$(MODEL) ] \
-	&& rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
+[ -d files/communities/$(MODEL)/$(PLAT) ] \
+	&& rsync -a files/communities/$(MODEL)/$(PLAT)/ openwrt/$(REPO)/files/
 	./gensettings $(REPO) $(PLAT) $(MODEL)
 endef
 
