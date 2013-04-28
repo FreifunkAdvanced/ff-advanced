@@ -1,5 +1,5 @@
 #!/bin/sh
-# By DocFox -> lcb01@jabber.ccc.de
+# By CyrusFox -> lcb01@jabber.ccc.de
 
 ffdef_set_interface_adhoc() {
 	local ifname=$1
@@ -48,5 +48,6 @@ set network.meshfsm.gossip_list='$gossip_list'
 set network.meshfsm.community_name='$community_name'
 set network.meshfsm.auto='1'
 EOF
+	ffdef_set_interface_adhoc $adhoc_dev
 }
 
