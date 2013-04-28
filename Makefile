@@ -41,7 +41,8 @@ cp -a files/common openwrt/$(REPO)/files
 [ -d files/$(REPO)/$(PLAT) ] \
 	&& rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
 [ -d files/$(REPO)/$(PLAT)-$(MODEL) ] \
-	&& ./gensettings $(REPO) $(PLAT) $(MODEL)
+	&& rsync -a files/$(REPO)/$(PLAT)-$(MODEL)/ openwrt/$(REPO)/files/
+	./gensettings $(REPO) $(PLAT) $(MODEL)
 endef
 
 define create_firmware_file
