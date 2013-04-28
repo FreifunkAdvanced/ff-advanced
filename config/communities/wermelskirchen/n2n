@@ -1,0 +1,25 @@
+# N2N settings 
+#Supernode of first n2n configuration
+n2n_supernode1='ffwk.norma.uberspace.de'
+
+#Port of first n2n configuration
+n2n_port1='56789'
+
+#Community name of first n2n configuration
+n2n_community1='ffwk_n2n_1'
+
+#Key of first n2n configuration
+n2n_key1='Freifunk-Wermelskirchen n2n Haupt-Server'
+
+#Supernode of second n2n configuration (optional)
+n2n_supernode2='ffwkn2n.no-ip.org'
+
+#Port of first n2n configuration
+n2n_port2='56789'
+
+#Community name of first n2n configuration
+n2n_community2='ffwk_n2n_1'
+
+#Key of first n2n configuration
+n2n_key2='Freifunk-Wermelskirchen n2n Backup-Server'
+

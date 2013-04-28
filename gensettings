@@ -1,0 +1,377 @@
+#!/bin/sh
+#
+# gensettings - creates the community setting files for each image
+# Copyright (C) 2012  Linus Broich <lcb01@lcb01.de>
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+fail() {
+    echo "$1" 1>&2
+    exit 1
+}
+
+gen_fsmsettings() {
+	local fsm_config=$1
+	local adhoc_dev=$2
+	local output=$3
+	
+	# Check if adhoc_dev is valid
+	[ -n $adhoc_dev ] || fail "Invalid wifi device"
+	# Include FSM config
+	. $fsm_config
+	# Check if fsm settings are non-zero strings and abort if thats not the case
+	[ -n $net_robinson \
+	-a -n $net_fake \
+	-a -n $net_mesh \
+	-a -n $net_ip6ula \
+	-a -n $batman_iface \
+	-a -n $fsm_list \
+	-a -n $gossip_list \
+	-a -n $community_name ] || fail "Error: One or more FSM settings are missing!"
+	
+	# Remove old config if existing
+	[ -f $output ] && rm -f $output
+	
+	cat << EOF > $output
+adhoc_dev=$adhoc_dev
+net_robinson='$net_robinson'
+net_fake='$net_fake'
+net_mesh='$net_mesh'
+net_ip6ula='$net_ip6ula'
+batman_iface='$batman_iface'
+fsm_list='$fsm_list'
+gossip_list='$gossip_list'
+community_name='$community_name'
+EOF
+}
+
+gen_wifisettings() {
+	local wifi_config=$1
+	local output=$2
+	
+	# Include wifi config
+	. $wifi_config
+	# Check if the necessary wifi settings are non-zero strings and abort if thats not the case
+	[ -n $wifi_channel \
+	-a -n $wifi_country \
+	-a -n $wifi_hwmode \
+	-a -n $wifi_htmode \
+	-a -n $wifi_adhoc_ssid \
+	-a -n $wifi_hotspot_ssid ] || fail "Error: One or more wifi settings are missing!"
+	
+	# Default value for txpower if none is set
+	[ -n $wifi_txpower ] && wifi_txpower='20'
+	
+	# Remove old config if existing
+	[ -f $output ] && rm -f $output
+	
+	# Write wifi-device config
+	cat <<EOF > $output
+config wifi-device radio0
+        option 'type'     'mac80211'
+        option 'channel'  '$wifi_channel'
+        option 'phy'      'phy0'
+        option 'txpower'  '$wifi_txpower'
+        option 'country'  '$wifi_country'
+        option 'hwmode'   '$wifi_hwmode'
+        option 'htmode'   '$wifi_htmode'
+
+EOF
+	# Set wifi_adhoc_bssid according to wifi channel
+	case $wifi_channel in
+		# 2.4GHZ Channels
+		1)
+		wifi_adhoc_bssid="12:CA:FF:EE:BA:BE"
+		;;
+		2)
+		wifi_adhoc_bssid="22:CA:FF:EE:BA:BE"
+		;;
+		3)
+		wifi_adhoc_bssid="32:CA:FF:EE:BA:BE"
+		;;
+		4)
+		wifi_adhoc_bssid="42:CA:FF:EE:BA:BE"
+		;;
+		5)
+		wifi_adhoc_bssid="52:CA:FF:EE:BA:BE"
+		;;
+		6)
+		wifi_adhoc_bssid="62:CA:FF:EE:BA:BE"
+		;;
+		7)
+		wifi_adhoc_bssid="72:CA:FF:EE:BA:BE"
+		;;
+		8)
+		wifi_adhoc_bssid="82:CA:FF:EE:BA:BE"
+		;;
+		9)
+		wifi_adhoc_bssid="92:CA:FF:EE:BA:BE"
+		;;
+		10)
+		wifi_adhoc_bssid="02:CA:FF:EE:BA:BE"
+		;;
+		11)
+		wifi_adhoc_bssid="B2:CA:FF:EE:BA:BE"
+		;;
+		12)
+		wifi_adhoc_bssid="C2:CA:FF:EE:BA:BE"
+		;;
+		13)
+		wifi_adhoc_bssid="D2:CA:FF:EE:BA:BE"
+		;;
+		14)
+		wifi_adhoc_bssid="E2:CA:FF:EE:BA:BE"
+		;;
+		# 5GHZ Channels
+		36)
+		wifi_adhoc_bssid="02:36:CA:FF:EE:EE"
+		;;
+		40)
+		wifi_adhoc_bssid="02:40:CA:FF:EE:EE"
+		;;
+		42)
+		wifi_adhoc_bssid="02:42:CA:FF:EE:EE"
+		;;
+		48)
+		wifi_adhoc_bssid="02:48:CA:FF:EE:EE"
+		;;
+		50)
+		wifi_adhoc_bssid="02:50:CA:FF:EE:EE"
+		;;
+		52)
+		wifi_adhoc_bssid="02:52:CA:FF:EE:EE"
+		;;
+		56)
+		wifi_adhoc_bssid="02:56:CA:FF:EE:EE"
+		;;
+		58)
+		wifi_adhoc_bssid="02:58:CA:FF:EE:EE"
+		;;
+		60)
+		wifi_adhoc_bssid="02:60:CA:FF:EE:EE"
+		;;
+		64)
+		wifi_adhoc_bssid="02:64:CA:FF:EE:EE"
+		;;
+		100)
+		wifi_adhoc_bssid="12:00:CA:FF:EE:EE"
+		;;
+		104)
+		wifi_adhoc_bssid="12:04:CA:FF:EE:EE"
+		;;
+		106)
+		wifi_adhoc_bssid="12:06:CA:FF:EE:EE"
+		;;
+		108)
+		wifi_adhoc_bssid="12:08:CA:FF:EE:EE"
+		;;
+		112)
+		wifi_adhoc_bssid="12:12:CA:FF:EE:EE"
+		;;
+		114)
+		wifi_adhoc_bssid="12:14:CA:FF:EE:EE"
+		;;
+		116)
+		wifi_adhoc_bssid="12:16:CA:FF:EE:EE"
+		;;
+		120)
+		wifi_adhoc_bssid="12:20:CA:FF:EE:EE"
+		;;
+		122)
+		wifi_adhoc_bssid="12:22:CA:FF:EE:EE"
+		;;
+		124)
+		wifi_adhoc_bssid="12:24:CA:FF:EE:EE"
+		;;
+		128)
+		wifi_adhoc_bssid="12:28:CA:FF:EE:EE"
+		;;
+		130)
+		wifi_adhoc_bssid="12:30:CA:FF:EE:EE"
+		;;
+		132)
+		wifi_adhoc_bssid="12:32:CA:FF:EE:EE"
+		;;
+		136)
+		wifi_adhoc_bssid="12:36:CA:FF:EE:EE"
+		;;
+		140)
+		wifi_adhoc_bssid="12:40:CA:FF:EE:EE"
+		;;
+		*)
+		fail "Unknown channel number!"
+	esac
+	
+	# Append adhoc wifi-iface
+	cat <<EOF >> $output
+config wifi-iface
+        option device   'radio0'
+        option mode     'adhoc'
+        option network	'adhoc'
+        option ssid     '$wifi_adhoc_ssid'
+        option bssid    '$wifi_adhoc_bssid'
+        option hidden   '1'
+        option encryption 'none'
+
+EOF
+	# Append hotspot ap configuration
+	cat <<EOF >> $output
+config wifi-iface
+        option device   'radio0'
+        option network 	'mesh'
+        option mode     'ap'
+        option ssid     '$wifi_hotspot_ssid'
+        option encryption 'none'
+        option wmm      '0'
+
+EOF
+	# Append the secondary wifi ap if existant in config
+	if [ -n $wifi_ap_ssid -a -n $wifi_ap_network -a -z $wifi_ap_encryption ]; then
+		cat <<EOF >> $output
+config wifi-iface
+        option device   'radio0'
+        option network 	'$wifi_ap_network'
+        option mode     'ap'
+        option ssid     '$wifi_ap_ssid'
+        option encryption 'none'
+        option wmm      '0'
+
+EOF
+		# Return the Adhoc Iface 
+		echo "wlan0-2"
+	elif [ -n $wifi_ap_ssid -a -n $wifi_ap_network -a -n $wifi_ap_encryption -a -n $wifi_ap_key ]; then
+		cat <<EOF >> $output
+config wifi-iface
+        option device   'radio0'
+        option network 	'$wifi_ap_network'
+        option mode     'ap'
+        option ssid     '$wifi_ap_ssid'
+        option encryption '$wifi_ap_encryption'
+		option key      '$wifi_ap_key'
+        option wmm      '0'
+
+EOF
+		# Return the Adhoc Iface 
+		echo "wlan0-2"
+	else
+		# Adhoc iface is wlan0-1 if no additional AP except the hotspot has been definded
+		echo "wlan0-1"
+	fi
+}
+
+gen_splashsettings() {
+	local splash_config=$1
+	local output=$2
+	
+	# Include splash config
+	. $splash_config
+	# Check if splash settings are non-zero strings and abort if thats not the case
+	[ -n $splash_package \
+	-a -n $splash_header \
+	-a -n $splash_website \
+	-a -n $splash_interfaces ] || fail "Error: One or more splash settings are missing!"
+
+	# Remove old config if existing
+	[ -f $output ] && rm -f $output
+	
+	cat << EOF > $output
+config splash 'settings'
+        option 'package' '$splash_package'
+        option 'header' '$splash_header'
+        option 'website' '$splash_website'
+        option 'interfaces' '$splash_interfaces'
+EOF
+}
+
+gen_n2nsettings() {
+	local n2n_config=$1
+	local output=$2
+	
+	# Include n2n config
+	. $n2n_config
+	# Check if n2nsettings are non-zero strings and abort if thats not the case
+	[ -n $n2n_supernode1 \
+	-a -n $n2n_port1 \
+	-a -n $n2n_community1 \
+	-a -n $n2n_key1 ] || fail "Error: One or more n2n settings are missing!"
+	
+	# Remove old config if existing
+	[ -f $output ] && rm -f $output
+	
+	# Add first n2n interface
+	cat << EOF > $output
+config edge
+        option ipaddr '1.2.3.4'
+        option supernode '$n2n_supernode1'
+        option port '$n2n_port1'
+        option community '$n2n_community1'
+        option key '$n2n_key1'
+        option devname 'n2n1'
+        option route ''
+
+EOF
+
+	# Add second n2n interface if all settings are present (optional interface)
+	if [ -n $n2n_supernode2 -a -n $n2n_port2 -a -n $n2n_community2 -a -n $n2n_key2 ]; then
+		cat << EOF >> $output
+config edge
+        option ipaddr '1.2.3.4'
+        option supernode '$n2n_supernode2'
+        option port '$n2n_port2'
+        option community '$n2n_community2'
+        option key '$n2n_key2'
+        option devname 'n2n2'
+        option route ''
+
+EOF
+	fi
+}
+
+gen_configs() {
+	local repository=$1
+	local buildtarget=$2
+	local community=$3
+	
+	local fsm_config="config/communities/$community/fsm"
+	local wifi_config="config/communities/$community/wifi"
+	local splash_config="config/communities/$community/splash"
+	local n2n_config="config/communities/$community/n2n"
+	[ -f $fsm_config -a -f $wifi_config -a -f $splash_config ] || fail "Missing config files for community $community!"
+	[ ! -d openwrt/$repository/ ] && fail "Error: Repository $repository not existant" 
+	[ ! -d openwrt/$repository/files/etc/defconfig ] && mkdir -p openwrt/$repository/files/etc/defconfig
+	rm -f openwrt/$repository/files/etc/defconfig/ffpreconfigure 
+	
+	# Generate wireless config, returns the wifi dev for the ffpreconfigure config
+	adhoc_dev=$(gen_wifisettings $wifi_config openwrt/$repository/files/etc/config/wireless)
+	gen_fsmsettings $fsm_config $adhoc_dev openwrt/$repository/files/etc/defconfig/ffpreconfigure
+	gen_spashsettings $splash_config openwrt/$repository/files/etc/config/splash
+	gen_n2nsettings $n2n_config openwrt/$repository/files/etc/config/n2n
+	
+}
+
+printArgs () {
+    fail "Usage:
+$0 repository buildtarget community
+"
+}
+[ $# -lt 2 ] && printArgs
+
+case "$1" in
+  --help|-h)
+    printArgs
+    ;;
+  *)
+    gen_configs $1 $2 $3
+    ;;
+esac
