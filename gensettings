@@ -71,7 +71,7 @@ gen_wifisettings() {
 	-a -n "$wifi_hotspot_ssid" ] || fail "Error: One or more wifi settings are missing!"
 	
 	# Default value for txpower if none is set
-	[ -n "$wifi_txpower" ] && wifi_txpower='20'
+	[ -z "$wifi_txpower" ] && wifi_txpower='20'
 	
 	# Remove old config if existing
 	[ -f $output ] && rm -f $output
