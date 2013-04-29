@@ -9,4 +9,4 @@ splash_header='Freifunk Rheinland'
 splash_website='https://www.freifunk-rheinland.net/'
 
 #Mesh interface, keep set to 'meshfsm' unless you know what you are doing
-splash_interfaces='meshfm'
+splash_interfaces='meshfsm'
