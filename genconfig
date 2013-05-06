@@ -314,6 +314,7 @@ CONFIG_PACKAGE_ffadv-p2ptbl=
 CONFIG_PACKAGE_ffadv-shuf=
 CONFIG_PACKAGE_ffadv-urlencoder=
 CONFIG_PACKAGE_ffadv-webservice=
+CONFIG_PACKAGE_ffadv-owm-update=
 EOF
 }
 
