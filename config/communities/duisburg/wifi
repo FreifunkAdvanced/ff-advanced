@@ -23,7 +23,7 @@ wifi_adhoc_ssid='FFDU-BATBONE'
 # Note: In order for roaming on non-mesh clients to work, the ssid for the hotspot AP has to be the same on all nodes.
 
 # Default hotspot ssid
-wifi_hotspot_ssid='www.freifunk-rheinland.net'
+wifi_hotspot_ssid='Freifunk'
 
 # Second AP network, the network can be changed and the encryption to provide a private AP
 # Uncomment the lines below and add your settings in order for it to work
