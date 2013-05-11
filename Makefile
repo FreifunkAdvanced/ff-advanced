@@ -49,7 +49,7 @@ endef
 
 define create_firmware_file
 echo $(DATE)_$$(echo $(VERSION) \
-	| sed -e "s/git-//g")_$(REPO)-`[[ "$(REPO)" == "trunk" ]] \
+	| sed -e "s/git-//g")/$(REPO)/`[[ "$(REPO)" == "trunk" ]] \
 	&& echo $(SVNREVISION) || echo "stable"` \
 	> openwrt/$(REPO)/files/etc/firmware
 endef
