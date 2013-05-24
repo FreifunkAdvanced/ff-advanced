@@ -27,5 +27,5 @@ REPOSITORY = attitude_adjustment trunk
 PLATFORM = ar71xx
 
 # Supported communitis (for zeroconfig images)
-COMMUNITY = aachen duesseldorf duisburg krefeld moenchengladbach neuss radevormwald solingen wermelskirchen wuppertal
+COMMUNITY = aachen duesseldorf duisburg krefeld mettmann moenchengladbach neuss radevormwald solingen wermelskirchen wuppertal
 
