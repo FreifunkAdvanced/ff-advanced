@@ -290,7 +290,7 @@ image-%:
 			$(MAKE) image-$(REPO)-$${pla}; \
 		done; \
 	elif [[ "$(COMMUNITY)" == "" ]]; then \
-		for com in $(COMMUNITY); do \
+		for com in $(COMMUNITIES); do \
 			$(MAKE) image-$(REPO)-$(PLAT)-$${com}; \
 		done; \
 	else \
