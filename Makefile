@@ -55,26 +55,19 @@ echo $(DATE)_$$(echo $(VERSION) \
 endef
 
 define brand_firmware
-if [[ -e config/communities/$(COMMUNITY)/banner ]]; then \
-	sed config/communities/$(COMMUNITY)/banner \
-	-e "s/SVNRV/$(SVNREVISION)/g" \
-	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
-	-e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
-	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner\
-else\
-	sed config/default/banner \
-	-e "s/SVNRV/$(SVNREVISION)/g" \
-	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
-	-e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
-	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner\
-fi\
+[[ -e config/communities/$(COMMUNITY)/banner ]] \
+	&& cp config/communities/$(COMMUNITY)/banner openwrt/$(REPO)/files/etc/banner || cp config/default/banner openwrt/$(REPO)/files/etc/banner
 
-if [[ "$(REPO)" == "attitude_adjustment" ]]; then \
-	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ ATTITUDE ADJUSTMENT (12.09, r36088) ----------------------------------------------------/g" || true \
-	sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/openwrtrouting/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" || true \
-else\
-	sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" || true \
-fi
+sed openwrt/$(REPO)/files/etc/banner -i \
+	-e "s/SVNRV/$(SVNREVISION)/g" \
+	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
+	-e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
+	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g"
+
+[[ "$(REPO)" == "attitude_adjustment" ]] \
+	&& sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ ATTITUDE ADJUSTMENT (12.09, r36088) -------------------------------------------/g" \
+	&& sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/openwrtrouting/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
+	|| sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" || true
 endef
 
 define oldconfig
