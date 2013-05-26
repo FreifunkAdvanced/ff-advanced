@@ -6,10 +6,10 @@ n2n_supernode1='5.9.112.157'
 n2n_port1='31337'
 
 #Community name of first n2n configuration
-n2n_community1='ff-wtal1'
+n2n_community1='ffwtal1'
 
 #Key of first n2n configuration
-n2n_key1='ff-wtal1'
+n2n_key1='ffwtal1'
 
 #Supernode of second n2n configuration (optional)
 n2n_supernode2='78.47.181.173'
@@ -18,8 +18,8 @@ n2n_supernode2='78.47.181.173'
 n2n_port2='31337'
 
 #Community name of first n2n configuration
-n2n_community2='ff-wtal2'
+n2n_community2='ffwtal2'
 
 #Key of first n2n configuration
-n2n_key2='ff-wtal2'
+n2n_key2='ffwtal2'
 
