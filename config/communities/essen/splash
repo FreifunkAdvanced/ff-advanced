@@ -1,0 +1,12 @@
+# Splash settings (currently unused! Please fill out as it will be implemented soon)
+#Name of the splash package containing style-sheets & graphics
+splash_package='ffrhein'
+
+#Title&Header of the websites
+splash_header='Freifunk Rheinland'
+
+#Splash page for the iframe after accepting 
+splash_website='https://www.freifunk-rheinland.net/'
+
+#Mesh interface, keep set to 'meshfsm' unless you know what you are doing
+splash_interfaces='meshfsm'
