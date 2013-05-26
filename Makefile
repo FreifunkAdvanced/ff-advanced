@@ -14,7 +14,7 @@ export NUMPROC
 
 export REPOSITORY
 export PLATFORM
-export COMMUNITY
+export COMMUNITIES
 
 ifeq ($(OS),Linux)
         NUMPROC := $(shell grep -c ^processor /proc/cpuinfo)
