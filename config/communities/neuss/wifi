@@ -15,9 +15,12 @@ wifi_hwmode='11ng'
 wifi_htmode='HT20'
 
 
-# Adhoc Iface ssid, the bssid will be chosen based on the channel number
-# See https://wiki.freifunk-rheinland.net/Netzwerk/Wireless_Channels for details
+# Adhoc Iface ssid
 wifi_adhoc_ssid='wifimesh-neuss'
+
+# Adhoc Iface bssid, this is normaly set automaticaly. Please only set if you need it, otherwise comment it out!
+# See https://wiki.freifunk-rheinland.net/Netzwerk/Wireless_Channels for details
+#wifi_adhoc_bssid='12:CA:FF:EE:BA:BE'
 
 # AP Interfaces, you can define up to 2 AP interfaces, the first one will always be a unencrypted hotspot and will be in the network "mesh"
 # Note: In order for roaming on non-mesh clients to work, the ssid for the hotspot AP has to be the same on all nodes.
