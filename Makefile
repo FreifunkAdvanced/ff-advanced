@@ -41,30 +41,40 @@ define move_files
 	[ -d files/$(REPO)/$(PLAT) ] \
 		&& rsync -a files/$(REPO)/$(PLAT)/ openwrt/$(REPO)/files/
 
-	if test -d "files/communities/$(MODEL)/$(PLAT)"; \
-		then rsync -a files/communities/$(MODEL)/$(PLAT)/ openwrt/$(REPO)/files/; \
+	if test -d "files/communities/$(COMMUNITY)/$(PLAT)"; \
+		then rsync -a files/communities/$(COMMUNITY)/$(PLAT)/ openwrt/$(REPO)/files/; \
 	fi
-	./gensettings $(REPO) $(PLAT) $(MODEL)
+	./gensettings $(REPO) $(PLAT) $(COMMUNITY)
 endef
 
 define create_firmware_file
 echo $(DATE)_$$(echo $(VERSION) \
-	| sed -e "s/git-//g")/$(REPO)/`[[ "$(REPO)" == "trunk" ]] \
+	| sed -e "s/git-//g")/$(REPO)/`[[ "$(REPO)" == "attitude_adjustment" ]] \
 	&& echo $(SVNREVISION) || echo "stable"` \
 	> openwrt/$(REPO)/files/etc/firmware
 endef
 
 define brand_firmware
-[[ -e config/misc/banner.$(MODEL) ]] && \
-sed config/misc/banner.$(MODEL) \
--e "s/SVNRV/$(SVNREVISION)/g" \
--e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
--e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
--e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
--e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner
+if [[ -e config/communities/$(COMMUNITY)/banner ]]; then \
+	sed config/communities/$(COMMUNITY)/banner \
+	-e "s/SVNRV/$(SVNREVISION)/g" \
+	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
+	-e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
+	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner\
+else\
+	sed config/default/banner \
+	-e "s/SVNRV/$(SVNREVISION)/g" \
+	-e "s/LINUXVERSION/`grep '^LINUX_VERSION:=' openwrt/$(REPO)/target/linux/$(PLAT)/Makefile | sed 's/^LINUX_VERSION:='//g`/g" \
+	-e "s/FFRLversion/$(DATE)_$(VERSION)/g" \
+	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g" > openwrt/$(REPO)/files/etc/banner\
+fi\
 
-[[ "$(REPO)" == "backfire" ]] && \
-sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ Backfire (10.03.1, r29592) ----------------------------------------------------/g" || true
+if [[ "$(REPO)" == "attitude_adjustment" ]]; then \
+	sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ ATTITUDE ADJUSTMENT (12.09, r36088) ----------------------------------------------------/g" || true \
+	sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/openwrtrouting/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" || true \
+else\
+	sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" || true \
+fi
 endef
 
 define oldconfig
@@ -272,31 +282,31 @@ image:
 .SECONDEXPANSION:
 image-%: REPO=$(shell echo $(@F) | cut -f2 -d-)
 image-%: PLAT=$(shell echo $(@F) | cut -f3 -d-)
-image-%: MODEL=$(shell echo $(@F) | cut -f4- -d-)
+image-%: COMMUNITY=$(shell echo $(@F) | cut -f4- -d-)
 image-%:
 image-%: 
 	if [ "$(PLAT)" == "" ]; then \
 		for pla in $(PLATFORM); do \
 			$(MAKE) image-$(REPO)-$${pla}; \
 		done; \
-	elif [[ "$(MODEL)" == "" ]]; then \
+	elif [[ "$(COMMUNITY)" == "" ]]; then \
 		for com in $(COMMUNITY); do \
 			$(MAKE) image-$(REPO)-$(PLAT)-$${com}; \
 		done; \
 	else \
-	[[ "$(REPO)" == "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(MODEL)-$(PLAT)-$(REPO)-r$(SVNREVISION) || true; \
-	[[ "$(REPO)" != "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(MODEL)-$(PLAT)-$(REPO) || true; \
+	[[ "$(REPO)" == "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(COMMUNITY)-$(PLAT)-$(REPO)-r$(SVNREVISION) || true; \
+	[[ "$(REPO)" != "trunk" ]] && $(MAKE) images/$(DATE)_$(VERSION)/$(COMMUNITY)-$(PLAT)-$(REPO) || true; \
 	fi
 
 image/%:
-	@echo '"make image/$$(repo)/openwrt-$$(platform)-$$(model)" is deprecated'
+	@echo '"make image/$$(repo)/openwrt-$$(platform)-$$(COMMUNITY)" is deprecated'
 	@echo 'please use the new make syntax:'
 	head -n24 doc/build-HOWTO
 
 # create a pure OpenWrt image to test the .config and for package integration
 images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): REPO="trunk"
 images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): PLAT="ar71xx"
-images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): MODEL="devel"
+images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): COMMUNITY="devel"
 images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
 	@echo '  BUILD   Development OpenWrt trunk for ar71xx'
 	cp -p config/devel.config openwrt/trunk/.config
@@ -313,57 +323,13 @@ images/$(DATE)_$(VERSION)/devel-ar71xx-trunk-r$(SVNREVISION): openwrt/trunk/.rep
 #	cd $@/ && rm md5sums
 #	cd $@/ && md5sum * > md5sums 2> /dev/null || true
 
-# DIR-300 build target
-images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): REPO="trunk"
-images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): PLAT="atheros"
-images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): MODEL="miniconfig"
-images/$(DATE)_$(VERSION)/miniconfig-atheros_dir300-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
-	@echo '  BUILD   OpenWrt trunk for D-Link DIR-300'
-	./genconfig dir300 > openwrt/$(REPO)/.config
-	$(oldconfig)
-	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
-	mkdir -p openwrt/$(REPO)/files/etc/
-	$(create_firmware_file)
-	$(brand_firmware)
-	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
-	mkdir -p $@
-	rsync --exclude="*-squashfs.bin" \
-	      --exclude="*.elf" \
-	      --exclude="*-vmlinux.gz" -a \
-	      openwrt/$(REPO)/bin/$(PLAT)/ $@/
-	cd $@/ && rm md5sums
-	cd $@/ && md5sum * > md5sums 2> /dev/null || true
-
-# WRT54G build target
-images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): REPO="trunk"
-images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): PLAT="brcm47xx"
-images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): MODEL="miniconfig"
-images/$(DATE)_$(VERSION)/miniconfig-brcm47xx_wrt54g-trunk-r$(SVNREVISION): openwrt/trunk/.repo_access 
-	@echo '  BUILD   OpenWrt trunk for Linksys WRT54G'
-	./genconfig wrt54g > openwrt/$(REPO)/.config
-	$(oldconfig)
-	-rm -r openwrt/$(REPO)/files 2> /dev/null || true
-	mkdir -p openwrt/$(REPO)/files/etc/
-	$(create_firmware_file)
-	$(brand_firmware)
-	cd openwrt/$(REPO) && $(MAKE) -j$(NUMPROC)
-	mkdir -p $@
-	rsync -a openwrt/$(REPO)/bin/$(PLAT)/packages $@/
-	rsync --exclude="*3g*" \
-	      --include="*wrt54g*" \
-	      --include="*-rootfs.tar.gz" \
-	      --include="openwrt-brcm47xx-squashfs.trx" \
-	      --exclude="*" -a \
-	      openwrt/$(REPO)/bin/$(PLAT)/ $@/
-	cd $@/ && md5sum * > md5sums 2> /dev/null || true
-
 # ar71xx build target
 .SECONDEXPANSION:
 images/%: REPO=$(shell echo $(@F) | cut -f3 -d-)
 images/%: PLAT=$(shell echo $(@F) | cut -f2 -d-)
-images/%: MODEL=$(shell echo $(@F) | cut -f1 -d-)
+images/%: COMMUNITY=$(shell echo $(@F) | cut -f1 -d-)
 images/%: openwrt/$$(REPO)/.repo_access 
-	@echo '  BUILD   OpenWrt $(REPO) for $(PLAT) in $(MODEL)'
+	@echo '  BUILD   OpenWrt $(REPO) for $(PLAT) in $(COMMUNITY)'
 	./genconfig $(PLAT) > openwrt/$(REPO)/.config
 	-rm -r openwrt/$(REPO)/files
 	$(move_files)
