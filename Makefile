@@ -169,6 +169,8 @@ openwrt/attitude_adjustment/.repo_access:
 	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland Git repo in OpenWrt Attitude Adjustment'
 	cd $(@D) && ./scripts/feeds install -a -p ffrlgit > /dev/null 2&>1
+	@echo '  INSTALL Alfred Git repo in OpenWrt Attitude Adjustment'
+	cd $(@D) && ./scripts/feeds install -a -p alfred > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Attitude Adjustment'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Attitude Adjustment packages'
