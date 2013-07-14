@@ -226,10 +226,7 @@ EOF
 # wird OpenVPN aktiviert, dann mit weiteren Optionen (=y)
 packages_openvpn(){
 cat << EOF
-CONFIG_PACKAGE_openvpn=
-CONFIG_OPENVPN_DISABLE_EUREPHIA=y
-CONFIG_OPENVPN_DISABLE_MANAGEMENT=y
-CONFIG_OPENVPN_ENABLE_PASSWORD_SAVE=y
+CONFIG_PACKAGE_openvpn-polarssl=
 EOF
 }
 
