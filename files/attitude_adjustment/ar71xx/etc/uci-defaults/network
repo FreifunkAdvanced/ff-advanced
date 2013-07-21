@@ -248,6 +248,10 @@ ew-dorin-router)
 esac
 
 [ -s /etc/defconfig/ffpreconfigure ] && ffdev_set_interface_mesh_settings
+
+# We set the LAN IP to something which probably no DSL provider router uses.
+uci set network.lan.ipaddr="192.168.210.1"
+
 uci commit batman-adv
 uci commit network
 
