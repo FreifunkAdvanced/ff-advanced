@@ -146,9 +146,11 @@ tl-wr941nd)
 	;;
 
 tl-wr841n-v8)
-	ucidef_set_interfaces_lan_wan "eth1" "eth0"
-	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
+	ucidef_set_interfaces_lan_wan "eth1.1" "eth0"
+	ffdef_set_interface_mesh "eth1.2"
+	ucidef_add_switch "eth1" "1" "1"
+	ucidef_add_switch_vlan "eth1" "1" "0t 2 3"
+	ucidef_add_switch_vlan "eth1" "2" "0t 4 1"
 	;;
 
 wrt160nl)
@@ -248,6 +250,10 @@ ew-dorin-router)
 esac
 
 [ -s /etc/defconfig/ffpreconfigure ] && ffdev_set_interface_mesh_settings
+
+# We set the LAN IP to something which probably no DSL provider router uses.
+uci set network.lan.ipaddr="192.168.210.1"
+
 uci commit batman-adv
 uci commit network
 

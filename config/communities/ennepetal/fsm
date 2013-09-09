@@ -6,10 +6,10 @@ net_robinson='21.0.0.0/8'
 net_fake='22.0.0.0/8'
 
 #IPv4 Network for default mesh operation
-net_mesh='10.52.0.0/16'
+net_mesh='10.84.0.0/16'
 
 #IPv6 Network for default mesh operation
-net_ip6ula='fda0:747e:ab29:2196::/64'
+net_ip6ula='fda0:747e:ab29:abee::/64'
 
 #Name of the default batman adv interface
 batman_iface='bat0'
@@ -21,5 +21,5 @@ fsm_list='inetable'
 gossip_list='gwip'
 
 #Community name ;)
-community_name='Freifunk Wermelskirchen'
+community_name='Freifunk Ennepetal'
 

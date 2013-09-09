@@ -65,9 +65,9 @@ sed openwrt/$(REPO)/files/etc/banner -i \
 	-e "s/buildSystem/`uname -n` by $(NAME) <$(MAIL)>/g"
 
 [[ "$(REPO)" == "attitude_adjustment" ]] \
-	&& sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ ATTITUDE ADJUSTMENT (12.09, r36088) -------------------------------------------/g" \
-	&& sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/openwrtrouting/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
-	|| sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/packages/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" || true
+	&& sed openwrt/$(REPO)/files/etc/banner -i -e "s/.*bleeding edge.*/ ATTITUDE ADJUSTMENT (12.09, r36088) -------------------------------------------/g" 
+	sed openwrt/$(REPO)/files/etc/banner -i -e "s/BATMANVERSION/`grep '^PKG_VERSION:=' openwrt/$(REPO)/package/feeds/routing/batman-adv/Makefile | sed 's/^PKG_VERSION:='//g`/g" \
+	|| true
 endef
 
 define oldconfig
@@ -144,6 +144,7 @@ openwrt/trunk/.repo_access:
 	svn co -q -r $(SVNREVISION) svn://svn.openwrt.org/openwrt/trunk/ $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
 	@echo '  UPDATE  OpenWrt Trunk r$(SVNREVISION) feeds'
+	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Trunk'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
@@ -163,7 +164,10 @@ openwrt/attitude_adjustment/.repo_access:
 	svn co -q svn://svn.openwrt.org/openwrt/branches/attitude_adjustment $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
 	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
+	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	@echo '  REMOVE Routing 12.09 branch (Replaced by master branch)'
+	sed -e "/for-12.09.x/d" -i $(@D)/feeds.conf
 	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Attitude Adjustment'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
@@ -175,10 +179,12 @@ openwrt/attitude_adjustment/.repo_access:
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Attitude Adjustment packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
-	@echo '  REMOVE  OpenWrt Attitude Adjustment kmod-batman-adv package'
-	cd $(@D) && ./scripts/feeds uninstall kmod-batman-adv > /dev/null 2&>1
+	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
+	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
+	cd $(@D) && ./scripts/feeds install -p trunkservices openvpn-polarssl > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
-	cd $(@D) && ./scripts/feeds install -p openwrtrouting kmod-batman-adv > /dev/null 2&>1
+	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $@
 	
 	
@@ -209,6 +215,7 @@ openwrt/trunk/.update:
 	@echo '  SVN     OpenWrt Trunk r$(SVNREVISION) (update)'
 	cd $(@D) && svn update -q -r $(SVNREVISION)
 	@echo '  UPDATE  OpenWrt Trunk r$(SVNREVISION) feeds'
+	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
@@ -226,7 +233,11 @@ openwrt/attitude_adjustment/.update:
 	@echo '  SVN     OpenWrt Attitude Adjustment (update)'
 	cd $(@D) && svn update -q
 	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
+	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
 	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	@echo '  REMOVE Routing 12.09 branch (Replaced by master branch)'
+	sed -e "/for-12.09.x/d" -i $(@D)/feeds.conf
+	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Attitude Adjustment'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) (update)'
@@ -235,10 +246,12 @@ openwrt/attitude_adjustment/.update:
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Attitude Adjustment packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
-	@echo '  REMOVE  OpenWrt Attitude Adjustment kmod-batman-adv package'
-	cd $(@D) && ./scripts/feeds uninstall kmod-batman-adv > /dev/null 2&>1
+	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
+	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
+	cd $(@D) && ./scripts/feeds install -p trunkservices openvpn-polarssl > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
-	cd $(@D) && ./scripts/feeds install -p openwrtrouting kmod-batman-adv > /dev/null 2&>1
+	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access	
 	
 # ------------------------------------

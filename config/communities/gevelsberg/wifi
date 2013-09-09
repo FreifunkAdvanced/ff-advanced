@@ -1,6 +1,6 @@
 # WIFI Settings
 # Channel
-wifi_channel='5'
+wifi_channel='11'
 
 # TX Power, default value is 20 for FFAdv if not set otherwise
 wifi_txpower='20'
@@ -16,7 +16,7 @@ wifi_htmode='HT20'
 
 
 # Adhoc Iface ssid
-wifi_adhoc_ssid='FFWK-BATBONE'
+wifi_adhoc_ssid='FFGEVELSBERG-BATBONE'
 
 # Adhoc Iface bssid, this is normaly set automaticaly. Please only set if you need it, otherwise comment it out!
 # See https://wiki.freifunk-rheinland.net/Netzwerk/Wireless_Channels for details
@@ -26,7 +26,7 @@ wifi_adhoc_ssid='FFWK-BATBONE'
 # Note: In order for roaming on non-mesh clients to work, the ssid for the hotspot AP has to be the same on all nodes.
 
 # Default hotspot ssid
-wifi_hotspot_ssid='freifunk-rheinland.net'
+wifi_hotspot_ssid='Freifunk'
 
 # Second AP network, the network can be changed and the encryption to provide a private AP
 # Uncomment the lines below and add your settings in order for it to work
