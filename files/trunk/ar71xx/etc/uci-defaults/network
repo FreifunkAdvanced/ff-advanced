@@ -146,11 +146,12 @@ tl-wr941nd)
 	;;
 
 tl-wr841n-v8)
-	ucidef_set_interfaces_lan_wan "eth1" "eth0"
-	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "0 1 2 3 4"
+	ucidef_set_interfaces_lan_wan "eth1.1" "eth0"
+	ffdef_set_interface_mesh "eth1.2"
+	ucidef_add_switch "eth1" "1" "1"
+	ucidef_add_switch_vlan "eth1" "1" "0t 2 3"
+	ucidef_add_switch_vlan "eth1" "2" "0t 4 1"
 	;;
-
 wrt160nl)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
