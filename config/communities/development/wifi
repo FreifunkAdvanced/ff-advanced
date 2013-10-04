@@ -1,6 +1,6 @@
 # WIFI Settings
 # Channel
-wifi_channel='13'
+wifi_channel='11'
 
 # TX Power, default value is 20 for FFAdv if not set otherwise
 wifi_txpower='20'
