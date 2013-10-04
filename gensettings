@@ -381,7 +381,7 @@ EOF
 
 	# Add network section
 	echo "<Plugin network>" >> $output
-	echo 'Server "'$server'" "'$server_port'"'
+	echo 'Server "'$server'" "'$server_port'"' >> $output
 	echo "</Plugin>" >> $output
 
 	# Add ping hosts
