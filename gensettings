@@ -340,6 +340,59 @@ EOF
 	fi
 }
 
+gen_collectdsettings() {
+	local collectd_config=$1
+	local output=$2
+	
+	# Include collectd config
+	. $collectd_config
+	# Check if collectd settings are non-zero strings and abort if thats not the case
+	[ -n "$interfaces" \
+	-a -n "$server" \
+	-a -n "$server_port" \
+	-a -n "$ping_hosts" ] || fail "Error: One or more collectd settings are missing! Remove collectd config or set necessary values"
+	
+	# Remove old config if existing
+	[ -f $output ] && rm -f $output
+	
+	cat << EOF > $output
+#Replace Hostname with the MAC Address (Without ":" or "-") plus the hostname
+#Hostname "01234567890A-myhostname"
+BaseDir "/var/lib/collectd"
+PIDFile "/var/run/collectd.pid"
+Interval 60
+ReadThreads 2
+
+LoadPlugin network
+LoadPlugin interface
+LoadPlugin ping
+
+EOF
+
+	# Add interface section
+	echo "<Plugin interface>" >> $output
+	for iface in $interfaces
+		do
+			echo 'Interface "'$iface'"' >> $output
+		done
+		
+	echo "IgnoreSelected false" >> $output
+	echo "</Plugin>" >> $output
+
+	# Add network section
+	echo "<Plugin network>" >> $output
+	echo 'Server "'$server'" "'$server_port'"'
+	echo "</Plugin>" >> $output
+
+	# Add ping hosts
+	echo "<Plugin ping>" >> $output
+	for host in $ping_hosts
+		do
+			echo 'Host "'$host'"' >> $output
+		done
+	echo "</Plugin>" >> $output
+}
+
 gen_configs() {
 	local repository=$1
 	local buildtarget=$2
@@ -349,17 +402,17 @@ gen_configs() {
 	local wifi_config="config/communities/$community/wifi"
 	local splash_config="config/communities/$community/splash"
 	local n2n_config="config/communities/$community/n2n"
-	[ -f "$fsm_config" -a -f "$wifi_config" -a -f "$splash_config" ] || fail "Missing config files for community $community!"
+	local collectd_config="config/communities/$community/collectd"
+	[ -f "$fsm_config" -a -f "$wifi_config" -a -f "$splash_config" -a -f "$n2n_config" || fail "Missing config files for community $community!"
 	[ ! -d openwrt/$repository/ ] && fail "Error: Repository $repository not existant" 
 	[ ! -d openwrt/$repository/files/etc/defconfig ] && mkdir -p openwrt/$repository/files/etc/defconfig
-	rm -f openwrt/$repository/files/etc/defconfig/ffpreconfigure 
 	
 	# Generate wireless config, returns the wifi dev for the ffpreconfigure config
 	adhoc_dev=$(gen_wifisettings $wifi_config openwrt/$repository/files/etc/config/wireless)
 	gen_fsmsettings "$fsm_config" "$adhoc_dev" "openwrt/$repository/files/etc/defconfig/ffpreconfigure"
 	gen_splashsettings "$splash_config" "openwrt/$repository/files/etc/config/splash"
 	gen_n2nsettings "$n2n_config" "openwrt/$repository/files/etc/config/n2n"
-	
+	[ -f "$collectd_config" ] && gen_collectdsettings "$collectd_config" "openwrt/$repository/files/etc/collectd.conf"
 }
 
 printArgs () {
