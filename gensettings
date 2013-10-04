@@ -413,6 +413,7 @@ gen_configs() {
 	gen_splashsettings "$splash_config" "openwrt/$repository/files/etc/config/splash"
 	gen_n2nsettings "$n2n_config" "openwrt/$repository/files/etc/config/n2n"
 	[ -f "$collectd_config" ] && gen_collectdsettings "$collectd_config" "openwrt/$repository/files/etc/collectd.conf"
+	exit 0
 }
 
 printArgs () {
