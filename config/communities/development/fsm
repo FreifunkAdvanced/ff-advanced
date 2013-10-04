@@ -1,0 +1,25 @@
+# FSM network settings
+#IPv4 Network for robinson state
+net_robinson='21.0.0.0/8'
+
+#IPv4 Network for fake DNS
+net_fake='22.0.0.0/8'
+
+#IPv4 Network for default mesh operation
+net_mesh='10.78.0.0/16'
+
+#IPv6 Network for default mesh operation
+net_ip6ula='fda0:747e:ab29:deff::/64'
+
+#Name of the default batman adv interface
+batman_iface='bat0'
+
+#List of state machines the FSM runs
+fsm_list='inetable'
+
+#List of p2ptables which are going to be gossiped
+gossip_list='gwip'
+
+#Community name ;)
+community_name='Freifunk Rheinland Development'
+
