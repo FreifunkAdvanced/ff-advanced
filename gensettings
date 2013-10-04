@@ -403,7 +403,7 @@ gen_configs() {
 	local splash_config="config/communities/$community/splash"
 	local n2n_config="config/communities/$community/n2n"
 	local collectd_config="config/communities/$community/collectd"
-	[ -f "$fsm_config" -a -f "$wifi_config" -a -f "$splash_config" -a -f "$n2n_config" || fail "Missing config files for community $community!"
+	[ -f "$fsm_config" -a -f "$wifi_config" -a -f "$splash_config" -a -f "$n2n_config" ] || fail "Missing config files for community $community!"
 	[ ! -d openwrt/$repository/ ] && fail "Error: Repository $repository not existant" 
 	[ ! -d openwrt/$repository/files/etc/defconfig ] && mkdir -p openwrt/$repository/files/etc/defconfig
 	
