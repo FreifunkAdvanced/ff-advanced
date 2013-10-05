@@ -1,0 +1,4 @@
+n2n_peers				value:GAUGE:0:254
+mesh_peers				value:GAUGE:0:254
+connected_clients       value:GAUGE:0:254
+dhcp_leases             value:GAUGE:0:254
