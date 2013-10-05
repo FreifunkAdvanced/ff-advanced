@@ -362,10 +362,13 @@ BaseDir "/var/lib/collectd"
 PIDFile "/var/run/collectd.pid"
 Interval 60
 ReadThreads 2
+TypesDB "/usr/share/collectd/types.db"
+TypesDB "/etc/types.db.mesh"
 
 LoadPlugin network
 LoadPlugin interface
 LoadPlugin ping
+LoadPlugin exec
 
 EOF
 
@@ -391,6 +394,11 @@ EOF
 			echo 'Host "'$host'"' >> $output
 		done
 	echo "</Plugin>" >> $output
+	cat << EOF >> $output
+<Plugin exec>
+Exec "nobody:nogroup" "/usr/sbin/collectd-mesh-script.sh"
+</Plugin>
+EOF
 }
 
 gen_configs() {
