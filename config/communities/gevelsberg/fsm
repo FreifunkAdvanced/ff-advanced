@@ -23,3 +23,5 @@ gossip_list='gwip'
 #Community name ;)
 community_name='Freifunk Gevelsberg'
 
+#Force the fsm into a state after leaving "boot" state. Currently only "drone" is supported, default value is "off"
+force_state='off'

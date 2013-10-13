@@ -38,7 +38,8 @@ gen_fsmsettings() {
 	-a -n "$batman_iface" \
 	-a -n "$fsm_list" \
 	-a -n "$gossip_list" \
-	-a -n "$community_name" ] || fail "Error: One or more FSM settings are missing!"
+	-a -n "$community_name" \
+	-a -n "$force_state" ] || fail "Error: One or more FSM settings are missing!"
 	
 	# Remove old config if existing
 	[ -f $output ] && rm -f $output
@@ -53,6 +54,7 @@ batman_iface='$batman_iface'
 fsm_list='$fsm_list'
 gossip_list='$gossip_list'
 community_name='$community_name'
+force_state='$force_state'
 EOF
 }
 
