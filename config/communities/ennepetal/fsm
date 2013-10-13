@@ -8,6 +8,10 @@ net_fake='22.0.0.0/8'
 #IPv4 Network for default mesh operation
 net_mesh='10.84.0.0/16'
 
+#IPv4 fsm queen IP-Range. This limits the number of dynamic fsm queens so the rest of the IPs can be used for static setups.
+#The setting consist of the start & end IP seperated by a whitespace. default is '0 192'
+net_queenrange='0 192'
+
 #IPv6 Network for default mesh operation
 net_ip6ula='fda0:747e:ab29:abee::/64'
 

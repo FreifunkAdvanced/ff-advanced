@@ -34,6 +34,7 @@ gen_fsmsettings() {
 	[ -n "$net_robinson" \
 	-a -n "$net_fake" \
 	-a -n "$net_mesh" \
+	-a -n "$net_queenrange" \
 	-a -n "$net_ip6ula" \
 	-a -n "$batman_iface" \
 	-a -n "$fsm_list" \
@@ -49,6 +50,7 @@ adhoc_dev='$adhoc_dev'
 net_robinson='$net_robinson'
 net_fake='$net_fake'
 net_mesh='$net_mesh'
+net_queenrange='$net_queenrange'
 net_ip6ula='$net_ip6ula'
 batman_iface='$batman_iface'
 fsm_list='$fsm_list'
