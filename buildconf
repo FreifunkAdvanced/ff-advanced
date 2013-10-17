@@ -30,9 +30,9 @@ Example: $(basename $0) ar71xx neuss
 }
 
 genconfig () {
-	local profile=$1
-	local community=$2
-	local add_packages=$3
+	local profile="$1"
+	local community="$2"
+	local add_packages="$3"
 	
 	[ -s buildconf.d/$profile.profile ] || fail "Error: Profile file missing or empty!"
 	. buildconf.d/$profile.profile
