@@ -336,7 +336,7 @@ images/%: PLAT=$(shell echo $(@F) | cut -f2 -d-)
 images/%: COMMUNITY=$(shell echo $(@F) | cut -f1 -d-)
 images/%: openwrt/$$(REPO)/.repo_access 
 	@echo '  BUILD   OpenWrt $(REPO) for $(PLAT) in $(COMMUNITY)'
-	./genconfig $(PLAT) > openwrt/$(REPO)/.config
+	./buildconf $(PLAT) $(COMMUNITY) > openwrt/$(REPO)/.config
 	-rm -r openwrt/$(REPO)/files
 	$(move_files)
 	$(create_firmware_file)
