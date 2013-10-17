@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+# buildconf - creates an OpenWrt config file for oldconfig
+# Copyright (C) 2013  Cyrus <cyrus AT lambdacore.de>
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+fail() {
+    echo "$1" 1>&2
+    exit 1
+}
+
+printArgs () {
+    fail 'Usage:
+$(basename $0) [profile] [community] "Addtional packages"
+Example: $(basename $0) ar71xx neuss
+		 $(basename $0) ar71xx neuss "space seperated packagenames"
+'
+}
+
+genconfig () {
+	local profile=$1
+	local community=$2
+	local add_packages=$3
+	
+	[ -s buildconf.d/$profile.profile ] || fail "Error: Profile file missing or empty!"
+	. buildconf.d/$profile.profile
+	
+	[ -n "$target" ] || fail "Error: Target not set"
+	[ -s buildconf.d/target/$target ] || fail "Error: Target file missing or empty!"
+	cat buildconf.d/target/$target
+	
+	for defpkgfile in $(find buildconf.d/default/*)
+	do
+		cat $defpkgfile
+	done
+	
+	for incpkgfile in $include_packages
+	do
+		cat buildconf.d/packages/$incpkgfile | cut -f1 -d'=' | sed 's/$/=y/'
+	done
+	
+	for modpkgfile in $module_packages
+	do
+		cat buildconf.d/packages/$modpkgfile | cut -f1 -d'=' | sed 's/$/=m/'
+	done
+	
+	if [ -d buildconf.d/communities/$community ]; then
+		for compkgfile in $(find buildconf.d/communities/$community/*)
+		do
+			cat $compkgfile
+		done
+	fi
+	
+	if [ -n "$add_packages" ]; then
+		for addpkg in $add_packages
+		do
+			echo "CONFIG_PACKAGE_$addpkg"
+		done
+	fi
+}
+
+[ $# -lt 2 ] && printArgs
+
+case "$1" in
+    --help|-h)
+	printArgs
+	;;
+	*)
+	genconfig "$1" "$2" "$3"
+esac
