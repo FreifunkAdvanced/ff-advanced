@@ -66,7 +66,7 @@ genconfig () {
 	if [ -n "$add_packages" ]; then
 		for addpkg in $add_packages
 		do
-			echo "CONFIG_PACKAGE_$addpkg"
+			echo "CONFIG_PACKAGE_$addpkg=y"
 		done
 	fi
 }
