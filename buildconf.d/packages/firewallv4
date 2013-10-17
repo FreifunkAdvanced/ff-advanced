@@ -1,0 +1,5 @@
+CONFIG_PACKAGE_firewall=y
+CONFIG_PACKAGE_iptables=y
+CONFIG_PACKAGE_librt=y
+CONFIG_PACKAGE_kmod-ledtrig-netfilter=y
+CONFIG_PACKAGE_iptables-mod-nat-extra=y
