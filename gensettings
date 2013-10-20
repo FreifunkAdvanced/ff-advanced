@@ -72,6 +72,7 @@ gen_wifisettings() {
 	-a -n "$wifi_hwmode" \
 	-a -n "$wifi_htmode" \
 	-a -n "$wifi_adhoc_ssid" \
+	-a -n "$wifi_adhoc_mcastrate" \
 	-a -n "$wifi_hotspot_ssid" ] || fail "Error: One or more wifi settings are missing!"
 	
 	# Default value for txpower if none is set
@@ -227,6 +228,7 @@ config wifi-iface
         option network	'adhoc'
         option ssid     '$wifi_adhoc_ssid'
         option bssid    '$wifi_adhoc_bssid'
+        option mcast_rate '$wifi_adhoc_mcastrate'
         option hidden   '1'
         option encryption 'none'
 
@@ -264,7 +266,7 @@ config wifi-iface
         option mode     'ap'
         option ssid     '$wifi_ap_ssid'
         option encryption '$wifi_ap_encryption'
-		option key      '$wifi_ap_key'
+        option key      '$wifi_ap_key'
         option wmm      '0'
 
 EOF
