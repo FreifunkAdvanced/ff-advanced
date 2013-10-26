@@ -412,14 +412,23 @@ gen_fastdsettings() {
 	local fastd_peers_path=$2
 	local fastd_target_folder=$3
 	local fastd_uci_config=$4
+	local autoregister_uci_config=$5
 
 	# Include fastd config
 	. $fastd_config
 	# Check if fastd settings are non-zero strings and abort if thats not the case
 	[ -n "$fastd_registerserver" \
+	-a -n "$fastd_autoregister" \
 	-a -n "$fastd_peers_path" \
 	-a -n "$fastd_meshvpn_mtu" \
 	-a -n "$fastd_meshvpn_methods" ] || fail "Error: One or more fastd settings are missing!"
+
+# Add fastd autoregister config
+	cat << EOF >> $autoregister_uci_config
+config autoregister settings
+        option register_server '$fastd_registerserver'
+        option autoregister '$fastd_autoregister'
+EOF
 
 	# Remove old fastd folder if existing
 	[ -d $fastd_target_folder ] && rm -rf $fastd_target_folder
