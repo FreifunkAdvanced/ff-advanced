@@ -434,6 +434,7 @@ config fastd mesh_vpn
         option enabled 0
         list config '/etc/fastd/mesh-vpn/fastd.conf'
         list config_peer_dir '/etc/fastd/mesh-vpn/peers'
+        option peer_limit '2'
         option syslog_level 'verbose'
         option mode 'tap'
         option interface 'mesh-vpn'
@@ -451,14 +452,8 @@ EOF
 
 		# Add settings to fastd.conf
 		cat << EOF >> $fastd_target_folder/mesh-vpn/fastd.conf
-include "secret.conf";
-
-peer group "meshvpn" {
-        peer limit 2;
-        include peers from "peers";
-}
-
 on up "
+    ip link set up dev \$INTERFACE
     batctl -m \"\$(uci -q get network.meshfsm.batman_iface)\" if add \$INTERFACE
     exit 0
 ";
@@ -479,6 +474,7 @@ config fastd exit_vpn
         option enabled 0
         list config '/etc/fastd/exit-vpn/fastd.conf'
         list config_peer_dir '/etc/fastd/exit-vpn/peers'
+        option peer_limit '2'
         option syslog_level 'verbose'
         option mode 'tap'
         option interface 'exit-vpn'
@@ -496,15 +492,9 @@ EOF
 
 			# Add settings to fastd.conf
 			cat << EOF >> $fastd_target_folder/exit-vpn/fastd.conf
-include "secret.conf";
-
-peer group "exitvpn" {
-        peer limit 2;
-        include peers from "peers";
-}
-
 on up "
     #Currently no automatic adding of the interface ;)
+    #ip link set up dev \$INTERFACE
     #batctl -m \"\$(uci -q get network.meshfsm.batman_iface)\" if add \$INTERFACE
     exit 0
 ";
