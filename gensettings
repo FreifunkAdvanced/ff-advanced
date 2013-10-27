@@ -442,12 +442,14 @@ EOF
 config fastd mesh_vpn
         option enabled 0
         list config '/etc/fastd/mesh-vpn/fastd.conf'
+        list config '/etc/fastd/mesh-vpn/secret.conf'
         list config_peer_dir '/etc/fastd/mesh-vpn/peers'
         option peer_limit '2'
         option syslog_level 'verbose'
         option mode 'tap'
         option interface 'mesh-vpn'
         option mtu '$fastd_meshvpn_mtu'
+        option secret 'dummy'
 EOF
 
 		# Add encryption methods to fastd uci config
@@ -482,12 +484,14 @@ EOF
 config fastd exit_vpn
         option enabled 0
         list config '/etc/fastd/exit-vpn/fastd.conf'
+        list config '/etc/fastd/exit-vpn/secret.conf'
         list config_peer_dir '/etc/fastd/exit-vpn/peers'
         option peer_limit '2'
         option syslog_level 'verbose'
         option mode 'tap'
         option interface 'exit-vpn'
         option mtu '$fastd_exitvpn_mtu'
+        option secret 'dummy'
 EOF
 
 			# Add encryption methods to fastd uci config
