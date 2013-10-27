@@ -180,7 +180,7 @@ openwrt/attitude_adjustment/.repo_access:
 	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
 	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
-	cd $(@D) && ./scripts/feeds install -p trunkservices openvpn-polarssl > /dev/null 2&>1
+	cd $(@D) && ./scripts/feeds install -p ovpnbackport openvpn-polarssl > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
 	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $@
@@ -247,7 +247,7 @@ openwrt/attitude_adjustment/.update:
 	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
 	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
-	cd $(@D) && ./scripts/feeds install -p trunkservices openvpn-polarssl > /dev/null 2&>1
+	cd $(@D) && ./scripts/feeds install -p ovpnbackport openvpn-polarssl > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
 	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access	
