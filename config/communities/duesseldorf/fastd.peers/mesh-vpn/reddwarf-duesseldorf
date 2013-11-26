@@ -1,0 +1,2 @@
+key "56712714007770c5fb3b43153618f285b8aedd5165edbcd3aebcf72d2501245f";
+remote ipv4 "fastd-vpn.freifunk-neuss.de" port 10040;
