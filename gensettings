@@ -60,7 +60,7 @@ meshwan_iface='$meshwan_iface'
 EOF
 
 	cat << EOF > $fsm_uci_config
-config inetable '$interface'
+config inetable 'meshfsm'
         option 'vpn_fallback' '$vpn_fallback'
         option 'net_queenmode' '$net_queenmode'
         option 'net_queenrange_start' '$net_queenrange_start'
