@@ -47,9 +47,7 @@ gen_fsmsettings() {
 	-a -n "$fsm_list" \
 	-a -n "$gossip_list" \
 	-a -n "$force_state" \
-	-a -n "$splash_enabled" \
-	-a -n "$splash_except_servers" \
-	-a -n "$splash_except_clients" ] || fail "Error: One or more FSM settings are missing!"
+	-a -n "$splash_enabled" ] || fail "Error: One or more FSM settings are missing!"
 	
 	# Remove old config if existing
 	[ -f $ffpreconfigure_output ] && rm -f $ffpreconfigure_output
