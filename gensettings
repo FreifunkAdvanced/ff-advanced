@@ -25,7 +25,7 @@ gen_fsmsettings() {
 	local fsm_config=$1
 	local adhoc_dev=$2
 	local ffpreconfigure_output=$3
-	local fsm_uci_config=$3
+	local fsm_uci_config=$4
 	
 	# Check if adhoc_dev is valid
 	[ -n $adhoc_dev ] || fail "Invalid wifi device"
