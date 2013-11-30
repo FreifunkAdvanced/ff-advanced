@@ -46,7 +46,7 @@ set network.$meshwan_iponly_iface='interface'
 set network.$meshwan_iponly_iface.proto='dhcp'
 set network.$meshwan_iponly_iface.ifname='br-mesh'
 set network.$meshwan_iponly_iface.defaultroute='0'
-set network.$meshwan_iponly_iface.peerdns='0
+set network.$meshwan_iponly_iface.peerdns='0'
 set network.$meshwan_iponly_iface.auto='0'
 EOF
 	ffdef_set_interface_adhoc $adhoc_dev
