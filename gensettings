@@ -494,7 +494,7 @@ EOF
 		cat << EOF >> $fastd_target_folder/mesh-vpn/fastd.conf
 on up "
     ip link set up dev \$INTERFACE
-    batctl -m \"\$(uci -q get network.meshfsm.batman_iface)\" if add \$INTERFACE
+    batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
     exit 0
 ";
 EOF
@@ -537,7 +537,7 @@ EOF
 on up "
     #Currently no automatic adding of the interface ;)
     #ip link set up dev \$INTERFACE
-    #batctl -m \"\$(uci -q get network.meshfsm.batman_iface)\" if add \$INTERFACE
+    #batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
     exit 0
 ";
 EOF
