@@ -24,7 +24,8 @@ fail() {
 gen_fsmsettings() {
 	local fsm_config=$1
 	local adhoc_dev=$2
-	local output=$3
+	local ffpreconfigure_output=$3
+	local fsm_uci_config=$4
 	
 	# Check if adhoc_dev is valid
 	[ -n $adhoc_dev ] || fail "Invalid wifi device"
@@ -34,29 +35,57 @@ gen_fsmsettings() {
 	[ -n "$net_robinson" \
 	-a -n "$net_fake" \
 	-a -n "$net_mesh" \
-	-a -n "$net_queenrange" \
+	-a -n "$net_queenrange_start" \
+	-a -n "$net_queenrange_end" \
+	-a -n "$net_queenmode" \
+	-a -n "$net_dhcpleasetime" \
+	-a -n "$testhosts_inet" \
 	-a -n "$net_ip6ula" \
+	-a -n "$meshwan_iface" \
+	-a -n "$meshwan_iponly_iface" \
 	-a -n "$batman_iface" \
 	-a -n "$fsm_list" \
 	-a -n "$gossip_list" \
-	-a -n "$community_name" \
-	-a -n "$force_state" ] || fail "Error: One or more FSM settings are missing!"
+	-a -n "$force_state" \
+	-a -n "$splash_enabled" ] || fail "Error: One or more FSM settings are missing!"
 	
 	# Remove old config if existing
-	[ -f $output ] && rm -f $output
+	[ -f $ffpreconfigure_output ] && rm -f $ffpreconfigure_output
+	[ -f $fsm_uci_config ] && rm -f $fsm_uci_config
 	
-	cat << EOF > $output
+	cat << EOF > $ffpreconfigure_output
 adhoc_dev='$adhoc_dev'
-net_robinson='$net_robinson'
-net_fake='$net_fake'
-net_mesh='$net_mesh'
-net_queenrange='$net_queenrange'
-net_ip6ula='$net_ip6ula'
-batman_iface='$batman_iface'
-fsm_list='$fsm_list'
-gossip_list='$gossip_list'
-community_name='$community_name'
-force_state='$force_state'
+meshwan_iponly_iface='$meshwan_iponly_iface'
+meshwan_iface='$meshwan_iface'
+EOF
+
+	cat << EOF > $fsm_uci_config
+config inetable 'meshfsm'
+        option 'vpn_fallback' '$vpn_fallback'
+        option 'net_queenmode' '$net_queenmode'
+        option 'net_queenrange_start' '$net_queenrange_start'
+        option 'net_queenrange_end' '$net_queenrange_end'
+        option 'net_gateways' '$net_gateways'
+        option 'net_nameservers' '$net_nameservers'
+        option 'net_dhcpleasetime' '$net_dhcpleasetime'
+        option 'net_mesh' '$net_mesh'
+        option 'net_ip6ula' '$net_ip6ula'
+        option 'net_robinson' '$net_robinson'
+        option 'net_fake' '$net_fake'
+		option 'fsm_list' '$fsm_list'
+		option 'gossip_list' '$gossip_list'
+        option 'batman_iface' '$batman_iface'
+        option 'routedvpn_iface' '$routedvpn_iface'
+        option 'meshvpn_iface' '$meshvpn_iface'
+        option 'testhosts_inet' '$testhosts_inet'
+        option 'testhosts_gwdhcp' '$testhosts_gwdhcp'
+        option 'testhosts_bridge' '$testhosts_bridge'
+        option 'meshwan_iponly_iface' '$meshwan_iponly_iface'
+        option 'meshwan_iface' '$meshwan_iface'
+        option 'splash_enabled' '$splash_enabled'
+        option 'splash_except_servers' '$splash_except_servers'
+        option 'splash_except_clients' '$splash_except_clients'
+        option 'force_state' '$force_state'
 EOF
 }
 
@@ -465,7 +494,7 @@ EOF
 		cat << EOF >> $fastd_target_folder/mesh-vpn/fastd.conf
 on up "
     ip link set up dev \$INTERFACE
-    batctl -m \"\$(uci -q get network.meshfsm.batman_iface)\" if add \$INTERFACE
+    batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
     exit 0
 ";
 EOF
@@ -508,7 +537,7 @@ EOF
 on up "
     #Currently no automatic adding of the interface ;)
     #ip link set up dev \$INTERFACE
-    #batctl -m \"\$(uci -q get network.meshfsm.batman_iface)\" if add \$INTERFACE
+    #batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
     exit 0
 ";
 EOF
@@ -541,7 +570,7 @@ gen_configs() {
 	
 	# Generate wireless config, returns the wifi dev for the ffpreconfigure config
 	adhoc_dev=$(gen_wifisettings $wifi_config openwrt/$repository/files/etc/config/wireless)
-	gen_fsmsettings "$fsm_config" "$adhoc_dev" "openwrt/$repository/files/etc/defconfig/ffpreconfigure"
+	gen_fsmsettings "$fsm_config" "$adhoc_dev" "openwrt/$repository/files/etc/defconfig/ffpreconfigure" "openwrt/$repository/files/etc/config/fsm"
 	gen_splashsettings "$splash_config" "openwrt/$repository/files/etc/config/splash"
 	[ -f "$fastd_config" ] && gen_fastdsettings "$fastd_config" "config/communities/$community/fastd.peers" "openwrt/$repository/files/etc/fastd" "openwrt/$repository/files/etc/config/fastd" "openwrt/$repository/files/etc/config/fastdregister"
 	[ -f "$n2n_config" ] && gen_n2nsettings "$n2n_config" "openwrt/$repository/files/etc/config/n2n"

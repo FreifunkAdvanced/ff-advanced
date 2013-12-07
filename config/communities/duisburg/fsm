@@ -8,15 +8,51 @@ net_fake='22.0.0.0/8'
 #IPv4 Network for default mesh operation
 net_mesh='10.71.0.0/16'
 
-#IPv4 fsm queen IP-Range. This limits the number of dynamic fsm queens so the rest of the IPs can be used for static setups.
-#The setting consist of the start & end IP seperated by a whitespace. default is '0 192'
-net_queenrange='0 192'
-
 #IPv6 Network for default mesh operation
 net_ip6ula='fda0:747e:ab29:203::/64'
 
+#Gateway IP-Addresses for the "VPN Hybrid" queen mode
+net_gateways=''
+
+#Nameservers for the "VPN Hybrid" queen mode
+net_nameservers=''
+
+#DHCP-Leasetime for clients
+net_dhcpleasetime='1h'
+
+#Set the queen mode. Following modes are possible: routed , vpn-routed , vpn-gwdhcp , vpn-bridge
+net_queenmode='routed'
+
+#Fallback to default routed (queen) mode if vpn tests fail?
+vpn_fallback='false'
+
+#IPv4 fsm queen IP-Range. This limits the number of dynamic fsm queens so the rest of the IPs can be used for static setups.
+net_queenrange_start='0'
+net_queenrange_end='192'
+
+#Testshosts for internet connectivity tests, this hosts are also used for the "Routed VPN" queen mode
+testhosts_inet='8.8.8.8 4.2.2.4 78.47.165.13 78.47.11.70'
+
+#Testhosts for "VPN Hybrid" queen mode, set to the same hosts as the gateways.
+testhosts_hybrid=''
+
+#Testshosts for the "VPN Bridge" queen mode, this are the MAC addresses of the exit VPN server interfaces (usually a bridge with a static mac)
+testhosts_bridge=''
+
+#Name of the routed vpn iface (e.g. openvpn interface)
+routedvpn_iface='tunff'
+
 #Name of the default batman adv interface
 batman_iface='bat0'
+
+#Name of the virtual mesh wan interface
+meshwan_iface='meshwan'
+
+#Name of the virtual ip only mesh wan interface
+meshwan_iponly_iface='meshwan_iponly'
+
+#Name of the mesh vpn interface (Fastd VPN)
+meshvpn_iface='mesh-vpn'
 
 #List of state machines the FSM runs
 fsm_list='inetable'
@@ -29,3 +65,13 @@ community_name='Freifunk Duisburg'
 
 #Force the fsm into a state after leaving "boot" state. Currently only "drone" is supported, default value is "off"
 force_state='off'
+
+#Enable the splash iptables rules? 
+splash_enabled='true'
+
+#Space seperated list of websites which will never get splashed. (IP addresses or DNS A records)
+splash_except_servers='78.47.165.13 5.9.112.157 78.24.191.177 144.76.72.180'
+
+#Space seperated list of clients that never get a splash (Mac addresses)
+splash_except_clients=''
+
