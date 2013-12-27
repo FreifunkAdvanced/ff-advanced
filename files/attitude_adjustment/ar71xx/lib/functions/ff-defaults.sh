@@ -52,3 +52,13 @@ EOF
 	ffdef_set_interface_adhoc $adhoc_dev
 }
 
+ffdef_add_interface_meshvpn() {
+	uci batch <<EOF
+set network.mesh_vpn='interface'
+set network.mesh_vpn.proto='batadv'
+set network.mesh_vpn.ifname='mesh-vpn'
+set network.mesh_vpn.mesh='bat0'
+set network.mesh_vpn.auto='1'
+set network.mesh_vpn.mesh_no_rebroadcast='1'
+EOF
+}
