@@ -1,0 +1,12 @@
+src-git packages git://github.com/FreifunkAdvanced/packages_12.09.git
+src-svn xwrt http://x-wrt.googlecode.com/svn/trunk/package
+src-svn luci http://svn.luci.subsignal.org/luci/branches/luci-0.11/contrib/package
+src-git routing git://github.com/FreifunkAdvanced/routing-packages.git
+src-git ovpnbackport git://github.com/FreifunkAdvanced/openvpn-backport.git
+#src-svn phone svn://svn.openwrt.org/openwrt/feeds/phone
+#src-svn efl svn://svn.openwrt.org/openwrt/feeds/efl
+#src-svn xorg svn://svn.openwrt.org/openwrt/feeds/xorg
+#src-svn desktop svn://svn.openwrt.org/openwrt/feeds/desktop
+#src-svn xfce svn://svn.openwrt.org/openwrt/feeds/xfce
+#src-svn lxde svn://svn.openwrt.org/openwrt/feeds/lxde
+#src-link custom /usr/src/openwrt/custom-feed

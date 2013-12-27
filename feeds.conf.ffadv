@@ -1,5 +1,3 @@
 #src-git ffj git://code.sotun.de/ffj/feed
 src-git ffadvgit git://github.com/FreifunkAdvanced/ff-advanced-feed.git
-src-git routing git://github.com/openwrt-routing/packages.git
-src-git ovpnbackport git://github.com/FreifunkAdvanced/openvpn-backport.git
 src-git fastd git://git.metameute.de/lff/pkg_fastd
