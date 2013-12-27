@@ -494,7 +494,8 @@ EOF
 		cat << EOF >> $fastd_target_folder/mesh-vpn/fastd.conf
 on up "
     ip link set up dev \$INTERFACE
-    batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
+    #batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
+	logger -t fastd \"Interface \$INTERFACE up and will be added by netifd\"
     exit 0
 ";
 EOF
