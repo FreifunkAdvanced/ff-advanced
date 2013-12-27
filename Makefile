@@ -155,6 +155,8 @@ openwrt/trunk/.repo_access:
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    OpenWrt Trunk/Development  packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $@
 
 .NOTPARALLEL:
@@ -177,8 +179,12 @@ openwrt/attitude_adjustment/.repo_access:
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
 	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
-	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
-	cd $(@D) && ./scripts/feeds install -p ovpnbackport openvpn-polarssl > /dev/null 2&>1
+	@echo '  REMOVE OpenWrt Attitude Adjustment uhttpd version'
+	cd $(@D) && ./scripts/feeds uninstall uhttpd > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports OpenVPN version (PolarSSL variant)'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports openvpn-polarssl > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports uhttpd2 version'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports uhttpd > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
 	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $@
@@ -221,6 +227,8 @@ openwrt/trunk/.update:
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
 	@echo '  LINK    Trunk/Development packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access
 
 .NOTPARALLEL:
@@ -242,8 +250,12 @@ openwrt/attitude_adjustment/.update:
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
 	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
-	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
-	cd $(@D) && ./scripts/feeds install -p ovpnbackport openvpn-polarssl > /dev/null 2&>1
+	@echo '  REMOVE OpenWrt Attitude Adjustment uhttpd version'
+	cd $(@D) && ./scripts/feeds uninstall uhttpd > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports OpenVPN version (PolarSSL variant)'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports openvpn-polarssl > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports uhttpd2 version'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports uhttpd > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
 	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access	

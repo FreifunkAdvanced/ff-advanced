@@ -1,4 +1,4 @@
-src-git packages git://github.com/FreifunkAdvanced/packages.git
+src-git packages git://github.com/FreifunkAdvanced/openwrt-packages.git
 src-svn xwrt http://x-wrt.googlecode.com/svn/trunk/package
 src-git luci git://nbd.name/luci.git
 src-git routing git://github.com/FreifunkAdvanced/routing-packages.git
