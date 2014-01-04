@@ -72,13 +72,13 @@ config inetable 'meshfsm'
         option 'net_ip6ula' '$net_ip6ula'
         option 'net_robinson' '$net_robinson'
         option 'net_fake' '$net_fake'
-		option 'fsm_list' '$fsm_list'
-		option 'gossip_list' '$gossip_list'
+        option 'fsm_list' '$fsm_list'
+        option 'gossip_list' '$gossip_list'
         option 'batman_iface' '$batman_iface'
         option 'routedvpn_iface' '$routedvpn_iface'
         option 'meshvpn_iface' '$meshvpn_iface'
         option 'testhosts_inet' '$testhosts_inet'
-        option 'testhosts_gwdhcp' '$testhosts_gwdhcp'
+        option 'testhosts_hybrid' '$testhosts_hybrid'
         option 'testhosts_bridge' '$testhosts_bridge'
         option 'meshwan_iponly_iface' '$meshwan_iponly_iface'
         option 'meshwan_iface' '$meshwan_iface'
@@ -494,7 +494,8 @@ EOF
 		cat << EOF >> $fastd_target_folder/mesh-vpn/fastd.conf
 on up "
     ip link set up dev \$INTERFACE
-    batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
+    #batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
+	logger -t fastd \"Interface \$INTERFACE up and will be added by netifd\"
     exit 0
 ";
 EOF
