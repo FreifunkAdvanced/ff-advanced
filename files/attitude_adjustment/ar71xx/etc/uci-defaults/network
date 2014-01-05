@@ -83,10 +83,12 @@ rb-751g |\
 wzr-hp-g450h)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_interface_batmanport "bateth0_4" "eth0.4"
 	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "0t 2 3"
+	ucidef_add_switch_vlan "switch0" "1" "0t 2"
 	ucidef_add_switch_vlan "switch0" "2" "0t 1"
-	ucidef_add_switch_vlan "switch0" "3" "0t 4 5"
+	ucidef_add_switch_vlan "switch0" "3" "0t 3"
+	ucidef_add_switch_vlan "switch0" "4" "0t 4 5"
 	;;
 
 rb-493g)
@@ -104,69 +106,85 @@ pb92 |\
 ap113)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_interface_batmanport "bateth0_4" "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0t 1 3"
+	ucidef_add_switch_vlan "eth0" "1" "0t 1"
 	ucidef_add_switch_vlan "eth0" "2" "0t 2"
-	ucidef_add_switch_vlan "eth0" "3" "0t 4 5"
+	ucidef_add_switch_vlan "eth0" "3" "0t 3"
+	ucidef_add_switch_vlan "eth0" "4" "0t 4 5"
 	;;
 
 tl-wdr4300|\
 tl-wr1041n-v2)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_interface_batmanport "bateth0_4" "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0t 2 3"
+	ucidef_add_switch_vlan "eth0" "1" "0t 2"
 	ucidef_add_switch_vlan "eth0" "2" "0t 1"
-	ucidef_add_switch_vlan "eth0" "3" "0t 4 5"
+	ucidef_add_switch_vlan "eth0" "3" "0t 3"
+	ucidef_add_switch_vlan "eth0" "4" "0t 4 5"
 	;;
 
 tl-wr1043nd)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_interface_batmanport "bateth0_4" "eth0.4"
 	ucidef_add_switch "rtl8366rb" "1" "1"
-	ucidef_add_switch_vlan "rtl8366rb" "1" "1 2 5t"
+	ucidef_add_switch_vlan "rtl8366rb" "1" "1 5t"
 	ucidef_add_switch_vlan "rtl8366rb" "2" "0 5t"
-	ucidef_add_switch_vlan "rtl8366rb" "3" "3 4 5t"
+	ucidef_add_switch_vlan "rtl8366rb" "3" "2 5t"
+	ucidef_add_switch_vlan "rtl8366rb" "4" "3 4 5t"
 	;;
 
 tl-wr2543n)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3" 
+	ffdef_add_interface_batmanport "bateth0_4" "eth0.4"
 	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "1 2 9t"
+	ucidef_add_switch_vlan "switch0" "1" "1 9t"
 	ucidef_add_switch_vlan "switch0" "2" "0 9t"
-	ucidef_add_switch_vlan "switch0" "3" "3 4 9t"
+	ucidef_add_switch_vlan "switch0" "3" "2 9t"
+	ucidef_add_switch_vlan "switch0" "4" "3 4 9t"
 	;;
 
 tl-wr841n-v1|\
 tl-wr941nd)
 	ucidef_set_interface_raw "eth" "eth0"
-	ucidef_set_interfaces_lan_wan "lan1 lan2" "wan"
-	ffdef_set_interface_mesh "lan3 lan4"
+	ucidef_set_interfaces_lan_wan "lan1" "wan"
+	ffdef_set_interface_mesh "lan2"
+	ffdef_add_interface_batmanport "batlan3" "lan3"
+	ffdef_add_interface_batmanport "batlan4" "lan4"
 	;;
 
 tl-wr841n-v8)
 	ucidef_set_interfaces_lan_wan "eth1.1" "eth0"
 	ffdef_set_interface_mesh "eth1.2"
+	ffdef_add_interface_batmanport "bateth1_3" "eth1.3"
 	ucidef_add_switch "eth1" "1" "1"
-	ucidef_add_switch_vlan "eth1" "1" "0t 2 3"
-	ucidef_add_switch_vlan "eth1" "2" "0t 4 1"
+	ucidef_add_switch_vlan "eth1" "1" "0t 2"
+	ucidef_add_switch_vlan "eth1" "2" "0t 3"
+	ucidef_add_switch_vlan "eth1" "3" "0t 4 1"
 	;;
 
 wrt160nl)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
+	ffdef_add_interface_batmanport "bateth0_3" "eth0.3"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0 1 4t 5"
-	ucidef_add_switch_vlan "eth0" "2" "2 3 4t"
+	ucidef_add_switch_vlan "eth0" "1" "3 4t 5"
+	ucidef_add_switch_vlan "eth0" "2" "2 4t"
+	ucidef_add_switch_vlan "eth0" "3" "0 1 4t"
 	;;
 
 wzr-hp-g300nh)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
+	ffdef_add_interface_batmanport "bateth0_3" "eth0.3"
 	ucidef_add_switch "switch0" "1" "1"
-	ucidef_add_switch_vlan "switch0" "1" "0 1 5t"
-	ucidef_add_switch_vlan "switch0" "2" "2 3 5t"
+	ucidef_add_switch_vlan "switch0" "1" "3 5t"
+	ucidef_add_switch_vlan "switch0" "2" "2 5t"
+	ucidef_add_switch_vlan "switch0" "3" "0 1 5t"
 	;;
 
 all0305 |\
@@ -218,18 +236,22 @@ whr-hp-gn |\
 wzr-hp-ag300h)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth1"
 	ffdef_set_interface_mesh "eth0.2"
+	ffdef_add_interface_batmanport "bateth0_3" "eth0.3"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0t 1 2"
-	ucidef_add_switch_vlan "eth0" "2" "0t 3 4"
+	ucidef_add_switch_vlan "eth0" "1" "0t 1"
+	ucidef_add_switch_vlan "eth0" "2" "0t 2"
+	ucidef_add_switch_vlan "eth0" "3" "0t 3 4"
 	;;
 
 wzr-hp-g450h)
 	ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
 	ffdef_set_interface_mesh "eth0.3"
+	ffdef_add_interface_batmanport "bateth0_4" "eth0.4"
 	ucidef_add_switch "eth0" "1" "1"
-	ucidef_add_switch_vlan "eth0" "1" "0t 2 3"
+	ucidef_add_switch_vlan "eth0" "1" "0t 2"
 	ucidef_add_switch_vlan "eth0" "2" "0t 1"
-	ucidef_add_switch_vlan "eth0" "3" "0t 4 5"
+	ucidef_add_switch_vlan "eth0" "3" "0t 3"
+	ucidef_add_switch_vlan "eth0" "4" "0t 4 5"
 	;;
 
 ew-dorin)
