@@ -62,3 +62,15 @@ set network.mesh_vpn.auto='1'
 set network.mesh_vpn.mesh_no_rebroadcast='1'
 EOF
 }
+
+ffdef_add_interface_batmanport() {
+	local interface=$1
+	local ifname=$2
+	uci batch <<EOF
+set network.$interface='interface'
+set network.$interface.proto='batadv'
+set network.$interface.ifname='$ifname'
+set network.$interface.mesh='bat0'
+set network.$interface.auto='1'
+EOF
+}
