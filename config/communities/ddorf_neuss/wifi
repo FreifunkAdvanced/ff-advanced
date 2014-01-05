@@ -12,11 +12,11 @@ wifi_country='DE'
 wifi_hwmode='11ng'
 
 # Wifi htmode, please keep at HT20 due to compatibility issues between devices
-wifi_htmode='HT20'
+wifi_htmode='HT40+'
 
 
 # Adhoc Iface ssid
-wifi_adhoc_ssid='batman.duesseldorf.freifunk.net'
+wifi_adhoc_ssid='wifimesh-ddorf-neuss'
 
 # Adhoc Iface bssid, this is normaly set automaticaly. Please only set if you need it, otherwise comment it out!
 # See https://wiki.freifunk-rheinland.net/Netzwerk/Wireless_Channels for details
