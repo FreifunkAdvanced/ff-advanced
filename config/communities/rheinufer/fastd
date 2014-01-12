@@ -1,0 +1,20 @@
+#Auto-Register URL, this is only used for the mesh-vpn and not the exit-vpn!
+fastd_registerserver="register.rheinufer.freifunk-rheinland.net"
+
+#Enable fastd auto register. (Default is currently "off"!)
+fastd_autoregister="off"
+
+#Mesh-VPN 
+#Interface MTU, please do not change unless you know what you are doing ;)
+fastd_meshvpn_mtu="1426"
+
+#Supported encryption ciphers, default is "null".
+fastd_meshvpn_methods="xsalsa20-poly1305"
+
+#Exit-VPN
+#Interface MTU, please do not change unless you know what you are doing ;)
+#fastd_exitvpn_mtu="1426"
+
+#Supported encryption ciphers, default is "null".
+#fastd_exitvpn_methods="null"
+
