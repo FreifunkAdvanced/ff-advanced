@@ -10,7 +10,7 @@ set network.adhoc.mesh='bat0'
 set network.adhoc.auto='1'
 add network device
 set network.@device[-1].name='$ifname'
-set network.@device[-1].mtu='1528'
+set network.@device[-1].mtu='1518'
 set network.@device[-1].type='ethernet'
 EOF
 }
