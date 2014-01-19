@@ -21,7 +21,7 @@ net_nameservers='10.40.250.1 10.40.252.1'
 net_dhcpleasetime='3600'
 
 #Set the queen mode. Following modes are possible: routed , vpn-routed , vpn-gwdhcp , vpn-bridge
-net_queenmode='routed'
+net_queenmode='vpn-bridge'
 
 #Fallback to default routed (queen) mode if vpn tests fail?
 vpn_fallback='false'
