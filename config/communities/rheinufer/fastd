@@ -2,7 +2,7 @@
 fastd_registerserver="register.rheinufer.freifunk-rheinland.net"
 
 #Enable fastd auto register. (Default is currently "off"!)
-fastd_autoregister="off"
+fastd_autoregister="on"
 
 #Mesh-VPN 
 #Interface MTU, please do not change unless you know what you are doing ;)
