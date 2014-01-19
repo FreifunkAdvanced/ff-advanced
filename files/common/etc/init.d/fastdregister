@@ -7,10 +7,12 @@ START=99
 start ()  {
 	autoregister=$(uci -q get fastdregister.settings.autoregister)
 	if [ "$autoregister" == "on" -a ! -f "/etc/fastd/mesh-vpn/autoregistered" ]; then
-		if /usr/sbin/fastdregister register; then
-			echo "node was automatically registered" > /etc/fastd/mesh-vpn/autoregistered
-			logger -t fastdregister "Node registered! Restarting fastd!"
-			/etc/init.d/fastd restart
+		if test_connectivity meshfsm internet; then
+			if /usr/sbin/fastdregister register; then
+				echo "node was automatically registered" > /etc/fastd/mesh-vpn/autoregistered
+				logger -t fastdregister "Node registered! Restarting fastd!"
+				/etc/init.d/fastd restart
+			fi
 		fi
 fi
 }
