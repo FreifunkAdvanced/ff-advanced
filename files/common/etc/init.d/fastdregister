@@ -1,18 +1,16 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2008-2011 OpenWrt.org
-#      Modified      2012 Freifunk Rheinland
+#      Modified      2014 Freifunk Rheinland
 
 START=99
 
 start ()  {
 	autoregister=$(uci -q get fastdregister.settings.autoregister)
 	if [ "$autoregister" == "on" -a ! -f "/etc/fastd/mesh-vpn/autoregistered" ]; then
-		if [ ! -f "/etc/fastd/mesh-vpn/pubkey" -a ! -f "/etc/fastd/mesh-vpn/secret.conf" ]; then
-			if /usr/sbin/fastdregister register; then
-				echo "node was automatically registered" > /etc/fastd/mesh-vpn/autoregistered
-				logger -t fastdregister "Node registered! Restarting fastd!"
-				/etc/init.d/fastd restart
-			fi
+		if /usr/sbin/fastdregister register; then
+			echo "node was automatically registered" > /etc/fastd/mesh-vpn/autoregistered
+			logger -t fastdregister "Node registered! Restarting fastd!"
+			/etc/init.d/fastd restart
 		fi
 fi
 }
