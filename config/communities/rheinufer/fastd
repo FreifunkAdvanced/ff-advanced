@@ -9,7 +9,7 @@ fastd_autoregister="on"
 fastd_meshvpn_mtu="1426"
 
 #Supported encryption ciphers, default is "null".
-fastd_meshvpn_methods="xsalsa20-poly1305"
+fastd_meshvpn_methods="salsa2012+gmac xsalsa20-poly1305"
 
 #Exit-VPN
 #Interface MTU, please do not change unless you know what you are doing ;)
