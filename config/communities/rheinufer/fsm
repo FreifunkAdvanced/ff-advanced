@@ -34,10 +34,10 @@ net_queenrange_end='127'
 testhosts_inet='8.8.8.8 4.2.2.4 78.47.165.13 78.47.11.70'
 
 #Testhosts for "VPN Hybrid" queen mode, set to the same hosts as the gateways.
-testhosts_hybrid='10.40.250.1 10.40.252.1'
+testhosts_hybrid='10.40.250.1 10.40.248.1'
 
 #Testshosts for the "VPN Bridge" queen mode, this are the MAC addresses of the exit VPN server interfaces (usually a bridge with a static mac)
-testhosts_bridge='c2:eb:7a:bf:a9:ca 7e:9d:32:fc:cf:d3'
+testhosts_bridge='04:be:ef:ca:fe:00 04:be:ef:ca:fe:01'
 
 #Name of the routed vpn iface (e.g. openvpn interface)
 routedvpn_iface='tunff'
