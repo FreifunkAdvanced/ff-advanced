@@ -24,7 +24,8 @@ fail() {
 gen_fsmsettings() {
 	local fsm_config=$1
 	local adhoc_dev=$2
-	local output=$3
+	local ffpreconfigure_output=$3
+	local fsm_uci_config=$4
 	
 	# Check if adhoc_dev is valid
 	[ -n $adhoc_dev ] || fail "Invalid wifi device"
@@ -34,25 +35,57 @@ gen_fsmsettings() {
 	[ -n "$net_robinson" \
 	-a -n "$net_fake" \
 	-a -n "$net_mesh" \
+	-a -n "$net_queenrange_start" \
+	-a -n "$net_queenrange_end" \
+	-a -n "$net_queenmode" \
+	-a -n "$net_dhcpleasetime" \
+	-a -n "$testhosts_inet" \
 	-a -n "$net_ip6ula" \
+	-a -n "$meshwan_iface" \
+	-a -n "$meshwan_iponly_iface" \
 	-a -n "$batman_iface" \
 	-a -n "$fsm_list" \
 	-a -n "$gossip_list" \
-	-a -n "$community_name" ] || fail "Error: One or more FSM settings are missing!"
+	-a -n "$force_state" \
+	-a -n "$splash_enabled" ] || fail "Error: One or more FSM settings are missing!"
 	
 	# Remove old config if existing
-	[ -f $output ] && rm -f $output
+	[ -f $ffpreconfigure_output ] && rm -f $ffpreconfigure_output
+	[ -f $fsm_uci_config ] && rm -f $fsm_uci_config
 	
-	cat << EOF > $output
+	cat << EOF > $ffpreconfigure_output
 adhoc_dev='$adhoc_dev'
-net_robinson='$net_robinson'
-net_fake='$net_fake'
-net_mesh='$net_mesh'
-net_ip6ula='$net_ip6ula'
-batman_iface='$batman_iface'
-fsm_list='$fsm_list'
-gossip_list='$gossip_list'
-community_name='$community_name'
+meshwan_iponly_iface='$meshwan_iponly_iface'
+meshwan_iface='$meshwan_iface'
+EOF
+
+	cat << EOF > $fsm_uci_config
+config inetable 'meshfsm'
+        option 'vpn_fallback' '$vpn_fallback'
+        option 'net_queenmode' '$net_queenmode'
+        option 'net_queenrange_start' '$net_queenrange_start'
+        option 'net_queenrange_end' '$net_queenrange_end'
+        option 'net_gateways' '$net_gateways'
+        option 'net_nameservers' '$net_nameservers'
+        option 'net_dhcpleasetime' '$net_dhcpleasetime'
+        option 'net_mesh' '$net_mesh'
+        option 'net_ip6ula' '$net_ip6ula'
+        option 'net_robinson' '$net_robinson'
+        option 'net_fake' '$net_fake'
+        option 'fsm_list' '$fsm_list'
+        option 'gossip_list' '$gossip_list'
+        option 'batman_iface' '$batman_iface'
+        option 'routedvpn_iface' '$routedvpn_iface'
+        option 'meshvpn_iface' '$meshvpn_iface'
+        option 'testhosts_inet' '$testhosts_inet'
+        option 'testhosts_hybrid' '$testhosts_hybrid'
+        option 'testhosts_bridge' '$testhosts_bridge'
+        option 'meshwan_iponly_iface' '$meshwan_iponly_iface'
+        option 'meshwan_iface' '$meshwan_iface'
+        option 'splash_enabled' '$splash_enabled'
+        option 'splash_except_servers' '$splash_except_servers'
+        option 'splash_except_clients' '$splash_except_clients'
+        option 'force_state' '$force_state'
 EOF
 }
 
@@ -68,6 +101,7 @@ gen_wifisettings() {
 	-a -n "$wifi_hwmode" \
 	-a -n "$wifi_htmode" \
 	-a -n "$wifi_adhoc_ssid" \
+	-a -n "$wifi_adhoc_mcastrate" \
 	-a -n "$wifi_hotspot_ssid" ] || fail "Error: One or more wifi settings are missing!"
 	
 	# Default value for txpower if none is set
@@ -223,6 +257,7 @@ config wifi-iface
         option network	'adhoc'
         option ssid     '$wifi_adhoc_ssid'
         option bssid    '$wifi_adhoc_bssid'
+        option mcast_rate '$wifi_adhoc_mcastrate'
         option hidden   '1'
         option encryption 'none'
 
@@ -260,7 +295,7 @@ config wifi-iface
         option mode     'ap'
         option ssid     '$wifi_ap_ssid'
         option encryption '$wifi_ap_encryption'
-		option key      '$wifi_ap_key'
+        option key      '$wifi_ap_key'
         option wmm      '0'
 
 EOF
@@ -340,6 +375,184 @@ EOF
 	fi
 }
 
+gen_collectdsettings() {
+	local collectd_config=$1
+	local output=$2
+	
+	# Include collectd config
+	. $collectd_config
+	# Check if collectd settings are non-zero strings and abort if thats not the case
+	[ -n "$interfaces" \
+	-a -n "$server" \
+	-a -n "$server_port" \
+	-a -n "$ping_hosts" ] || fail "Error: One or more collectd settings are missing! Remove collectd config or set necessary values"
+	
+	# Remove old config if existing
+	[ -f $output ] && rm -f $output
+	
+	cat << EOF > $output
+#Replace Hostname with the MAC Address (Without ":" or "-") plus the hostname
+#Hostname "01234567890A-myhostname"
+BaseDir "/var/lib/collectd"
+PIDFile "/var/run/collectd.pid"
+Interval 60
+ReadThreads 2
+TypesDB "/usr/share/collectd/types.db"
+TypesDB "/etc/types.db.mesh"
+
+LoadPlugin network
+LoadPlugin interface
+LoadPlugin ping
+LoadPlugin exec
+
+EOF
+
+	# Add interface section
+	echo "<Plugin interface>" >> $output
+	for iface in $interfaces
+		do
+			echo 'Interface "'$iface'"' >> $output
+		done
+		
+	echo "IgnoreSelected false" >> $output
+	echo "</Plugin>" >> $output
+
+	# Add network section
+	echo "<Plugin network>" >> $output
+	echo 'Server "'$server'" "'$server_port'"' >> $output
+	echo "</Plugin>" >> $output
+
+	# Add ping hosts
+	echo "<Plugin ping>" >> $output
+	for host in $ping_hosts
+		do
+			echo 'Host "'$host'"' >> $output
+		done
+	echo "</Plugin>" >> $output
+	cat << EOF >> $output
+<Plugin exec>
+Exec "nobody:nogroup" "/usr/sbin/collectd-mesh-script.sh"
+</Plugin>
+EOF
+}
+
+gen_fastdsettings() {
+	local fastd_config=$1
+	local fastd_peers_path=$2
+	local fastd_target_folder=$3
+	local fastd_uci_config=$4
+	local autoregister_uci_config=$5
+
+	# Include fastd config
+	. $fastd_config
+	# Check if fastd settings are non-zero strings and abort if thats not the case
+	[ -n "$fastd_registerserver" \
+	-a -n "$fastd_autoregister" \
+	-a -n "$fastd_peers_path" \
+	-a -n "$fastd_meshvpn_mtu" \
+	-a -n "$fastd_meshvpn_methods" ] || fail "Error: One or more fastd settings are missing!"
+
+# Add fastd autoregister config
+	cat << EOF >> $autoregister_uci_config
+config autoregister settings
+        option register_server '$fastd_registerserver'
+        option autoregister '$fastd_autoregister'
+EOF
+
+	# Remove old fastd folder if existing
+	[ -d $fastd_target_folder ] && rm -rf $fastd_target_folder
+	mkdir -p $fastd_target_folder
+
+	# Remove old uci config if existing
+	[ -f $fastd_uci_config ] && rm -f $fastd_uci_config
+
+	# Add mesh-vpn section to fastd UCI config
+	cat << EOF >> $fastd_uci_config
+config fastd mesh_vpn
+        option enabled 0
+        list config '/etc/fastd/mesh-vpn/fastd.conf'
+        list config '/etc/fastd/mesh-vpn/secret.conf'
+        list config_peer_dir '/etc/fastd/mesh-vpn/peers'
+        option peer_limit '2'
+        option syslog_level 'verbose'
+        option mode 'tap'
+        option interface 'mesh-vpn'
+        option mtu '$fastd_meshvpn_mtu'
+        option secret 'dummy'
+EOF
+
+		# Add encryption methods to fastd uci config
+		for method in $fastd_meshvpn_methods
+		do
+			echo "        list method '$method'" >> $fastd_uci_config
+		done
+
+		# Make peer folder recursivly if not existant
+		mkdir -p $fastd_target_folder/mesh-vpn/peers
+
+		# Add settings to fastd.conf
+		cat << EOF >> $fastd_target_folder/mesh-vpn/fastd.conf
+on up "
+    #ip link set up dev \$INTERFACE
+    #batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
+	logger -t fastd \"Interface \$INTERFACE up and will be added by netifd\"
+    exit 0
+";
+EOF
+
+		# Add peer files for mesh-vpn
+		for peer in $(find $fastd_peers_path/mesh-vpn -type f)
+		do
+			cp $peer $fastd_target_folder/mesh-vpn/peers
+		done
+		
+		
+		# Exit-VPN Part
+		if [ -n "$fastd_exitvpn_mtu" -a -n "$fastd_exitvpn_methods" ]; then
+			# Add exit-vpn section to fastd UCI config
+			cat << EOF >> $fastd_uci_config
+config fastd exit_vpn
+        option enabled 0
+        list config '/etc/fastd/exit-vpn/fastd.conf'
+        list config '/etc/fastd/exit-vpn/secret.conf'
+        list config_peer_dir '/etc/fastd/exit-vpn/peers'
+        option peer_limit '2'
+        option syslog_level 'verbose'
+        option mode 'tap'
+        option interface 'exit-vpn'
+        option mtu '$fastd_exitvpn_mtu'
+        option secret 'dummy'
+EOF
+
+			# Add encryption methods to fastd uci config
+			for method in $fastd_exitvpn_methods
+			do
+				echo "        list method '$method'" >> $fastd_uci_config
+			done
+
+			# Make peer folder recursivly if not existant
+			mkdir -p $fastd_target_folder/exit-vpn/peers
+
+			# Add settings to fastd.conf
+			cat << EOF >> $fastd_target_folder/exit-vpn/fastd.conf
+on up "
+    #Currently no automatic adding of the interface ;)
+    #ip link set up dev \$INTERFACE
+    #batctl -m \"\$(uci -q get fsm.meshfsm.batman_iface)\" if add \$INTERFACE
+    exit 0
+";
+EOF
+
+			# Add peer files for exit-vpn
+			if [ -d $fastd_peers_path/exit-vpn ]; then
+				for peer in $(find $fastd_peers_path/exit-vpn -type f)
+				do
+					cp $peer $fastd_target_folder/exit-vpn/peers
+				done
+			fi
+		fi
+}
+
 gen_configs() {
 	local repository=$1
 	local buildtarget=$2
@@ -349,17 +562,21 @@ gen_configs() {
 	local wifi_config="config/communities/$community/wifi"
 	local splash_config="config/communities/$community/splash"
 	local n2n_config="config/communities/$community/n2n"
+	local fastd_config="config/communities/$community/fastd"
+	local collectd_config="config/communities/$community/collectd"
 	[ -f "$fsm_config" -a -f "$wifi_config" -a -f "$splash_config" ] || fail "Missing config files for community $community!"
 	[ ! -d openwrt/$repository/ ] && fail "Error: Repository $repository not existant" 
 	[ ! -d openwrt/$repository/files/etc/defconfig ] && mkdir -p openwrt/$repository/files/etc/defconfig
-	rm -f openwrt/$repository/files/etc/defconfig/ffpreconfigure 
+	[ ! -d openwrt/$repository/files/etc/config ] && mkdir -p openwrt/$repository/files/etc/config
 	
 	# Generate wireless config, returns the wifi dev for the ffpreconfigure config
 	adhoc_dev=$(gen_wifisettings $wifi_config openwrt/$repository/files/etc/config/wireless)
-	gen_fsmsettings "$fsm_config" "$adhoc_dev" "openwrt/$repository/files/etc/defconfig/ffpreconfigure"
+	gen_fsmsettings "$fsm_config" "$adhoc_dev" "openwrt/$repository/files/etc/defconfig/ffpreconfigure" "openwrt/$repository/files/etc/config/fsm"
 	gen_splashsettings "$splash_config" "openwrt/$repository/files/etc/config/splash"
-	gen_n2nsettings "$n2n_config" "openwrt/$repository/files/etc/config/n2n"
-	
+	[ -f "$fastd_config" ] && gen_fastdsettings "$fastd_config" "config/communities/$community/fastd.peers" "openwrt/$repository/files/etc/fastd" "openwrt/$repository/files/etc/config/fastd" "openwrt/$repository/files/etc/config/fastdregister"
+	[ -f "$n2n_config" ] && gen_n2nsettings "$n2n_config" "openwrt/$repository/files/etc/config/n2n"
+	[ -f "$collectd_config" ] && gen_collectdsettings "$collectd_config" "openwrt/$repository/files/etc/collectd.conf"
+	exit 0
 }
 
 printArgs () {

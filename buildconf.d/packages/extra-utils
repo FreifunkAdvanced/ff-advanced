@@ -1,0 +1,7 @@
+CONFIG_PACKAGE_iputils-ping=m
+CONFIG_PACKAGE_iputils-tracepath=m
+CONFIG_PACKAGE_iputils-tracepath6=m
+CONFIG_PACKAGE_iputils-traceroute6=m
+CONFIG_PACKAGE_nano=m
+CONFIG_PACKAGE_iperf=m
+CONFIG_PACKAGE_iperf-mt=m

@@ -38,21 +38,39 @@ ffdev_set_interface_mesh_settings() {
 set network.meshfsm='interface'
 set network.meshfsm.proto='fsm'
 set network.meshfsm.ifname='br-mesh'
-set network.meshfsm.meshwan_iface='meshwan'
-set network.meshfsm.net_robinson='$net_robinson'
-set network.meshfsm.net_fake='$net_fake'
-set network.meshfsm.net_mesh='$net_mesh'
-set network.meshfsm.net_ip6ula='$net_ip6ula'
-set network.meshfsm.batman_iface='$batman_iface'
-set network.meshfsm.fsm_list='$fsm_list'
-set network.meshfsm.gossip_list='$gossip_list'
-set network.meshfsm.community_name='$community_name'
-set network.meshfsm.auto='1'
-set network.meshwan='interface'
-set network.meshwan.proto='dhcp'
-set network.meshwan.ifname='br-mesh'
-set network.meshwan.auto='0'
+set network.$meshwan_iface='interface'
+set network.$meshwan_iface.proto='dhcp'
+set network.$meshwan_iface.ifname='br-mesh'
+set network.$meshwan_iface.auto='0'
+set network.$meshwan_iponly_iface='interface'
+set network.$meshwan_iponly_iface.proto='dhcp'
+set network.$meshwan_iponly_iface.ifname='br-mesh'
+set network.$meshwan_iponly_iface.defaultroute='0'
+set network.$meshwan_iponly_iface.peerdns='0'
+set network.$meshwan_iponly_iface.auto='0'
 EOF
 	ffdef_set_interface_adhoc $adhoc_dev
 }
 
+ffdef_add_interface_meshvpn() {
+	uci batch <<EOF
+set network.mesh_vpn='interface'
+set network.mesh_vpn.proto='batadv'
+set network.mesh_vpn.ifname='mesh-vpn'
+set network.mesh_vpn.mesh='bat0'
+set network.mesh_vpn.auto='1'
+set network.mesh_vpn.mesh_no_rebroadcast='1'
+EOF
+}
+
+ffdef_add_interface_batmanport() {
+	local interface=$1
+	local ifname=$2
+	uci batch <<EOF
+set network.$interface='interface'
+set network.$interface.proto='batadv'
+set network.$interface.ifname='$ifname'
+set network.$interface.mesh='bat0'
+set network.$interface.auto='1'
+EOF
+}

@@ -1,0 +1,12 @@
+# Collectd settings file, if you dont need collectd simply remove this config file
+#Interfaces to monitor for the interface plugin (Space seperated)
+interfaces='br-mesh'
+
+#Collectd server to send data to
+server='collectd.rheinufer.freifunk-rheinland.net'
+
+#Collectd server port
+server_port='25826'
+ 
+#Hosts for the ping plugin to check (Space seperated)
+ping_hosts='5.9.112.157 78.47.11.70'
