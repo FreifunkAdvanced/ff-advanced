@@ -1,0 +1,3 @@
+#src-git ffj git://code.sotun.de/ffj/feed
+src-git ffadvgit git://github.com/FreifunkAdvanced/ff-advanced-feed.git
+src-git fastd git://git.metameute.de/lff/pkg_fastd

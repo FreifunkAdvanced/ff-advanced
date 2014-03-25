@@ -1,0 +1,11 @@
+CONFIG_PACKAGE_ffadv-hbbp=y
+CONFIG_PACKAGE_nacl=y
+CONFIG_PACKAGE_kmod-nfnetlink=y
+CONFIG_PACKAGE_ffadv-fsm=y
+CONFIG_PACKAGE_ffadv-fsm-inetable=y
+CONFIG_PACKAGE_ffadv-nodeid=y
+CONFIG_PACKAGE_ffadv-p2ptbl=y
+CONFIG_PACKAGE_ffadv-shuf=y
+CONFIG_PACKAGE_ffadv-urlencoder=y
+CONFIG_PACKAGE_ffadv-webservice=y
+CONFIG_PACKAGE_ffadv-owm-update=y

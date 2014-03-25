@@ -1,0 +1,2 @@
+key "d9426ccb9dcf79d90b63b7395b5e4c104a3672fc84e9df4331fa9d17f7e8cabb"; #public key
+remote ipv4 "ic2.vpn.jena.freifunk.net" port 10000;

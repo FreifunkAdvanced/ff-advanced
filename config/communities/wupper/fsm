@@ -1,0 +1,77 @@
+# FSM network settings
+#IPv4 Network for robinson state
+net_robinson='21.0.0.0/8'
+
+#IPv4 Network for fake DNS
+net_fake='22.0.0.0/8'
+
+#IPv4 Network for default mesh operation
+net_mesh='10.40.0.0/16'
+
+#IPv6 Network for default mesh operation
+net_ip6ula='fda0:747e:ab29:e1ba::/64'
+
+#Gateway IP-Addresses for the "VPN Hybrid" queen mode
+net_gateways='10.3.0.240 10.3.0.241 10.3.0.242 10.3.0.243 10.3.0.244 10.3.0.245 10.3.0.246 10.3.0.247 10.3.0.248 10.3.0.249'
+
+#Nameservers for the "VPN Hybrid" queen mode
+net_nameservers='10.3.0.251 10.3.0.252 10.3.0.253 10.3.0.254'
+
+#DHCP-Leasetime for clients
+net_dhcpleasetime='3600'
+
+#Set the queen mode. Following modes are possible: routed , vpn-routed , vpn-gwdhcp , vpn-bridge
+net_queenmode='vpn-bridge'
+
+#Fallback to default routed (queen) mode if vpn tests fail?
+vpn_fallback='false'
+
+#IPv4 fsm queen IP-Range. This limits the number of dynamic fsm queens so the rest of the IPs can be used for static setups.
+net_queenrange_start='128'
+net_queenrange_end='254'
+
+#Testshosts for internet connectivity tests, this hosts are also used for the "Routed VPN" queen mode
+testhosts_inet='8.8.8.8 4.2.2.4 78.47.165.13 78.47.11.70'
+
+#Testhosts for "VPN Hybrid" queen mode, set to the same hosts as the gateways.
+testhosts_hybrid='10.3.0.240 10.3.0.241 10.3.0.242 10.3.0.243 10.3.0.244 10.3.0.245 10.3.0.246 10.3.0.247 10.3.0.248 10.3.0.249'
+
+#Testshosts for the "VPN Bridge" queen mode, this are the MAC addresses of the exit VPN server interfaces (usually a bridge with a static mac)
+testhosts_bridge='04:be:e1:ba:fe:00 04:be:e1:ba:fe:10 04:be:e1:ba:fe:20 04:be:e1:ba:fe:30 04:be:e1:ba:fe:40 04:be:e1:ba:fe:50 04:be:e1:ba:fe:60 04:be:e1:ba:fe:70 04:be:e1:ba:fe:80 04:be:e1:ba:fe:90'
+
+#Name of the routed vpn iface (e.g. openvpn interface)
+routedvpn_iface='tunff'
+
+#Name of the default batman adv interface
+batman_iface='bat0'
+
+#Name of the virtual mesh wan interface
+meshwan_iface='meshwan'
+
+#Name of the virtual ip only mesh wan interface
+meshwan_iponly_iface='meshwan_iponly'
+
+#Name of the mesh vpn interface (Fastd VPN)
+meshvpn_iface='mesh-vpn'
+
+#List of state machines the FSM runs
+fsm_list='inetable'
+
+#List of p2ptables which are going to be gossiped
+gossip_list='gwip'
+
+#Community name ;)
+community_name='Domain Wupper'
+
+#Force the fsm into a state after leaving "boot" state. Currently only "drone" is supported, default value is "off"
+force_state='off'
+
+#Enable the splash iptables rules? 
+splash_enabled='true'
+
+#Space seperated list of websites which will never get splashed. (IP addresses or DNS A records)
+splash_except_servers='78.47.165.13 5.9.112.157 78.24.191.177 144.76.72.180'
+
+#Space seperated list of clients that never get a splash (Mac addresses)
+splash_except_clients=''
+

@@ -140,34 +140,34 @@ fetch-attitude_adjustment: openwrt/attitude_adjustment/.repo_access
 .NOTPARALLEL:
 openwrt/trunk/.repo_access:
 	mkdir -p openwrt dl
-	@echo '  SVN     OpenWrt Trunk r$(SVNREVISION)'
-	svn co -q -r $(SVNREVISION) svn://svn.openwrt.org/openwrt/trunk/ $(@D)
+	@echo '  GIT-Clone    OpenWrt Trunk/Development (FF-Adv Repo)'
+	git clone -q git://github.com/FreifunkAdvanced/openwrt.git $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
-	@echo '  UPDATE  OpenWrt Trunk r$(SVNREVISION) feeds'
+	@echo '  UPDATE  OpenWrt Trunk/Development feeds'
 	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
-	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Trunk'
+	cat feeds.conf.trunk feeds.conf.ffadv > $(@D)/feeds.conf
+	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Trunk/Development'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Rheinland Git repo in OpenWrt Trunk'
+	@echo '  INSTALL Freifunk Rheinland Git repo in OpenWrt Trunk/Development'
 	cd $(@D) && ./scripts/feeds install -a -p ffrlgit > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk/Development'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
-	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
+	@echo '  LINK    OpenWrt Trunk/Development  packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $@
 
 .NOTPARALLEL:
 openwrt/attitude_adjustment/.repo_access:
 	mkdir -p openwrt dl
-	@echo '  SVN     OpenWrt Attitude Adjustment'
-	svn co -q svn://svn.openwrt.org/openwrt/branches/attitude_adjustment $(@D)
+	@echo '  GIT-Clone     OpenWrt Attitude Adjustment (FF-Adv Repo)'
+	git clone -q git://github.com/FreifunkAdvanced/attitude_adjustment.git $(@D)
 	[[ -h $(@D)/dl ]] || ln -s ../../dl $(@D)/
 	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
 	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
-	@echo '  REMOVE Routing 12.09 branch (Replaced by master branch)'
-	sed -e "/for-12.09.x/d" -i $(@D)/feeds.conf
+	cat feeds.conf.attitude_adjustment feeds.conf.ffadv > $(@D)/feeds.conf
 	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Attitude Adjustment'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
@@ -179,8 +179,12 @@ openwrt/attitude_adjustment/.repo_access:
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
 	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
-	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
-	cd $(@D) && ./scripts/feeds install -p trunkservices openvpn-polarssl > /dev/null 2&>1
+	@echo '  REMOVE OpenWrt Attitude Adjustment uhttpd version'
+	cd $(@D) && ./scripts/feeds uninstall uhttpd > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports OpenVPN version (PolarSSL variant)'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports openvpn-polarssl > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports uhttpd2 version'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports uhttpd > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
 	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $@
@@ -210,31 +214,31 @@ update-trunk: openwrt/trunk/.update
 .NOTPARALLEL:
 openwrt/trunk/.update:
 	mkdir -p openwrt dl
-	@echo '  SVN     OpenWrt Trunk r$(SVNREVISION) (update)'
-	cd $(@D) && svn update -q -r $(SVNREVISION)
-	@echo '  UPDATE  OpenWrt Trunk r$(SVNREVISION) feeds'
+	@echo '  GIT-Pull     OpenWrt Trunk/Development (FF-Adv Repo)'
+	cd $(@D) && git pull -q
+	@echo '  UPDATE  OpenWrt Trunk/Development feeds'
 	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
+	cat feeds.conf.trunk feeds.conf.ffadv > $(@D)/feeds.conf
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update > /dev/null 2&>1
 	@echo '  INSTALL Freifunk Jena hbbpd $(FFJVERSION) (update)'
 	cd $(@D) && ./scripts/feeds install -a -p ffj > /dev/null 2&>1
-	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk'
+	@echo '  INSTALL Freifunk Rheinland packages in OpenWrt Trunk/Development'
 	cd $(@D) && ./scripts/feeds install -a -p ffrl > /dev/null 2&>1
-	@echo '  LINK    OpenWrt Trunk r$(SVNREVISION) packages'
+	@echo '  LINK    Trunk/Development packages'
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
+	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
+	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access
 
 .NOTPARALLEL:
 openwrt/attitude_adjustment/.update:
 	mkdir -p openwrt dl
-	@echo '  SVN     OpenWrt Attitude Adjustment (update)'
-	cd $(@D) && svn update -q
+	@echo '  GIT-Pull     OpenWrt Attitude Adjustment (FF-Adv Repo)'
+	cd $(@D) && git pull -q
 	@echo '  UPDATE  OpenWrt Attitude Adjustment feeds'
 	cd $(@D) && ./scripts/feeds uninstall -a > /dev/null 2&>1
-	cat $(@D)/feeds.conf.default feeds.conf > $(@D)/feeds.conf
-	@echo '  REMOVE Routing 12.09 branch (Replaced by master branch)'
-	sed -e "/for-12.09.x/d" -i $(@D)/feeds.conf
+	cat feeds.conf.attitude_adjustment feeds.conf.ffadv > $(@D)/feeds.conf
 	@echo '  INSERT  Freifunk Rheinland Buildroot packages in OpenWrt Attitude Adjustment'
 	echo "src-link ffrl $$(pwd)/feeds/ffrl" >> $(@D)/feeds.conf
 	cd $(@D) && ./scripts/feeds update -a > /dev/null 2&>1
@@ -246,8 +250,12 @@ openwrt/attitude_adjustment/.update:
 	cd $(@D) && $(MAKE) $(MAKEFLAGS) package/symlinks
 	@echo '  REMOVE OpenWrt Attitude Adjustment OpenVPN version'
 	cd $(@D) && ./scripts/feeds uninstall openvpn > /dev/null 2&>1
-	@echo '  INSTALL OpenWrt trunk OpenVPN version (PolarSSL variant)'
-	cd $(@D) && ./scripts/feeds install -p trunkservices openvpn-polarssl > /dev/null 2&>1
+	@echo '  REMOVE OpenWrt Attitude Adjustment uhttpd version'
+	cd $(@D) && ./scripts/feeds uninstall uhttpd > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports OpenVPN version (PolarSSL variant)'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports openvpn-polarssl > /dev/null 2&>1
+	@echo '  INSTALL OpenWrt FF-Adv trunk backports uhttpd2 version'
+	cd $(@D) && ./scripts/feeds install -p ffadvbackports uhttpd > /dev/null 2&>1
 	@echo '  INSTALL OpenWrt Routing kmod-batman-adv package'
 	cd $(@D) && ./scripts/feeds install -p routing kmod-batman-adv > /dev/null 2&>1
 	touch $(@D).repo_access	
@@ -336,7 +344,7 @@ images/%: PLAT=$(shell echo $(@F) | cut -f2 -d-)
 images/%: COMMUNITY=$(shell echo $(@F) | cut -f1 -d-)
 images/%: openwrt/$$(REPO)/.repo_access 
 	@echo '  BUILD   OpenWrt $(REPO) for $(PLAT) in $(COMMUNITY)'
-	./genconfig $(PLAT) > openwrt/$(REPO)/.config
+	./buildconf $(PLAT) $(COMMUNITY) > openwrt/$(REPO)/.config
 	-rm -r openwrt/$(REPO)/files
 	$(move_files)
 	$(create_firmware_file)
