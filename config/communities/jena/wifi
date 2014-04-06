@@ -16,7 +16,7 @@ wifi_htmode='HT20'
 
 
 # Adhoc Iface ssid
-wifi_adhoc_ssid='batman.jena.freifunk.net'
+wifi_adhoc_ssid='batman-adv_Transportnetz'
 
 # Adhoc Iface bssid, this is normaly set automaticaly. Please only set if you need it, otherwise comment it out!
 # See https://wiki.freifunk-rheinland.net/Netzwerk/Wireless_Channels for details
